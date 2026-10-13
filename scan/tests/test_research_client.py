@@ -62,6 +62,37 @@ class RequestTests(unittest.TestCase):
         with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")):
             self.assertIsNone(research_client.claim())
 
+    def test_claim_sends_zip_codes_only_when_given(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen:
+            research_client.claim()
+            research_client.claim(zip_codes=["94601", "94607"])
+
+        plain, targeted = (json.loads(c[0][0].data) for c in urlopen.call_args_list)
+        self.assertNotIn("p_zip_codes", plain)
+        self.assertEqual(["94601", "94607"], targeted["p_zip_codes"])
+
+    def test_zip_codes_are_flattened_and_deduplicated(self) -> None:
+        self.assertEqual(
+            ["94601", "94607", "94621"],
+            research_client.parse_zip_codes(["94601, 94607", "94621-1234", "94601"]),
+        )
+        self.assertEqual([], research_client.parse_zip_codes(None))
+
+    def test_cli_rejects_a_malformed_zip_without_calling_the_server(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen") as urlopen, \
+                patch("sys.stderr", new_callable=io.StringIO) as stderr:
+            code = research_client.main(["claim", "--zip", "9460"])
+        self.assertEqual(1, code)
+        self.assertIn("9460", stderr.getvalue())
+        urlopen.assert_not_called()
+
+    def test_cli_zip_flags_reach_the_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen, \
+                patch("sys.stdout", new_callable=io.StringIO):
+            code = research_client.main(["claim", "--zip", "94601,94607", "--zip", "94621"])
+        self.assertEqual(0, code)
+        self.assertEqual(["94601", "94607", "94621"], json.loads(urlopen.call_args[0][0].data)["p_zip_codes"])
+
     def test_submit_maps_the_finding_to_rpc_parameters(self) -> None:
         finding = {
             "claim_token": "c-1", "verdict": "unknown", "confidence": 0.2,

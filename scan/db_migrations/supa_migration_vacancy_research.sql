@@ -101,11 +101,16 @@ REVOKE ALL ON FUNCTION public._research_agent_name(TEXT) FROM PUBLIC, anon, auth
 -- ============================================================
 -- 6. claim_vacancy_research — hand one property to an agent
 --    Returns JSON null when nothing is left to claim.
+--    p_zip_codes limits the claim to those 5-digit ZIPs (NULL or empty = any).
 -- ============================================================
+-- Drop the earlier signature so PostgREST never sees two overloads.
+DROP FUNCTION IF EXISTS public.claim_vacancy_research(TEXT, INTEGER, TEXT);
+
 CREATE OR REPLACE FUNCTION public.claim_vacancy_research(
     p_agent_token   TEXT,
     p_lease_minutes INTEGER DEFAULT 45,
-    p_city          TEXT    DEFAULT ''
+    p_city          TEXT    DEFAULT '',
+    p_zip_codes     TEXT[]  DEFAULT NULL
 )
 RETURNS JSON
 LANGUAGE plpgsql
@@ -139,6 +144,7 @@ BEGIN
     JOIN public.bills b ON b.apn = t.apn
     WHERE (t.status = 'pending' OR (t.status = 'claimed' AND t.lease_expires_at < now()))
       AND (p_city = '' OR p_city IS NULL OR LOWER(b.city) = LOWER(p_city))
+      AND (COALESCE(cardinality(p_zip_codes), 0) = 0 OR LEFT(TRIM(b.zip_code), 5) = ANY(p_zip_codes))
     ORDER BY t.priority DESC, t.apn
     LIMIT 1
     FOR UPDATE OF t SKIP LOCKED;
@@ -335,12 +341,12 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[]) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.submit_vacancy_finding(TEXT, UUID, TEXT, REAL, TEXT, JSONB, TEXT) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.release_vacancy_research(TEXT, UUID, TEXT) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.extend_vacancy_research(TEXT, UUID, INTEGER) FROM PUBLIC;
 
-GRANT EXECUTE ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT) TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[]) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.submit_vacancy_finding(TEXT, UUID, TEXT, REAL, TEXT, JSONB, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.release_vacancy_research(TEXT, UUID, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.extend_vacancy_research(TEXT, UUID, INTEGER) TO anon, authenticated, service_role;

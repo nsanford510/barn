@@ -9,7 +9,7 @@ Environment:
     BARN_AGENT_TOKEN        this agent's personal token
 
 Commands (each prints JSON on stdout; errors go to stderr with exit code 1):
-    research_client.py claim [--city OAKLAND] [--lease-minutes 45]
+    research_client.py claim [--city OAKLAND] [--zip 94601,94607] [--lease-minutes 45]
     research_client.py submit --file finding.json [--token CLAIM_TOKEN]
     research_client.py release --token CLAIM_TOKEN --reason "why"
     research_client.py extend --token CLAIM_TOKEN [--minutes 30]
@@ -69,9 +69,25 @@ def call(function: str, params: dict[str, Any]) -> Any:
     return json.loads(raw) if raw.strip() else None
 
 
-def claim(city: str = "", lease_minutes: int = 45) -> dict[str, Any] | None:
-    """One property to research, or None when the queue is empty."""
-    return call("claim_vacancy_research", {"p_lease_minutes": lease_minutes, "p_city": city or ""})
+def parse_zip_codes(values: list[str] | None) -> list[str]:
+    """Flatten repeated and comma-separated --zip values into 5-digit ZIP codes."""
+    zips: list[str] = []
+    for value in values or []:
+        for part in value.replace(",", " ").split():
+            zip_code = part.split("-")[0]  # accept ZIP+4
+            if len(zip_code) != 5 or not zip_code.isdigit():
+                raise ClientError(f"not a 5-digit zip code: {part}")
+            if zip_code not in zips:
+                zips.append(zip_code)
+    return zips
+
+
+def claim(city: str = "", lease_minutes: int = 45, zip_codes: list[str] | None = None) -> dict[str, Any] | None:
+    """One property to research, or None when nothing matching is left in the queue."""
+    params: dict[str, Any] = {"p_lease_minutes": lease_minutes, "p_city": city or ""}
+    if zip_codes:
+        params["p_zip_codes"] = zip_codes
+    return call("claim_vacancy_research", params)
 
 
 def submit(finding: dict[str, Any], claim_token: str | None = None) -> dict[str, Any]:
@@ -102,6 +118,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("claim", help="get one property to research (prints null when none are left)")
     p.add_argument("--city", default="")
+    p.add_argument("--zip", action="append", default=None, metavar="ZIP[,ZIP...]",
+                   help="only claim properties in these zip codes (repeatable or comma-separated)")
     p.add_argument("--lease-minutes", type=int, default=45)
 
     p = sub.add_parser("submit", help="submit a finding and close the claim")
@@ -122,7 +140,9 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         if args.command == "claim":
-            result: Any = claim(city=args.city, lease_minutes=args.lease_minutes)
+            result: Any = claim(
+                city=args.city, lease_minutes=args.lease_minutes, zip_codes=parse_zip_codes(args.zip)
+            )
         elif args.command == "submit":
             try:
                 text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()

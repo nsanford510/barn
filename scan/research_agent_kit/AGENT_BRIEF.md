@@ -18,6 +18,10 @@ account to obtain information.
    `mail_vacant`, `has_vpt`, `delinquent`), a `claim_token` and a
    `lease_expires_at`. If it prints `null`, the queue is empty: stop.
 
+   If you were assigned particular zip codes, pass them on every claim, e.g.
+   `python research_client.py claim --zip 94601,94607`. You then only receive
+   properties in those zip codes, and `null` means none are left there.
+
 2. **Research** that property. You have until `lease_expires_at` (45 minutes by
    default). If you need longer, run
    `python research_client.py extend --token <claim_token>` before it expires;
