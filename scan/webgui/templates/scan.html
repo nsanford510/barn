@@ -53,7 +53,9 @@
 <nav class="sidenav">
   <div class="sidenav-label">Scan</div>
   <a href="#vpt" class="sidenav-tab active" data-panel="panel-vpt">VPT Scanner</a>
+  <a href="#fleet" class="sidenav-tab" data-panel="panel-fleet">Fleet</a>
   <a href="#research" class="sidenav-tab" data-panel="panel-research">Research</a>
+  <a href="#vacancy" class="sidenav-tab" data-panel="panel-vacancy">Vacancy</a>
   <a href="#condition" class="sidenav-tab" data-panel="panel-condition">Condition</a>
   <a href="#pge" class="sidenav-tab" data-panel="panel-pge">PGE</a>
 </nav>
@@ -157,6 +159,68 @@
   </div>
 </div>
 
+<!-- Vacancy Research Panel -->
+<div id="panel-vacancy" class="panel">
+  <h1 style="font-size:20px;font-weight:700;margin-bottom:20px;">Vacancy Research <span style="font-size:14px;color:var(--text-muted);font-weight:400;">(remote agents)</span></h1>
+
+  <div class="card">
+    <div id="vacancy-error" style="display:none;font-size:13px;color:var(--danger);margin-bottom:10px;"></div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="value" id="vacancy-pending">0</div><div class="label">Pending</div></div>
+      <div class="stat-box"><div class="value" id="vacancy-claimed">0</div><div class="label">In Progress</div></div>
+      <div class="stat-box"><div class="value" id="vacancy-done">0</div><div class="label">Done</div></div>
+      <div class="stat-box"><div class="value" id="vacancy-failed">0</div><div class="label">Failed</div></div>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="font-size:13px;margin-bottom:6px;"><strong id="vacancy-count">0 / 0</strong> researched <span id="vacancy-pct" style="color:var(--text-muted);"></span></div>
+      <div style="height:10px;border-radius:5px;background:var(--border);overflow:hidden;" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="vacancy-track">
+        <div id="vacancy-bar" style="height:100%;width:0%;background:var(--success);transition:width .4s;"></div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);margin-top:10px;">
+      Likely vacant <strong id="vacancy-likely_vacant" style="color:var(--danger);">0</strong> ·
+      Likely occupied <strong id="vacancy-likely_occupied" style="color:var(--success);">0</strong> ·
+      Unknown <strong id="vacancy-unknown" style="color:var(--text);">0</strong> ·
+      Expired leases <strong id="vacancy-expired" style="color:var(--text);">0</strong>
+    </div>
+  </div>
+
+  <div id="vacancy-agents" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;"></div>
+</div>
+
+<!-- Fleet Panel -->
+<div id="panel-fleet" class="panel">
+  <h1 style="font-size:20px;font-weight:700;margin-bottom:20px;">Scan Fleet</h1>
+
+  <div class="card">
+    <h2>Overall <span id="fleet-run" style="font-size:12px;font-weight:400;color:var(--text-muted);"></span></h2>
+    <div id="fleet-empty" style="font-size:13px;color:var(--text-muted);">No fleet run yet.</div>
+    <div id="fleet-overall" style="display:none;">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px;margin-bottom:6px;">
+        <span><strong id="fleet-count">0 / 0</strong> parcels scanned <span id="fleet-pct" style="color:var(--text-muted);"></span></span>
+        <span><strong id="fleet-speed">0</strong> scanned/min <span style="color:var(--text-muted);">· ETA <span id="fleet-eta">–</span></span></span>
+      </div>
+      <div style="height:10px;border-radius:5px;background:var(--border);overflow:hidden;" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="fleet-track">
+        <div id="fleet-bar" style="height:100%;width:0%;background:var(--success);transition:width .4s;"></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--text-muted);">
+        Added <strong id="fleet-added" style="color:var(--text);">0</strong> ·
+        Removed <strong id="fleet-removed" style="color:var(--text);">0</strong> ·
+        Unflagged <strong id="fleet-unflagged" style="color:var(--text);">0</strong> ·
+        Errors <strong id="fleet-errors" style="color:var(--text);">0</strong> ·
+        Rejections <strong id="fleet-rejections" style="color:var(--text);">0</strong>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-danger" onclick="fleetAction('stop')">Stop fleet</button>
+        <button class="btn btn-success" onclick="fleetAction('resume')">Resume fleet</button>
+        <span id="fleet-action-msg" style="font-size:13px;color:var(--text-muted);align-self:center;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="fleet-nodes" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;"></div>
+</div>
+
 <!-- PGE Panel -->
 <div id="panel-pge" class="panel">
   <h1 style="font-size:20px;font-weight:700;margin-bottom:20px;">PGE Power Status Scanner</h1>
@@ -186,7 +250,7 @@
 {% block scripts %}
 <script>
 // ── Tab routing via hash ──
-const panelMap = { vpt:'panel-vpt', research:'panel-research', condition:'panel-condition', pge:'panel-pge' };
+const panelMap = { vpt:'panel-vpt', fleet:'panel-fleet', research:'panel-research', vacancy:'panel-vacancy', condition:'panel-condition', pge:'panel-pge' };
 
 function activateTab(hash) {
   const key = (hash || '').replace('#','') || 'vpt';
@@ -240,7 +304,7 @@ async function refreshStatus() {
     } else if (data.is_running) {
       statusBox.className = 'stat-box running';
       statusText.textContent = data.continuous_mode ? 'CONTINUOUS' : 'RUNNING';
-      document.getElementById('btn-stop').disabled = !data.continuous_mode;
+      document.getElementById('btn-stop').disabled = false;
       document.getElementById('btn-start-city').disabled = true;
       document.getElementById('btn-continuous').disabled = true;
     } else {
@@ -372,6 +436,143 @@ refreshStatus();
 
 // Poll every 5 seconds
 pollInterval = setInterval(refreshStatus, 5000);
+
+// ── Fleet ──
+const FLEET_STATE_COLORS = {
+  running: 'var(--success)', paused: '#f39c12', stale: '#f39c12',
+  stopped: 'var(--text-muted)', completed: 'var(--primary)', failed: 'var(--danger)',
+};
+
+function fmtEta(seconds) {
+  if (seconds === null || seconds === undefined) return '–';
+  if (seconds <= 0) return 'done';
+  const d = Math.floor(seconds / 86400), h = Math.floor((seconds % 86400) / 3600), m = Math.floor((seconds % 3600) / 60);
+  return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
+}
+
+function fleetNodeCard(n) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const color = FLEET_STATE_COLORS[n.state] || 'var(--text-muted)';
+  const note = n.state === 'paused' ? 'backing off after a rejection'
+    : n.state === 'stale' ? `no heartbeat for ${n.heartbeat_age_s ?? '?'}s`
+    : n.state === 'failed' ? (n.error_summary || 'failed') : '';
+  card.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <strong>Node ${n.segment ?? '?'}</strong>
+      <span style="font-size:12px;padding:2px 8px;border-radius:10px;background:${color};color:#fff;">${n.state}</span>
+    </div>
+    <div style="font-size:13px;margin-bottom:4px;"><strong>${(n.scanned || 0).toLocaleString()}</strong> / ${(n.total || 0).toLocaleString()}
+      <span style="color:var(--text-muted);">(${n.pct}%)</span></div>
+    <div style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:8px;">
+      <div style="height:100%;width:${n.pct}%;background:${color};"></div></div>
+    <div style="font-size:13px;"><strong>${n.speed_now}</strong>/min now · ${n.speed_avg}/min avg</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">
+      +${n.added} added · −${n.removed} removed · ${n.unflagged} unflagged<br>
+      ${n.errors} errors · ${n.rejections} rejections${n.interval ? ` · ${n.interval}s pace` : ''}
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+      ${n.mem_avail_mb != null ? `mem ${n.mem_avail_mb} MB free` : ''}${n.load1 != null ? ` · load ${n.load1}` : ''}${n.passes ? ` · retry pass ${n.passes}` : ''}
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:6px;word-break:break-all;">
+      ${n.public_ip || ''} ${n.instance_id || ''} ${n.az || ''}<br>
+      ${n.current_apn ? 'last: ' + n.current_apn : ''}${n.heartbeat_age_s != null ? ` · heartbeat ${n.heartbeat_age_s}s ago` : ''}
+    </div>
+    ${note ? `<div style="font-size:12px;color:${color};margin-top:6px;">${note}</div>` : ''}`;
+  return card;
+}
+
+async function refreshFleet() {
+  try {
+    const data = await (await fetch('/api/fleet/status')).json();
+    const o = data.overall;
+    document.getElementById('fleet-empty').style.display = o ? 'none' : '';
+    document.getElementById('fleet-overall').style.display = o ? '' : 'none';
+    document.getElementById('fleet-run').textContent = data.run_id ? `run ${data.run_id}` : '';
+    const nodesEl = document.getElementById('fleet-nodes');
+    nodesEl.innerHTML = '';
+    if (!o) return;
+    document.getElementById('fleet-count').textContent = `${o.scanned.toLocaleString()} / ${o.total.toLocaleString()}`;
+    document.getElementById('fleet-pct').textContent = `(${o.pct}%)`;
+    document.getElementById('fleet-speed').textContent = o.speed_now.toFixed(1);
+    document.getElementById('fleet-eta').textContent = fmtEta(o.eta_seconds);
+    document.getElementById('fleet-bar').style.width = `${o.pct}%`;
+    document.getElementById('fleet-track').setAttribute('aria-valuenow', Math.round(o.pct));
+    ['added', 'removed', 'unflagged', 'errors', 'rejections'].forEach(k => {
+      document.getElementById(`fleet-${k}`).textContent = (o[k] || 0).toLocaleString();
+    });
+    data.nodes.forEach(n => nodesEl.appendChild(fleetNodeCard(n)));
+  } catch (e) {
+    console.error('fleet status failed', e);
+  }
+}
+
+async function fleetAction(action) {
+  const msg = document.getElementById('fleet-action-msg');
+  if (action === 'stop' && !confirm('Pause all fleet nodes? They finish their current lookup and wait.')) return;
+  try {
+    const res = await (await fetch(`/api/fleet/${action}`, { method: 'POST' })).json();
+    msg.textContent = res.success ? `${action === 'stop' ? 'Paused' : 'Resumed'} ${res.changed} node(s)` : (res.error || 'failed');
+  } catch (e) {
+    msg.textContent = 'request failed';
+  }
+  refreshFleet();
+}
+
+refreshFleet();
+setInterval(refreshFleet, 5000);
+
+// ── Vacancy research (remote agents) ──
+function vacancyAgentCard(a) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const working = a.claims.some(c => !c.expired);
+  const state = !a.active ? 'revoked' : working ? 'working' : 'idle';
+  const color = state === 'working' ? 'var(--success)' : state === 'revoked' ? 'var(--danger)' : 'var(--text-muted)';
+  const head = document.createElement('div');
+  head.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;';
+  const name = document.createElement('strong');
+  name.textContent = a.name;
+  const badge = document.createElement('span');
+  badge.style.cssText = `font-size:12px;padding:2px 8px;border-radius:10px;background:${color};color:#fff;`;
+  badge.textContent = state;
+  head.append(name, badge);
+  const body = document.createElement('div');
+  body.style.cssText = 'font-size:12px;color:var(--text-muted);word-break:break-all;';
+  const seen = a.last_seen_age_s == null ? 'never seen' : `last seen ${fmtEta(a.last_seen_age_s) === 'done' ? 'just now' : fmtEta(a.last_seen_age_s) + ' ago'}`;
+  const claims = a.claims.map(c => `${c.apn}${c.expired ? ' (lease expired)' : ''}`).join(', ');
+  body.textContent = seen + (claims ? ` · on ${claims}` : '');
+  card.append(head, body);
+  return card;
+}
+
+async function refreshVacancy() {
+  const err = document.getElementById('vacancy-error');
+  try {
+    const data = await (await fetch('/api/vacancy-research/status')).json();
+    err.style.display = data.error ? '' : 'none';
+    if (data.error) { err.textContent = `Queue unavailable: ${data.error}`; return; }
+    ['pending', 'claimed', 'done', 'failed'].forEach(k => {
+      document.getElementById(`vacancy-${k}`).textContent = (data.tasks[k] || 0).toLocaleString();
+    });
+    ['likely_vacant', 'likely_occupied', 'unknown'].forEach(k => {
+      document.getElementById(`vacancy-${k}`).textContent = (data.verdicts[k] || 0).toLocaleString();
+    });
+    document.getElementById('vacancy-expired').textContent = data.expired_leases;
+    document.getElementById('vacancy-count').textContent = `${data.tasks.done.toLocaleString()} / ${data.total.toLocaleString()}`;
+    document.getElementById('vacancy-pct').textContent = `(${data.pct}%)`;
+    document.getElementById('vacancy-bar').style.width = `${data.pct}%`;
+    document.getElementById('vacancy-track').setAttribute('aria-valuenow', Math.round(data.pct));
+    const agentsEl = document.getElementById('vacancy-agents');
+    agentsEl.innerHTML = '';
+    data.agents.forEach(a => agentsEl.appendChild(vacancyAgentCard(a)));
+  } catch (e) {
+    console.error('vacancy research status failed', e);
+  }
+}
+
+refreshVacancy();
+setInterval(refreshVacancy, 15000);
 
 // ========================================
 // Deep Research Functions

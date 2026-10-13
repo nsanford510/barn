@@ -278,6 +278,48 @@
     </dl>
   </div>
 
+  <!-- AI Vacancy Research -->
+  <div class="panel">
+    <h2>Vacancy Research</h2>
+    {% if property.ai_vacancy_verdict %}
+    <dl class="kv-grid">
+      <dt>Verdict</dt>
+      <dd>
+        <span class="{% if property.ai_vacancy_verdict == 'likely_vacant' %}score-bad{% elif property.ai_vacancy_verdict == 'likely_occupied' %}score-good{% endif %}">
+          {{ property.ai_vacancy_verdict.replace("_", " ") }}
+        </span>
+        {% if property.ai_vacancy_confidence is not none %}({{ "%.0f"|format(property.ai_vacancy_confidence * 100) }}% confidence){% endif %}
+      </dd>
+      <dt>Rationale</dt>
+      <dd style="white-space:pre-wrap;">{{ property.ai_vacancy_rationale or "-" }}</dd>
+      <dt>Updated</dt>
+      <dd>{{ property.ai_vacancy_updated_at or "-" }}</dd>
+    </dl>
+    {% else %}
+    <div style="color:var(--muted);font-size:14px;">Not researched yet.</div>
+    {% endif %}
+    {% for finding in property.vacancy_findings %}
+    <details style="margin-top:10px;font-size:14px;">
+      <summary>
+        {{ (finding.created_at or "")[:10] }} · {{ finding.agent }} ·
+        {{ (finding.verdict or "").replace("_", " ") }}
+        {% if finding.confidence is not none %}({{ "%.0f"|format(finding.confidence * 100) }}%){% endif %}
+      </summary>
+      <div style="margin:6px 0;white-space:pre-wrap;">{{ finding.rationale }}</div>
+      {% if finding.evidence %}
+      <ul style="margin:0 0 0 18px;">
+        {% for item in finding.evidence %}
+        <li>
+          <strong>{{ item.signal or "evidence" }}</strong>{% if item.observed_at %} ({{ item.observed_at }}){% endif %}{% if item.detail %}: {{ item.detail }}{% endif %}
+          {% if item.source_url %}<a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">source &#8594;</a>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </details>
+    {% endfor %}
+  </div>
+
   <!-- Research Links -->
   <div class="panel">
     <h2>Research Links</h2>

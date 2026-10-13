@@ -398,9 +398,72 @@ class TestFindMeasWAndRunAll(unittest.TestCase):
             run_all.intake_autopilot.intake_state, {"is_running": False}
         ):
             with patch.dict(run_all.scan_state, {"is_running": True}):
-                self.assertEqual(run_all.get_scan_state()["progress"], {"scanned": 5, "total": 10, "per_min": 12.0})
+                progress = run_all.get_scan_state()["progress"]
+                self.assertEqual({k: progress[k] for k in ("scanned", "total", "per_min")}, {"scanned": 5, "total": 10, "per_min": 12.0})
             with patch.dict(run_all.scan_state, {"is_running": False}):
                 self.assertIsNone(run_all.get_scan_state()["progress"])
+
+    def test_main_restrict_to_csv_rechecks_only_the_segments_db_rows(self):
+        # The CSV (this node's segment) holds 001-003. The DB also holds 003 and a parcel
+        # that belongs to another node's segment.
+        db_rows = {
+            "003": {"apn": "003", "has_vpt": 1, "delinquent": 0},
+            "1-1-1": {"apn": "1-1-1", "has_vpt": 1, "delinquent": 0},
+        }
+        lookups = {apn: _ok_result() for apn in ("001", "002", "003", "1-1-1")}
+
+        _, scanned, _, _ = self._run_main({}, db_rows, lookups, restrict_to_csv=True)
+        self.assertEqual(scanned, ["003", "001", "002"])    # DB row first, then discovery; no foreign row
+
+        _, scanned, _, _ = self._run_main({}, db_rows, lookups, restrict_to_csv=False)
+        self.assertEqual(scanned[:2], ["003", "1-1-1"])      # city-wide runs recheck every DB row
+
+    def test_main_restrict_to_csv_can_come_from_the_environment(self):
+        db_rows = {"9-9-9": {"apn": "9-9-9", "has_vpt": 1, "delinquent": 0}}
+        with patch.dict("os.environ", {"VPT_RESTRICT_DB_TO_CSV": "1"}):
+            _, scanned, _, _ = self._run_main({}, db_rows, {"001": _ok_result(), "002": _ok_result(), "003": _ok_result()})
+        self.assertNotIn("9-9-9", scanned)
+
+    def test_scan_progress_carries_counters_pace_and_rejections(self):
+        seen: list[dict] = []
+        real_apply = scanner.apply_scan_result
+
+        def recording_apply(*args, **kwargs):
+            seen.append(dict(scanner.scan_progress))
+            return real_apply(*args, **kwargs)
+
+        with patch.object(scanner, "apply_scan_result", side_effect=recording_apply):
+            self._run_main({}, {}, {"001": _ok_result(has_vpt=True), "002": _ok_result(), "003": scanner._tax_result("error")})
+
+        final = scanner.scan_progress
+        self.assertEqual((final["added"], final["errors"]), (1, 1))
+        self.assertEqual(final["current_apn"], "003")
+        self.assertEqual(final["interval"], scanner.LOOKUP_INTERVAL_SEC)
+        self.assertEqual(seen[0]["added"], 0)               # counters start from zero for each scan
+
+        with patch.object(scanner, "REJECT_BACKOFF_SEC", 60.0), patch.object(scanner, "LOOKUP_INTERVAL_SEC", 10.0):
+            pacer = scanner._Pacer()
+            before = scanner.time.time()
+            pacer.rejected()
+        self.assertEqual(scanner.scan_progress["rejections"], 1)
+        self.assertGreaterEqual(scanner.scan_progress["paused_until"], before + 59)
+        self.assertEqual(scanner.scan_progress["interval"], 12.5)
+
+    def test_main_reports_aborted_when_the_site_keeps_rejecting(self):
+        def fake_scan(apns, city, on_result, max_workers=None):
+            return False
+
+        fake_db = MagicMock()
+        fake_db.get_bills_for_recheck.return_value = {}
+        fake_db.get_curated_apns.return_value = set()
+        with tempfile.TemporaryDirectory() as tmp:
+            csv_path = Path(tmp) / "oakland.csv"
+            csv_path.write_text("APN,CITY\n001,Oakland\n")
+            with patch.dict("sys.modules", {"db": fake_db}), patch.object(
+                scanner, "get_input_csv_path", return_value=csv_path
+            ), patch.object(scanner, "load_cache", return_value={}), patch.object(scanner, "scan_apns", side_effect=fake_scan):
+                stats = scanner.main(city="OAKLAND")
+        self.assertEqual(stats.get("aborted"), 1)
 
     def test_main_recheck_only_skips_discovery(self):
         db_rows = {"003": {"apn": "003", "has_vpt": 1, "delinquent": 0}}
@@ -495,6 +558,72 @@ class TestFindMeasWAndRunAll(unittest.TestCase):
         self.assertTrue(completed)
         self.assertEqual(seen, {"001": "ok", "002": "ok", "003": "ok"})
         self.assertEqual(calls.count("002"), 2)
+
+    def test_needs_new_browser_after_many_lookups_or_repeated_failures(self):
+        with patch.object(scanner, "RECYCLE_EVERY", 150), patch.object(scanner, "RECYCLE_AFTER_ERRORS", 3):
+            self.assertFalse(scanner._needs_new_browser(149, 2))
+            self.assertTrue(scanner._needs_new_browser(150, 0))
+            self.assertTrue(scanner._needs_new_browser(10, 3))
+        with patch.object(scanner, "RECYCLE_EVERY", 0), patch.object(scanner, "RECYCLE_AFTER_ERRORS", 0):
+            self.assertFalse(scanner._needs_new_browser(10_000, 10_000))   # both can be switched off
+
+    def _run_worker(self, statuses, recycle_every=0, after_errors=0):
+        """Run one scan worker over len(statuses) parcels; returns (browsers launched, closed, results)."""
+        browsers: list[MagicMock] = []
+
+        def launch(playwright_instance):
+            browser = MagicMock()
+            browser.new_context.return_value.new_page.return_value.is_closed.return_value = False
+            browsers.append(browser)
+            return browser, False
+
+        calls = iter(statuses)
+        tasks, results = scanner.queue.Queue(), scanner.queue.Queue()
+        for i in range(len(statuses)):
+            tasks.put(f"00{i}")
+        playwright = MagicMock()
+        playwright.__enter__.return_value = MagicMock()
+        with patch("playwright.sync_api.sync_playwright", return_value=playwright), patch.object(
+            scanner, "get_browser", side_effect=launch
+        ), patch.object(
+            scanner, "check_property_taxes_with_page", side_effect=lambda apn, page, city=None: _ok_result() if next(calls) == "ok" else scanner._tax_result("error")
+        ), patch.object(scanner, "LOOKUP_INTERVAL_SEC", 0), patch.object(scanner, "RECYCLE_EVERY", recycle_every), patch.object(
+            scanner, "RECYCLE_AFTER_ERRORS", after_errors
+        ):
+            scanner._scan_worker(tasks, results, "OAKLAND", scanner._Pacer())
+        done = []
+        while not results.empty():
+            item = results.get()
+            if item is not scanner._WORKER_DONE:
+                done.append(item)
+        return browsers, done
+
+    def test_worker_starts_a_fresh_browser_every_n_lookups(self):
+        browsers, done = self._run_worker(["ok"] * 5, recycle_every=2)
+        self.assertEqual(len(done), 5)
+        self.assertEqual(len(browsers), 3)                         # lookups 1-2, 3-4, 5
+        for browser in browsers:
+            browser.close.assert_called_once()                     # each one is closed, including the last
+
+    def test_worker_starts_a_fresh_browser_after_consecutive_failures(self):
+        browsers, done = self._run_worker(["err", "err", "err", "ok", "ok"], after_errors=3)
+        self.assertEqual(len(done), 5)                             # failed parcels are still reported, never lost
+        self.assertEqual(len(browsers), 2)                         # restarted once, after the third failure in a row
+
+    def test_a_success_resets_the_failure_streak(self):
+        browsers, _ = self._run_worker(["err", "err", "ok", "err", "err", "ok"], after_errors=3)
+        self.assertEqual(len(browsers), 1)
+
+    def test_worker_keeps_one_browser_when_recycling_is_off(self):
+        browsers, _ = self._run_worker(["ok", "err", "err", "err", "err"])
+        self.assertEqual(len(browsers), 1)
+
+    def test_progress_counts_only_verified_lookups(self):
+        lookups = {"001": _ok_result(), "002": scanner._tax_result("error"), "003": scanner._tax_result("no_bill")}
+        self._run_main({}, {}, lookups)
+        self.assertEqual(scanner.scan_progress["scanned"], 2)      # the failed lookup is not "done"
+        self.assertEqual(scanner.scan_progress["errors"], 1)
+        self.assertEqual(scanner.scan_progress["total"], 3)
 
     def test_pacer_spaces_lookups_and_slows_down_after_rejection(self):
         with patch.object(scanner, "LOOKUP_INTERVAL_SEC", 0.05), patch.object(scanner, "REJECT_BACKOFF_SEC", 0.1):

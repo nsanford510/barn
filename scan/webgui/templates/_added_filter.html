@@ -1,0 +1,101 @@
+{# Date-added range filter shared by the list and gallery pages. Expects added_after_filter / added_before_filter
+   (UTC ISO timestamps or ""). The visible inputs are in the browser's local time; hidden fields carry UTC ISO to the server. #}
+<span class="added-range" style="display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap;">
+  <label class="fav-filter" title="Only records added at or after this time">
+    Added from
+    <input type="datetime-local" id="added-after-local" />
+  </label>
+  <label class="fav-filter" title="Only records added before this time">
+    to
+    <input type="datetime-local" id="added-before-local" />
+  </label>
+  <input type="hidden" name="added_after" id="added-after" value="{{ added_after_filter or '' }}" />
+  <input type="hidden" name="added_before" id="added-before" value="{{ added_before_filter or '' }}" />
+  <button type="button" class="btn-secondary" id="added-new-since-fleet"
+    title="Records added since the latest fleet run started (brand new), newest first">New since fleet</button>
+  <button type="button" class="btn-secondary" id="added-before-fleet"
+    title="Records that were already in the database before the latest fleet run started">Existing before fleet</button>
+  <button type="button" class="btn-secondary" id="added-clear-dates">Clear dates</button>
+</span>
+<script>
+  (function () {
+    const pad = (n) => String(n).padStart(2, '0');
+    // Browser-local "YYYY-MM-DDTHH:mm" for a datetime-local input, from an ISO timestamp.
+    const toLocalInput = (iso) => {
+      const d = new Date(iso);
+      if (!iso || isNaN(d)) return '';
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    };
+    const toIso = (local) => {
+      const d = new Date(local);
+      return local && !isNaN(d) ? d.toISOString() : '';
+    };
+
+    const afterLocal = document.getElementById('added-after-local');
+    const beforeLocal = document.getElementById('added-before-local');
+    const afterHidden = document.getElementById('added-after');
+    const beforeHidden = document.getElementById('added-before');
+    const form = document.getElementById('filter-form');
+
+    afterLocal.value = toLocalInput(afterHidden.value);
+    beforeLocal.value = toLocalInput(beforeHidden.value);
+    const sync = () => {
+      afterHidden.value = toIso(afterLocal.value);
+      beforeHidden.value = toIso(beforeLocal.value);
+    };
+    afterLocal.addEventListener('input', sync);
+    beforeLocal.addEventListener('input', sync);
+    if (form) form.addEventListener('submit', sync);
+
+    const setSort = () => {
+      const sort = document.querySelector('select[name=sort]');
+      const order = document.querySelector('select[name=order]');
+      if (sort) sort.value = 'added_at';
+      if (order) order.value = 'desc';
+    };
+    const fleetStart = async () => {
+      try {
+        const data = await (await fetch('/api/fleet/status')).json();
+        return data && data.overall ? data.overall.started_at : null;
+      } catch (e) {
+        return null;
+      }
+    };
+    const applyRange = async (which) => {
+      const start = await fleetStart();
+      if (!start) {
+        alert('No fleet run found, so there is no start time to compare against.');
+        return;
+      }
+      afterHidden.value = which === 'after' ? start : '';
+      beforeHidden.value = which === 'before' ? start : '';
+      afterLocal.value = toLocalInput(afterHidden.value);
+      beforeLocal.value = toLocalInput(beforeHidden.value);
+      setSort();
+      if (form) form.requestSubmit();
+    };
+    document.getElementById('added-new-since-fleet').addEventListener('click', () => applyRange('after'));
+    document.getElementById('added-before-fleet').addEventListener('click', () => applyRange('before'));
+    document.getElementById('added-clear-dates').addEventListener('click', () => {
+      afterLocal.value = beforeLocal.value = afterHidden.value = beforeHidden.value = '';
+      if (form) form.requestSubmit();
+    });
+
+    // Show the local date and time each record was added (the server-rendered text is date-only).
+    // This script sits above the table, so wait until the rows exist.
+    const showAddedTimes = () => {
+      document.querySelectorAll('.added-at[data-iso]').forEach((el) => {
+        const local = toLocalInput(el.dataset.iso);
+        if (local) {
+          el.textContent = local.replace('T', ' ');
+          el.title = new Date(el.dataset.iso).toLocaleString();
+        }
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showAddedTimes);
+    } else {
+      showAddedTimes();
+    }
+  })();
+</script>

@@ -32,6 +32,161 @@ class RouteApiTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.webgui_app = _load_webgui_app()
 
+    def _fleet_store(self) -> dict:
+        now = datetime.now(timezone.utc)
+        return {
+            "scanner_workers": [{"id": "w1", "name": "barn-scan-node-1", "last_heartbeat": now.isoformat(),
+                                 "capabilities": {"public_ip": "1.2.3.4"}}],
+            "scanner_jobs": [{"id": "j1", "worker_id": "w1", "job_type": "fleet_scan", "status": "running",
+                              "scope": {"run_id": "r1", "segment": 1, "of": 4, "total": 200},
+                              "processed_count": 50, "started_at": now.isoformat()}],
+            "scanner_job_checkpoints": [],
+        }
+
+    def test_parse_added_bound_normalises_to_utc_and_ignores_garbage(self) -> None:
+        parse = self.webgui_app._parse_added_bound
+        self.assertEqual("2026-10-08T23:46:00+00:00", parse("2026-10-08T23:46:00Z"))
+        self.assertEqual("2026-10-08T23:46:00+00:00", parse("2026-10-08T16:46:00-07:00"))
+        self.assertEqual("2026-10-08T23:46:00+00:00", parse("2026-10-08T23:46:00"))     # no offset: UTC
+        self.assertEqual("2026-10-08T23:46:00.123000+00:00", parse("2026-10-08T23:46:00.123Z"))
+        self.assertEqual("2026-10-08T00:00:00+00:00", parse("2026-10-08"))               # bare date: midnight UTC
+        for bad in ("", "   ", None, "yesterday", "2026-13-45", "x'; drop table bills;--"):
+            self.assertIsNone(parse(bad))
+
+    def test_added_range_args_reads_the_query_string(self) -> None:
+        with self.webgui_app.app.test_request_context(
+            "/?added_after=2026-10-08T23:46:00.000Z&added_before=nonsense"
+        ):
+            after, before = self.webgui_app._added_range_args()
+        self.assertEqual(("2026-10-08T23:46:00+00:00", ""), (after, before))
+
+    def _fake_db(self):
+        from unittest.mock import MagicMock
+        fake = MagicMock()
+        fake.get_bills_with_parcels_filtered.return_value = ([], 0)
+        fake.get_favorites_apns.return_value = []
+        fake.get_distinct_zips.return_value = []
+        fake.get_distinct_cities.return_value = []
+        fake.get_lists.return_value = []
+        fake.get_list.return_value = None
+        return fake
+
+    def test_list_page_filters_the_query_and_hands_the_range_to_the_template(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context(
+            "/?added_after=2026-10-08T23:46:00Z&added_before=2026-10-10T00:00:00Z&sort=added_at&order=desc"
+        ), patch.object(self.webgui_app, "db", fake), patch.object(
+            self.webgui_app, "render_template", return_value="rendered"
+        ) as render:
+            self.webgui_app.search_page.__wrapped__()
+
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual("2026-10-08T23:46:00+00:00", kwargs["added_after"])
+        self.assertEqual("2026-10-10T00:00:00+00:00", kwargs["added_before"])
+        self.assertEqual(("added_at", "desc"), (kwargs["sort"], kwargs["order"]))
+        self.assertEqual("2026-10-08T23:46:00+00:00", render.call_args.kwargs["added_after_filter"])
+        self.assertEqual("2026-10-10T00:00:00+00:00", render.call_args.kwargs["added_before_filter"])
+
+    def test_list_page_without_dates_passes_empty_bounds(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context("/"), patch.object(self.webgui_app, "db", fake), patch.object(
+            self.webgui_app, "render_template", return_value="rendered"
+        ):
+            self.webgui_app.search_page.__wrapped__()
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual(("", ""), (kwargs["added_after"], kwargs["added_before"]))
+
+    def test_gallery_page_filters_by_date_added(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context("/gallery?added_before=2026-10-08T23:46:00Z"), patch.object(
+            self.webgui_app, "db", fake
+        ), patch.object(self.webgui_app, "render_template", return_value="rendered") as render:
+            self.webgui_app.gallery_page.__wrapped__()
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual(("", "2026-10-08T23:46:00+00:00"), (kwargs["added_after"], kwargs["added_before"]))
+        self.assertEqual("2026-10-08T23:46:00+00:00", render.call_args.kwargs["added_before_filter"])
+
+    def test_select_all_apn_list_uses_the_same_date_range(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context("/api/apn_list?added_after=2026-10-08T23:46:00Z"), patch.object(
+            self.webgui_app, "db", fake
+        ):
+            self.webgui_app.api_apn_list.__wrapped__()
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual("2026-10-08T23:46:00+00:00", kwargs["added_after"])
+        self.assertEqual((1, 0), (kwargs["page"], kwargs["page_size"]))      # every matching row, not one page
+
+    def test_add_all_matching_to_list_forwards_the_normalised_range(self) -> None:
+        fake = self._fake_db()
+        fake.get_list.return_value = {"id": 3}
+        fake.add_properties_to_list_from_filter.return_value = 5
+        with self.webgui_app.app.test_request_context(
+            "/api/lists/3/add-properties", method="POST",
+            json={"apns": "all", "filters": {"added_after": "2026-10-08T16:46:00-07:00", "added_before": "garbage", "vpt": "1"}},
+        ), patch.object(self.webgui_app, "db", fake):
+            response = self.webgui_app.api_lists_add_properties.__wrapped__(3)
+        payload = response.get_json() if hasattr(response, "get_json") else response[0].get_json()
+        self.assertTrue(payload["success"])
+        kwargs = fake.add_properties_to_list_from_filter.call_args.kwargs
+        self.assertEqual(("2026-10-08T23:46:00+00:00", ""), (kwargs["added_after"], kwargs["added_before"]))
+
+    def test_list_and_gallery_templates_include_the_date_filter(self) -> None:
+        import jinja2
+
+        templates = SCAN_DIR / "webgui" / "templates"
+        partial = (templates / "_added_filter.html").read_text(encoding="utf-8")
+        jinja2.Environment().parse(partial)
+        for marker in ('name="added_after"', 'name="added_before"', "/api/fleet/status", 'id="added-new-since-fleet"',
+                       'id="added-before-fleet"', "datetime-local", "toISOString", "DOMContentLoaded"):
+            self.assertIn(marker, partial)
+        for name in ("index.html", "gallery.html"):
+            source = (templates / name).read_text(encoding="utf-8")
+            jinja2.Environment().parse(source)
+            self.assertIn('{% include "_added_filter.html" %}', source)
+            self.assertIn('class="added-at"', source)
+
+    def test_fleet_status_route_returns_overall_and_nodes(self) -> None:
+        from tests.fleet_fakes import FakeClient
+        client = FakeClient(self._fleet_store())
+        with self.webgui_app.app.test_request_context("/api/fleet/status"):
+            with patch.object(self.webgui_app.db, "get_client", return_value=client):
+                payload = self.webgui_app.api_fleet_status.__wrapped__().get_json()
+
+        self.assertEqual(payload["run_id"], "r1")
+        self.assertEqual(payload["overall"]["scanned"], 50)
+        self.assertEqual(payload["nodes"][0]["public_ip"], "1.2.3.4")
+        self.assertEqual(payload["nodes"][0]["state"], "running")
+
+    def test_fleet_status_route_reports_errors_as_json(self) -> None:
+        with self.webgui_app.app.test_request_context("/api/fleet/status"):
+            with patch.object(self.webgui_app.db, "get_client", side_effect=RuntimeError("no database")):
+                payload = self.webgui_app.api_fleet_status.__wrapped__().get_json()
+        self.assertEqual((payload["error"], payload["nodes"], payload["overall"]), ("no database", [], None))
+
+    def test_fleet_stop_and_resume_routes_flip_job_status(self) -> None:
+        from tests.fleet_fakes import FakeClient
+        store = self._fleet_store()
+        client = FakeClient(store)
+        with patch.object(self.webgui_app.db, "get_client", return_value=client):
+            with self.webgui_app.app.test_request_context("/api/fleet/stop", method="POST"):
+                stopped = self.webgui_app.api_fleet_stop.__wrapped__().get_json()
+            self.assertEqual((stopped["success"], stopped["changed"]), (True, 1))
+            self.assertEqual(store["scanner_jobs"][0]["status"], "interrupted")
+
+            with self.webgui_app.app.test_request_context("/api/fleet/resume", method="POST"):
+                resumed = self.webgui_app.api_fleet_resume.__wrapped__().get_json()
+            self.assertEqual((resumed["success"], resumed["changed"]), (True, 1))
+            self.assertEqual(store["scanner_jobs"][0]["status"], "running")
+
+    def test_scan_template_has_the_fleet_tab_and_parses(self) -> None:
+        import jinja2
+
+        source = (SCAN_DIR / "webgui" / "templates" / "scan.html").read_text(encoding="utf-8")
+        jinja2.Environment().parse(source)   # raises TemplateSyntaxError on a broken block
+        for marker in ('data-panel="panel-fleet"', 'id="panel-fleet"', "/api/fleet/status", "fleetAction("):
+            self.assertIn(marker, source)
+        self.assertIn("document.getElementById('btn-stop').disabled = false;", source)
+
     def test_reorder_route_api_cleans_apns_and_delegates_to_db(self) -> None:
         with self.webgui_app.app.test_request_context(
             "/api/lists/7/reorder",

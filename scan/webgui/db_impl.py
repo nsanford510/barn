@@ -366,6 +366,8 @@ def get_bills_with_parcels_filtered(
     research_filter: str = "",
     owner_name_filter: str = "",
     new_filter: str = "",
+    added_after: str = "",
+    added_before: str = "",
     sort: str = "location_of_property",
     order: str = "asc",
     page: int = 1,
@@ -410,6 +412,11 @@ def get_bills_with_parcels_filtered(
     if (new_filter or "").strip() == "1":
         cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
         query = query.gte("added_at", cutoff)
+    # Exact date-added range (UTC ISO timestamps): "added_at >= after" and "added_at < before".
+    if (added_after or "").strip():
+        query = query.gte("added_at", added_after.strip())
+    if (added_before or "").strip():
+        query = query.lt("added_at", added_before.strip())
     for column, expr in _CONDITION_BUCKETS.get((condition_filter or "").strip().lower(), []):
         op, _, value = expr.partition(".")
         if op == "is":
@@ -790,6 +797,8 @@ def add_properties_to_list_from_filter(
     primary_resident_age_filter: str = "",
     deceased_count_filter: str = "",
     new_filter: str = "",
+    added_after: str = "",
+    added_before: str = "",
     limit: int = 0,
 ) -> int:
     rows, _ = get_bills_with_parcels_filtered(
@@ -802,6 +811,8 @@ def add_properties_to_list_from_filter(
         condition_filter=condition_filter,
         research_filter=research_filter,
         new_filter=new_filter,
+        added_after=added_after,
+        added_before=added_before,
         occupancy_filter=occupancy_filter,
         ownership_filter=ownership_filter,
         primary_resident_age_filter=primary_resident_age_filter,

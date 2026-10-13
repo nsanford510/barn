@@ -62,43 +62,57 @@ def _build_client_mock(table_response_data: list | None = None) -> MagicMock:
 # ---------------------------------------------------------------------------
 
 class TestHeartbeat(unittest.TestCase):
-    def test_upsert_called_with_correct_data_returns_worker_id(self):
-        worker_id = "worker-uuid-1234"
-        client, builder, response = _build_client_mock([{"id": worker_id}])
+    """heartbeat() against an in-memory client: scanner_workers has no unique constraint on name."""
 
+    def _db(self):
+        sys.path.insert(0, str(SCAN_DIR / "tests"))
+        from fleet_fakes import FakeClient
+        return FakeClient({})
+
+    def test_first_heartbeat_registers_the_worker_as_online(self):
+        client = self._db()
         with patch("db.get_client", return_value=client):
-            result = worker_state.heartbeat("my-worker", tunnel_url="https://tunnel.example.com")
+            worker_id = worker_state.heartbeat("my-worker", tunnel_url="https://tunnel.example.com")
 
-        client.table.assert_called_once_with("scanner_workers")
-        builder.upsert.assert_called_once_with(
-            {
-                "name": "my-worker",
-                "last_heartbeat": "now()",
-                "status": "online",
-                "tunnel_url": "https://tunnel.example.com",
-            },
-            on_conflict="name",
+        rows = client.store["scanner_workers"]
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["id"], worker_id)
+        self.assertEqual(
+            {k: rows[0][k] for k in ("name", "status", "last_heartbeat", "tunnel_url")},
+            {"name": "my-worker", "status": "online", "last_heartbeat": "now()", "tunnel_url": "https://tunnel.example.com"},
         )
-        self.assertEqual(result, worker_id)
 
-    def test_heartbeat_without_tunnel_url_omits_key(self):
-        worker_id = "worker-uuid-5678"
-        client, builder, response = _build_client_mock([{"id": worker_id}])
-
+    def test_later_heartbeats_refresh_the_same_row(self):
+        client = self._db()
         with patch("db.get_client", return_value=client):
-            result = worker_state.heartbeat("my-worker")
+            first = worker_state.heartbeat("my-worker")
+            client.store["scanner_workers"][0]["status"] = "offline"
+            second = worker_state.heartbeat("my-worker")
+            other = worker_state.heartbeat("another-worker")
 
-        upsert_payload = builder.upsert.call_args[0][0]
-        self.assertNotIn("tunnel_url", upsert_payload)
-        self.assertEqual(result, worker_id)
+        self.assertEqual(first, second)
+        self.assertNotEqual(first, other)
+        self.assertEqual(len(client.store["scanner_workers"]), 2)
+        self.assertEqual(client.store["scanner_workers"][0]["status"], "online")
 
-    def test_heartbeat_returns_worker_id(self):
-        client, builder, response = _build_client_mock([{"id": "abc-def"}])
-
+    def test_heartbeat_without_tunnel_url_omits_key_and_keeps_existing_one(self):
+        client = self._db()
         with patch("db.get_client", return_value=client):
-            result = worker_state.heartbeat("worker-x")
+            worker_state.heartbeat("my-worker", tunnel_url="https://t.example.com")
+            worker_state.heartbeat("my-worker")
+            first_row = client.store["scanner_workers"][0]
+            self.assertEqual(first_row["tunnel_url"], "https://t.example.com")
 
-        self.assertEqual(result, "abc-def")
+            fresh = self._db()
+        with patch("db.get_client", return_value=fresh):
+            worker_state.heartbeat("w2")
+        self.assertNotIn("tunnel_url", fresh.store["scanner_workers"][0])
+
+    def test_heartbeat_raises_when_registration_returns_nothing(self):
+        client, builder, response = _build_client_mock([])
+        with patch("db.get_client", return_value=client):
+            with self.assertRaises(RuntimeError):
+                worker_state.heartbeat("worker-x")
 
 
 class TestCreateJob(unittest.TestCase):

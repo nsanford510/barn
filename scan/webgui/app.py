@@ -280,6 +280,34 @@ def _is_within_days(dt_val: Any, days: int = 30) -> bool:
     return 0 <= diff <= (days * 86400)
 
 
+def _parse_added_bound(value: str | None) -> str | None:
+    """
+    Normalise an "added after/before" filter value to a UTC ISO-8601 timestamp.
+
+    Accepts ISO 8601 with a Z/offset (what the page sends), without one (taken as
+    UTC) or a bare date (midnight UTC). Blank or unparseable values return None, so
+    a bad query string is ignored rather than breaking the page.
+    """
+    text = (value or "").strip()
+    if not text:
+        return None
+    try:
+        dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).isoformat()
+
+
+def _added_range_args() -> tuple[str, str]:
+    """(added_after, added_before) from the query string, normalised; "" when unset."""
+    return (
+        _parse_added_bound(request.args.get("added_after")) or "",
+        _parse_added_bound(request.args.get("added_before")) or "",
+    )
+
+
 def _format_added_at(dt_val: Any) -> str:
     """Format an added_at timestamp as YYYY-MM-DD. Defaults to 31 days ago if not available."""
     val = dt_val or _get_thirty_one_days_ago()
@@ -626,6 +654,7 @@ def search_page():
     outreach_stage_filter = (request.args.get("outreach_stage") or "").strip()
     owner_name_filter = (request.args.get("owner_name") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
+    added_after_filter, added_before_filter = _added_range_args()
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
     page = max(int(request.args.get("page") or 1), 1)
@@ -686,6 +715,8 @@ def search_page():
         research_filter=research_filter,
         owner_name_filter=owner_name_filter,
         new_filter=new_filter,
+        added_after=added_after_filter,
+        added_before=added_before_filter,
         sort=sort,
         order=order,
         page=1,
@@ -749,6 +780,8 @@ def search_page():
         outreach_stage_filter=outreach_stage_filter,
         owner_name_filter=owner_name_filter,
         new_filter=new_filter,
+        added_after_filter=added_after_filter,
+        added_before_filter=added_before_filter,
         list_id=selected_list_id,
         selected_list=selected_list,
         sort=sort,
@@ -788,6 +821,7 @@ def gallery_page():
     outreach_stage_filter = (request.args.get("outreach_stage") or "").strip()
     owner_name_filter = (request.args.get("owner_name") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
+    added_after_filter, added_before_filter = _added_range_args()
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
     page = max(int(request.args.get("page") or 1), 1)
@@ -839,6 +873,8 @@ def gallery_page():
         research_filter=research_filter,
         owner_name_filter=owner_name_filter,
         new_filter=new_filter,
+        added_after=added_after_filter,
+        added_before=added_before_filter,
         sort=sort,
         order=order,
         page=query_page,
@@ -933,6 +969,8 @@ def gallery_page():
         outreach_stage_filter=outreach_stage_filter,
         owner_name_filter=owner_name_filter,
         new_filter=new_filter,
+        added_after_filter=added_after_filter,
+        added_before_filter=added_before_filter,
         list_id=selected_list_id,
         selected_list=selected_list,
         sort=sort,
@@ -967,6 +1005,7 @@ def api_apn_list():
     owner_name_filter = (request.args.get("owner_name") or "").strip()
     outreach_stage_filter = (request.args.get("outreach_stage") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
+    added_after_filter, added_before_filter = _added_range_args()
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
 
@@ -993,10 +1032,12 @@ def api_apn_list():
         research_filter=research_filter,
         owner_name_filter=owner_name_filter,
         new_filter=new_filter,
+        added_after=added_after_filter,
+        added_before=added_before_filter,
         sort=sort,
         order=order,
-        page=query_page,
-        page_size=query_page_size,
+        page=1,
+        page_size=0,  # 0 = every page: this feeds prev/next navigation across the whole filtered list
     )
 
     if county_filter:
@@ -1058,9 +1099,21 @@ def property_detail(apn: str):
         links.append({"label": "Condition Report", "url": url_for("property_condition_report", apn=apn)})
     # Google Maps link removed (street view image replaces it)
 
+    # History from the remote research agents; absent until the vacancy research migration is applied.
+    try:
+        import research_queue
+        vacancy_findings = research_queue.get_findings(apn)
+    except Exception:
+        vacancy_findings = []
+
     return_to = _safe_return_to(request.args.get("return_to"), fallback=url_for("search_page"))
     property_data = {
         "apn": apn,
+        "ai_vacancy_verdict": row.get("ai_vacancy_verdict") or "",
+        "ai_vacancy_confidence": row.get("ai_vacancy_confidence"),
+        "ai_vacancy_rationale": row.get("ai_vacancy_rationale") or "",
+        "ai_vacancy_updated_at": str(row.get("ai_vacancy_updated_at") or "")[:10],
+        "vacancy_findings": vacancy_findings,
         "added_at": _format_added_at(row.get("added_at")),
         "added_at_raw": row.get("added_at"),
         "is_new": _is_within_days(row.get("added_at"), 30),
@@ -1894,6 +1947,50 @@ def api_worker_status():
         })
     except Exception as e:
         return jsonify({"worker": None, "active_job": None, "last_interrupted_job": None, "error": str(e)})
+
+
+@app.route("/api/fleet/status")
+@login_required
+def api_fleet_status():
+    """Per-node and overall progress/speed of the fleet run (latest run, or ?run_id=)."""
+    from webgui import fleet_status
+    try:
+        return jsonify(fleet_status.fetch_fleet_status(db.get_client(), run_id=request.args.get("run_id") or None))
+    except Exception as e:
+        return jsonify({"error": str(e), "run_id": None, "nodes": [], "overall": None})
+
+
+@app.route("/api/vacancy-research/status")
+@login_required
+def api_vacancy_research_status():
+    """Queue counts, verdicts and per-agent activity for the remote vacancy research agents."""
+    try:
+        import research_queue
+        return jsonify(research_queue.status())
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/fleet/stop", methods=["POST"])
+@login_required
+def api_fleet_stop():
+    """Pause every running node of the fleet run; nodes finish their lookup and idle."""
+    from webgui import fleet_status
+    try:
+        return jsonify({"success": True, **fleet_status.set_fleet_state(db.get_client(), "stop")})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/api/fleet/resume", methods=["POST"])
+@login_required
+def api_fleet_resume():
+    """Resume paused or failed nodes of the fleet run."""
+    from webgui import fleet_status
+    try:
+        return jsonify({"success": True, **fleet_status.set_fleet_state(db.get_client(), "resume")})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route("/api/scan/resume", methods=["POST"])
@@ -2791,6 +2888,8 @@ def api_lists_add_properties(list_id: int):
                     research_filter=filters.get("research", ""),
                     owner_name_filter=filters.get("owner_name", ""),
                     new_filter=filters.get("new", ""),
+                    added_after=_parse_added_bound(str(filters.get("added_after") or "")) or "",
+                    added_before=_parse_added_bound(str(filters.get("added_before") or "")) or "",
                     occupancy_filter=filters.get("occupancy_type", ""),
                     ownership_filter=filters.get("ownership_type", ""),
                     primary_resident_age_filter=filters.get("primary_resident_age", ""),

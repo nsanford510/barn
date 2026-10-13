@@ -18,23 +18,35 @@ _UNSET = object()
 
 
 def heartbeat(worker_name: str, tunnel_url: str | None = None) -> str:
-    """Upserts scanner_workers row. Returns worker_id (uuid str)."""
+    """Registers the worker on first call and refreshes its heartbeat after that.
+    Returns worker_id (uuid str).
+
+    scanner_workers has no unique constraint on name, so the row is looked up
+    rather than upserted with on_conflict="name" (which Postgres rejects)."""
     client = db.get_client()
     payload: dict = {
-        "name": worker_name,
         "last_heartbeat": "now()",
         "status": "online",
     }
     if tunnel_url is not None:
         payload["tunnel_url"] = tunnel_url
 
-    result = (
+    existing = (
         client.table("scanner_workers")
-        .upsert(payload, on_conflict="name")
+        .select("id")
+        .eq("name", worker_name)
+        .order("created_at")
+        .limit(1)
         .execute()
     )
+    if existing.data:
+        worker_id = existing.data[0]["id"]
+        client.table("scanner_workers").update(payload).eq("id", worker_id).execute()
+        return worker_id
+
+    result = client.table("scanner_workers").insert({"name": worker_name, **payload}).execute()
     if not result.data:
-        raise RuntimeError(f"heartbeat failed: upsert returned empty response for worker {worker_name}")
+        raise RuntimeError(f"heartbeat failed: insert returned empty response for worker {worker_name}")
     return result.data[0]["id"]
 
 

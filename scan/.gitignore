@@ -50,3 +50,6 @@ playwright-report/
 test-results/
 .vercel
 .env*.local
+
+# Fleet run artifacts (segment CSVs, manifests)
+fleet/out/

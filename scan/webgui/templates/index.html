@@ -592,6 +592,7 @@
         onchange="if (this.checked) { const s = document.querySelector('select[name=sort]'); const o = document.querySelector('select[name=order]'); if (s) s.value = 'added_at'; if (o) o.value = 'desc'; }" />
       New (30d)
     </label>
+    {% include "_added_filter.html" %}
     <label class="fav-filter">
       <input type="checkbox" name="delinquent" value="1" {% if delinquent_filter=="1" %}checked{% endif %} />
       Delinquent
@@ -727,7 +728,7 @@
           <td>{{ r.city }}</td>
           <td>{{ r.situs_zip or "-" }}</td>
           <td>
-            <span style="white-space: nowrap;">{{ r.added_at or "-" }}</span>
+            <span class="added-at" data-iso="{{ r.added_at_raw or '' }}" style="white-space: nowrap;">{{ r.added_at or "-" }}</span>
             {% if r.is_new %}
             <span class="pill pill-active" style="background:#27ae60; color:#fff; font-size:10px; padding:1px 5px; margin-left:4px; font-weight:700; border-radius:3px; vertical-align:middle;">NEW</span>
             {% endif %}

@@ -100,5 +100,50 @@ class NewFilterTests(unittest.TestCase):
         self.assertEqual("added_at", args[0])
 
 
+class AddedRangeFilterTests(unittest.TestCase):
+    """The exact date-added range: added_at >= after and added_at < before, in the database."""
+
+    def _run(self, **kwargs):
+        client = _FakeClient()
+        with patch("db.get_client", return_value=client):
+            db.get_bills_with_parcels_filtered(page=1, page_size=25, **kwargs)
+        return client
+
+    def test_added_after_is_an_inclusive_lower_bound(self) -> None:
+        client = self._run(added_after="2026-10-08T23:46:00+00:00")
+        self.assertEqual([(("added_at", "2026-10-08T23:46:00+00:00"), {})], client.log["gte"])
+        self.assertNotIn("lt", client.log)
+
+    def test_added_before_is_an_exclusive_upper_bound(self) -> None:
+        client = self._run(added_before="2026-10-08T23:46:00+00:00")
+        self.assertEqual([(("added_at", "2026-10-08T23:46:00+00:00"), {})], client.log["lt"])
+        self.assertNotIn("gte", client.log)
+
+    def test_both_bounds_and_the_new_filter_combine(self) -> None:
+        client = self._run(new_filter="1", added_after="2026-10-01T00:00:00+00:00", added_before="2026-10-09T00:00:00+00:00")
+        gte_columns = [args for args, _ in client.log["gte"]]
+        self.assertEqual(2, len(gte_columns))                       # the 30-day cutoff and the explicit lower bound
+        self.assertIn(("added_at", "2026-10-01T00:00:00+00:00"), gte_columns)
+        self.assertEqual([("added_at", "2026-10-09T00:00:00+00:00")], [args for args, _ in client.log["lt"]])
+
+    def test_blank_bounds_add_no_constraint(self) -> None:
+        client = self._run(added_after="", added_before="  ")
+        self.assertNotIn("gte", client.log)
+        self.assertNotIn("lt", client.log)
+
+    def test_list_from_filter_forwards_the_range(self) -> None:
+        with patch("db.get_bills_with_parcels_filtered", return_value=([{"apn": "001"}], 1)) as fetch, patch(
+            "db.add_properties_to_list", return_value=1
+        ) as add:
+            db.add_properties_to_list_from_filter(
+                7, added_after="2026-10-08T23:46:00+00:00", added_before="2026-10-10T00:00:00+00:00", limit=0
+            )
+        kwargs = fetch.call_args.kwargs
+        self.assertEqual("2026-10-08T23:46:00+00:00", kwargs["added_after"])
+        self.assertEqual("2026-10-10T00:00:00+00:00", kwargs["added_before"])
+        self.assertEqual(0, kwargs["page_size"])                    # 0 = every matching row, not the first 500
+        add.assert_called_once_with(7, ["001"])
+
+
 if __name__ == "__main__":
     unittest.main()

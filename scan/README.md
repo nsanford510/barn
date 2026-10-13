@@ -135,6 +135,20 @@ If these are missing, the app returns a 503 with instructions. To verify the dep
 
 - **`/health`** – returns `{"status":"ok","db":"connected"}` when Supabase is configured, or `db: not_configured` with a hint when env vars are missing.
 
+### Vacancy research by remote agents
+
+AI agents on other machines research each property and report a vacancy verdict
+with evidence. Apply `db_migrations/supa_migration_vacancy_research.sql`, then:
+
+```bash
+python research_queue.py add-agent grokbot-1     # prints the agent's token once
+python research_queue.py enqueue --city OAKLAND  # queue properties
+python research_queue.py status                  # or Scan > Vacancy in the web UI
+```
+
+Agents use only the files in `research_agent_kit/` (see its README), never the
+secret key.
+
 ## Web Interface
 
 ### List View (`/`)

@@ -78,15 +78,31 @@ REJECT_BACKOFF_MAX_SEC = 480.0
 MAX_CONSECUTIVE_REJECTIONS = 5
 REJECTED_MARKER = "Request Rejected"
 BLOCKED_RESOURCE_TYPES = frozenset({"image", "font", "stylesheet", "media"})
+# A browser that has run for thousands of lookups degrades (observed on EC2 after ~2,200
+# lookups: CPU pegged, traffic collapsed, every lookup timing out). So start a fresh browser
+# every RECYCLE_EVERY lookups, and straight away after RECYCLE_AFTER_ERRORS failures in a row.
+# Set either to 0 to disable it.
+RECYCLE_EVERY = int(os.getenv("VPT_RECYCLE_EVERY", "150"))
+RECYCLE_AFTER_ERRORS = int(os.getenv("VPT_RECYCLE_AFTER_ERRORS", "3"))
 
 CHROME_PATH = "/usr/bin/google-chrome"
 OUTPUT_DIR = BASE_DIR / "bills"
 CDP_URL = os.environ.get("CDP_URL", "").strip()
 _stop_requested = False
-# Live progress of the current scan, read by the web UI via run_all.get_scan_state().
-# "scanned" counts parcels that are up to date (already cached or looked up in
-# this run) out of "total" in scope; "per_min" is this run's lookup speed.
-scan_progress = {"scanned": 0, "total": 0, "per_min": 0.0}
+# Live progress of the current scan, read by the web UI via run_all.get_scan_state()
+# and reported by fleet nodes. "scanned" counts parcels that are up to date
+# (already cached or looked up in this run) out of "total" in scope; "per_min" is
+# this run's lookup speed; "paused_until" is the epoch second the pacer resumes
+# after a WAF rejection (0 when not paused).
+def _blank_progress() -> dict:
+    return {
+        "scanned": 0, "total": 0, "per_min": 0.0,
+        "added": 0, "removed": 0, "unflagged": 0, "errors": 0,
+        "rejections": 0, "paused_until": 0.0, "interval": 0.0, "current_apn": None,
+    }
+
+
+scan_progress = _blank_progress()
 
 
 def request_stop() -> None:
@@ -823,9 +839,13 @@ class _Pacer:
                 return  # another worker already reported this rejection
             self._consecutive += 1
             if self._consecutive >= MAX_CONSECUTIVE_REJECTIONS:
+                scan_progress["rejections"] += 1
                 self.aborted = True
                 return
             self._interval = min(max(self._interval, 1.0) * 1.25, LOOKUP_INTERVAL_MAX_SEC)
+            scan_progress["rejections"] += 1
+            scan_progress["interval"] = round(self._interval, 1)
+            scan_progress["paused_until"] = now + self._backoff
             print(
                 f"Tax site rejected a request; pausing {self._backoff:.0f}s, "
                 f"then one lookup every {self._interval:.1f}s"
@@ -866,24 +886,50 @@ def _new_scan_context(browser):
 _WORKER_DONE = object()
 
 
+def _needs_new_browser(lookups: int, consecutive_errors: int) -> bool:
+    """True once the current browser has run long enough, or is failing lookup after lookup."""
+    return (RECYCLE_EVERY > 0 and lookups >= RECYCLE_EVERY) or (
+        RECYCLE_AFTER_ERRORS > 0 and consecutive_errors >= RECYCLE_AFTER_ERRORS
+    )
+
+
+def _close_quietly(browser) -> None:
+    try:
+        browser.close()
+    except Exception:
+        pass  # a wedged browser may already be gone; the replacement starts regardless
+
+
 def _scan_worker(tasks: queue.Queue, results: queue.Queue, city: str | None, pacer: _Pacer) -> None:
     try:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as p:
-            browser, is_cdp = get_browser(p)
+            browser = context = page = None
+            lookups = consecutive_errors = 0
             try:
-                context = page = None
                 while not _stop_requested and not pacer.aborted:
+                    if browser is not None and _needs_new_browser(lookups, consecutive_errors):
+                        print(
+                            f"Restarting the browser after {lookups} lookups "
+                            f"({consecutive_errors} failures in a row)",
+                            flush=True,
+                        )
+                        _close_quietly(browser)
+                        browser = context = page = None
+                        lookups = consecutive_errors = 0
                     try:
                         apn = tasks.get_nowait()
                     except queue.Empty:
                         break
                     pacer.wait()
+                    if browser is None:
+                        browser, _is_cdp = get_browser(p)
                     if context is None:
                         context = _new_scan_context(browser)
                     if page is None or page.is_closed():
                         page = context.new_page()
                     result = check_property_taxes_with_page(apn, page, city=city)
+                    lookups += 1
                     if result["status"] == "rejected":
                         # Retry this parcel after the pause, on a fresh session.
                         pacer.rejected()
@@ -892,9 +938,11 @@ def _scan_worker(tasks: queue.Queue, results: queue.Queue, city: str | None, pac
                         context = page = None
                         continue
                     pacer.ok()
+                    consecutive_errors = consecutive_errors + 1 if result["status"] == "error" else 0
                     results.put((apn, result))
             finally:
-                browser.close()
+                if browser is not None:
+                    _close_quietly(browser)
     except Exception as exc:
         print(f"Scan worker stopped: {exc}")
     finally:
@@ -946,10 +994,13 @@ def _scan_and_apply(
     started = time.time()
     scope_total = max(scope_total or total, total)
     up_to_date = scope_total - total
-    scan_progress.update(scanned=up_to_date, total=scope_total, per_min=0.0)
+    scan_progress.update(_blank_progress())
+    scan_progress.update(scanned=up_to_date, total=scope_total, interval=LOOKUP_INTERVAL_SEC)
 
     def on_result(apn: str, result: dict) -> None:
         stats["scanned"] += 1
+        if result["status"] in ("ok", "no_bill"):
+            stats["done"] += 1     # verified against the county site; failed lookups are retried later
         try:
             action = apply_scan_result(
                 apn, result, row_json_by_apn.get(apn), db_rows.get(apn), apn in curated,
@@ -966,7 +1017,11 @@ def _scan_and_apply(
             action = "error"
         stats[action] += 1
         per_min = stats["scanned"] * 60 / max(time.time() - started, 0.001)
-        scan_progress.update(scanned=up_to_date + stats["scanned"], per_min=round(per_min, 1))
+        scan_progress.update(
+            scanned=up_to_date + stats["done"], per_min=round(per_min, 1), current_apn=apn,
+            added=stats["added"], removed=stats["removed"], unflagged=stats["unflagged"],
+            errors=stats["error"],
+        )
         if stats["scanned"] % 25 == 0 or stats["scanned"] == total:
             print(
                 f"[{label}] {stats['scanned']}/{total} ({per_min:.1f}/min) "
@@ -975,6 +1030,7 @@ def _scan_and_apply(
             )
 
     if not scan_apns(apns, city, on_result):
+        stats["aborted"] = 1
         print(f"[{label}] Stopping: the tax site kept rejecting requests. Try again later or raise VPT_LOOKUP_INTERVAL_SEC.")
     return stats
 
@@ -1010,10 +1066,16 @@ def main(
     recheck_only: bool = False,
     dry_run: bool = False,
     force: bool = False,
+    restrict_to_csv: bool | None = None,
 ) -> dict[str, int]:
     """
     Sync one city (or every parcel in the CSV) with the tax site. Returns
-    action counts (scanned, added, updated, removed, unflagged, error, ...).
+    action counts (scanned, added, updated, removed, unflagged, error, ...;
+    aborted=1 if the site kept rejecting requests).
+
+    restrict_to_csv limits the DB re-check to parcels present in the CSV. Fleet
+    nodes set it (or VPT_RESTRICT_DB_TO_CSV=1) because their CSV is only their
+    segment of the city and other nodes own the rest.
     """
     global TARGET_CITY, _stop_requested
     _stop_requested = False
@@ -1036,7 +1098,12 @@ def main(
 
     import db
     db_rows = db.get_bills_for_recheck(TARGET_CITY)
-    if not TARGET_CITY:
+    if restrict_to_csv is None:
+        restrict_to_csv = os.getenv("VPT_RESTRICT_DB_TO_CSV", "").strip().lower() in ("1", "true", "yes")
+    if restrict_to_csv:
+        csv_apns = {normalize_apn(apn) for apn in apn_order}
+        db_rows = {apn: row for apn, row in db_rows.items() if normalize_apn(apn) in csv_apns}
+    elif not TARGET_CITY:
         # Without a city filter the DB also holds other counties' parcels.
         db_rows = {apn: row for apn, row in db_rows.items() if apn in apn_to_rowjson}
     curated = db.get_curated_apns() if db_rows else set()
@@ -1107,13 +1174,13 @@ if __name__ == "__main__":
     cli_city = None
     single_apn = None
     mode = None
-    flags = {"recheck_only": False, "dry_run": False, "force": False}
+    flags = {"recheck_only": False, "dry_run": False, "force": False, "restrict_to_csv": False}
     args = [a.strip() for a in sys.argv[1:]]
     while args:
         arg = args.pop(0)
         if arg in ("--backfill-only", "--retry-missing", "--fix-missing"):
             mode = arg
-        elif arg in ("--recheck-only", "--dry-run", "--force"):
+        elif arg in ("--recheck-only", "--dry-run", "--force", "--restrict-to-csv"):
             flags[arg[2:].replace("-", "_")] = True
         elif arg == "--city" and args:
             cli_city = args.pop(0)
@@ -1129,4 +1196,6 @@ if __name__ == "__main__":
     elif single_apn:
         run_single_apn(single_apn, dry_run=flags["dry_run"])
     else:
+        # Unset flag -> None, so VPT_RESTRICT_DB_TO_CSV still applies.
+        flags["restrict_to_csv"] = flags["restrict_to_csv"] or None
         main(city=cli_city, **flags)

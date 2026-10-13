@@ -1,0 +1,92 @@
+#!/bin/bash
+# Bootstrap for one fleet node (Ubuntu 24.04). Placeholders written in double braces are
+# filled in when the instance is launched; see fleet/README.md.
+set -euo pipefail
+exec > >(tee -a /var/log/barn-fleet-bootstrap.log /dev/console) 2>&1
+export DEBIAN_FRONTEND=noninteractive
+echo "BOOTSTRAP: start node {{NODE_INDEX}} run {{RUN_ID}} $(date -u +%FT%TZ)"
+
+APP=/opt/barn-scan
+mkdir -p "$APP"
+apt-get update -qq
+apt-get install -y -qq python3-venv >/dev/null
+python3 -m venv /opt/v
+/opt/v/bin/pip install -q boto3
+
+# Code bundle + this node's segment (as oakland.csv) + Supabase credentials, via the instance role.
+/opt/v/bin/python - <<'PY'
+import os, tarfile
+import boto3
+
+region, bucket, run_id, node = "{{REGION}}", "{{BUCKET}}", "{{RUN_ID}}", "{{NODE_INDEX}}"
+app = "/opt/barn-scan"
+s3 = boto3.client("s3", region_name=region)
+s3.download_file(bucket, f"runs/{run_id}/code.tgz", "/tmp/code.tgz")
+s3.download_file(bucket, f"runs/{run_id}/oakland_seg{node}.csv", f"{app}/oakland.csv")
+with tarfile.open("/tmp/code.tgz") as tar:
+    tar.extractall(app)
+
+# supabase.env holds SUPABASE_URL and SUPABASE_SECRET_KEY (KEY=value lines).
+s3.download_file(bucket, f"runs/{run_id}/supabase.env", "/tmp/supabase.env")
+secrets = {}
+for line in open("/tmp/supabase.env"):
+    if "=" in line:
+        key, value = line.rstrip("\n").split("=", 1)
+        secrets[key.strip()] = value.strip().strip("'\"")
+os.remove("/tmp/supabase.env")
+
+lines = {
+    **secrets,
+    "VPT_LOOKUP_INTERVAL_SEC": "{{INTERVAL_SEC}}",
+    "VPT_MAX_WORKERS": "1",
+    "VPT_RESTRICT_DB_TO_CSV": "1",
+    "FLEET_RUN_ID": run_id,
+    "FLEET_NODE_INDEX": node,
+    "FLEET_NODE_COUNT": "{{NODE_COUNT}}",
+    "FLEET_CITY": "{{CITY}}",
+    "FLEET_START_DELAY_SEC": "{{START_DELAY_SEC}}",
+    "FLEET_SHUTDOWN_WHEN_DONE": "1",
+    "FLEET_S3_BUCKET": bucket,
+    "FLEET_S3_PREFIX": f"runs/{run_id}/artifacts",
+    "AWS_DEFAULT_REGION": region,
+}
+fd = os.open(f"{app}/.env", os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+with os.fdopen(fd, "w") as f:
+    f.write("".join(f"{k}={v}\n" for k, v in lines.items()))
+PY
+
+# Instance facts shown in the web UI.
+TOKEN=$(curl -sX PUT http://169.254.169.254/latest/api/token -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+imds() { curl -s -H "X-aws-ec2-metadata-token: $TOKEN" "http://169.254.169.254/latest/meta-data/$1"; }
+{
+  echo "FLEET_INSTANCE_ID=$(imds instance-id)"
+  echo "FLEET_PUBLIC_IP=$(imds public-ipv4)"
+  echo "FLEET_AZ=$(imds placement/availability-zone)"
+} >> "$APP/.env"
+
+/opt/v/bin/pip install -q -r "$APP/fleet/requirements-node.txt"
+/opt/v/bin/playwright install --with-deps chromium >/var/log/playwright-install.log 2>&1
+echo "BOOTSTRAP: dependencies installed $(date -u +%FT%TZ)"
+
+cat > /etc/systemd/system/barn-fleet-node.service <<'UNIT'
+[Unit]
+Description=BARN fleet scan node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/barn-scan
+EnvironmentFile=/opt/barn-scan/.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/v/bin/python /opt/barn-scan/fleet/fleet_node.py
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload
+systemctl enable --now barn-fleet-node.service
+echo "BOOTSTRAP: node service started $(date -u +%FT%TZ)"
