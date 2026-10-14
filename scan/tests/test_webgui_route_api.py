@@ -185,7 +185,7 @@ class RouteApiTests(unittest.TestCase):
         fake = self._fake_db()
         fake.get_bills_with_parcels_filtered.return_value = ([{
             "apn": "1-2-3", "location_of_property": "1 Main St", "city": "OAKLAND",
-            "ai_vacancy_verdict": "likely_vacant", "ai_vacancy_confidence": 0.85, "site_vacant": True,
+            "ai_vacancy_verdict": "vacant", "ai_vacancy_confidence": 0.85, "site_vacant": True,
         }], 1)
         import flask
         import jinja2

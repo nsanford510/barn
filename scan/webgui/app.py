@@ -167,6 +167,12 @@ def _vacancy_filter_args(source: Any) -> dict[str, str]:
     }
 
 
+def _normalize_ai_verdict(value: Any) -> str:
+    """Map short verdicts ("vacant") onto the canonical likely_* vocabulary."""
+    v = str(value or "").strip().lower()
+    return {"vacant": "likely_vacant", "occupied": "likely_occupied"}.get(v, v)
+
+
 def _split_multi_filter(value: str) -> list[str]:
     return [item.strip().upper() for item in (value or "").split(",") if item.strip()]
 
@@ -614,7 +620,7 @@ def _build_list_view_row(
         "outreach_score": r.get("outreach_score"),
         "outreach_stage": r.get("outreach_stage") or "",
         "research_status": r.get("research_status") or "",
-        "ai_vacancy_verdict": r.get("ai_vacancy_verdict") or "",
+        "ai_vacancy_verdict": _normalize_ai_verdict(r.get("ai_vacancy_verdict")),
         "ai_vacancy_confidence": r.get("ai_vacancy_confidence"),
         "site_vacant": r.get("site_vacant"),
         "owner_name": r.get("owner_name") or "",
@@ -1130,7 +1136,7 @@ def property_detail(apn: str):
     return_to = _safe_return_to(request.args.get("return_to"), fallback=url_for("search_page"))
     property_data = {
         "apn": apn,
-        "ai_vacancy_verdict": row.get("ai_vacancy_verdict") or "",
+        "ai_vacancy_verdict": _normalize_ai_verdict(row.get("ai_vacancy_verdict")),
         "ai_vacancy_confidence": row.get("ai_vacancy_confidence"),
         "ai_vacancy_rationale": row.get("ai_vacancy_rationale") or "",
         "ai_vacancy_updated_at": str(row.get("ai_vacancy_updated_at") or "")[:10],

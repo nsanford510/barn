@@ -26,9 +26,11 @@ class VacancyFilterTests(unittest.TestCase):
         self.assertNotIn("is_", client.log)
         self.assertNotIn("eq", client.log)
 
-    def test_ai_verdict_filter_matches_exact_verdict(self) -> None:
+    def test_ai_verdict_filter_matches_long_and_short_spellings(self) -> None:
         client = self._run(ai_verdict_filter="likely_vacant")
-        self.assertIn((("ai_vacancy_verdict", "likely_vacant"), {}), client.log["eq"])
+        self.assertIn((("ai_vacancy_verdict", ["likely_vacant", "vacant"]), {}), client.log["in_"])
+        client = self._run(ai_verdict_filter="unknown")
+        self.assertIn((("ai_vacancy_verdict", ["unknown"]), {}), client.log["in_"])
 
     def test_ai_verdict_none_matches_unassessed_rows(self) -> None:
         client = self._run(ai_verdict_filter="none")
@@ -36,7 +38,7 @@ class VacancyFilterTests(unittest.TestCase):
 
     def test_ai_verdict_filter_ignores_unknown_values(self) -> None:
         client = self._run(ai_verdict_filter="bogus")
-        self.assertNotIn("eq", client.log)
+        self.assertNotIn("in_", client.log)
 
     def test_ai_confidence_accepts_percent_and_fraction(self) -> None:
         for raw in ("70", "0.7"):

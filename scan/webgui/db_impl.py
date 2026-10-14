@@ -324,7 +324,12 @@ _CONDITION_BUCKETS = {
     "unscored": [("condition_score", "is.null")],
 }
 
-_AI_VERDICTS = ("likely_vacant", "likely_occupied", "unknown")
+# Some research writers store the short form ("vacant"), so match both spellings.
+_AI_VERDICT_ALIASES = {
+    "likely_vacant": ["likely_vacant", "vacant"],
+    "likely_occupied": ["likely_occupied", "occupied"],
+    "unknown": ["unknown"],
+}
 
 
 def _parse_confidence_min(value: Any) -> float | None:
@@ -437,8 +442,8 @@ def get_bills_with_parcels_filtered(
     verdict = (ai_verdict_filter or "").strip().lower()
     if verdict == "none":
         query = query.is_("ai_vacancy_verdict", None)
-    elif verdict in _AI_VERDICTS:
-        query = query.eq("ai_vacancy_verdict", verdict)
+    elif verdict in _AI_VERDICT_ALIASES:
+        query = query.in_("ai_vacancy_verdict", _AI_VERDICT_ALIASES[verdict])
     confidence = _parse_confidence_min(ai_confidence_min)
     if confidence is not None:
         query = query.gte("ai_vacancy_confidence", confidence)
