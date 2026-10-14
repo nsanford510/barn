@@ -158,6 +158,15 @@ def _parse_multi_select_filter(name: str) -> str:
     return ",".join(values)
 
 
+def _vacancy_filter_args(source: Any) -> dict[str, str]:
+    """AI vacancy verdict / min confidence / site_vacant filters from args or a JSON dict."""
+    return {
+        "ai_verdict_filter": str(source.get("ai_verdict") or "").strip(),
+        "ai_confidence_min": str(source.get("ai_confidence") or "").strip(),
+        "site_vacant_filter": str(source.get("site_vacant") or "").strip(),
+    }
+
+
 def _split_multi_filter(value: str) -> list[str]:
     return [item.strip().upper() for item in (value or "").split(",") if item.strip()]
 
@@ -605,6 +614,9 @@ def _build_list_view_row(
         "outreach_score": r.get("outreach_score"),
         "outreach_stage": r.get("outreach_stage") or "",
         "research_status": r.get("research_status") or "",
+        "ai_vacancy_verdict": r.get("ai_vacancy_verdict") or "",
+        "ai_vacancy_confidence": r.get("ai_vacancy_confidence"),
+        "site_vacant": r.get("site_vacant"),
         "owner_name": r.get("owner_name") or "",
         "latitude": r.get("lat") if r.get("lat") is not None else r.get("latitude"),
         "longitude": r.get("lng") if r.get("lng") is not None else r.get("longitude"),
@@ -655,6 +667,7 @@ def search_page():
     owner_name_filter = (request.args.get("owner_name") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
     added_after_filter, added_before_filter = _added_range_args()
+    vacancy_filters = _vacancy_filter_args(request.args)
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
     page = max(int(request.args.get("page") or 1), 1)
@@ -676,6 +689,7 @@ def search_page():
         "condition_score",
         "deceased_count",
         "outreach_score",
+        "ai_vacancy_confidence",
     }
     if sort not in allowed_sorts:
         sort = "location_of_property"
@@ -717,6 +731,7 @@ def search_page():
         new_filter=new_filter,
         added_after=added_after_filter,
         added_before=added_before_filter,
+        **vacancy_filters,
         sort=sort,
         order=order,
         page=1,
@@ -782,6 +797,9 @@ def search_page():
         new_filter=new_filter,
         added_after_filter=added_after_filter,
         added_before_filter=added_before_filter,
+        ai_verdict_filter=vacancy_filters["ai_verdict_filter"],
+        ai_confidence_filter=vacancy_filters["ai_confidence_min"],
+        site_vacant_filter=vacancy_filters["site_vacant_filter"],
         list_id=selected_list_id,
         selected_list=selected_list,
         sort=sort,
@@ -1006,6 +1024,7 @@ def api_apn_list():
     outreach_stage_filter = (request.args.get("outreach_stage") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
     added_after_filter, added_before_filter = _added_range_args()
+    vacancy_filters = _vacancy_filter_args(request.args)
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
 
@@ -1014,6 +1033,7 @@ def api_apn_list():
         "tax_year", "pdf_file", "situs_zip", "last_payment", "delinquent",
         "power_status", "city", "has_vpt", "condition_score",
         "primary_resident_age", "deceased_count", "outreach_score",
+        "ai_vacancy_confidence",
     }
     if sort not in allowed_sorts:
         sort = "location_of_property"
@@ -1034,6 +1054,7 @@ def api_apn_list():
         new_filter=new_filter,
         added_after=added_after_filter,
         added_before=added_before_filter,
+        **vacancy_filters,
         sort=sort,
         order=order,
         page=1,
@@ -2863,10 +2884,9 @@ def api_lists_add_properties(list_id: int):
                     research_filter=filters.get("research", ""),
                     owner_name_filter=filters.get("owner_name", ""),
                     new_filter=filters.get("new", ""),
-                    occupancy_filter=filters.get("occupancy_type", ""),
-                    ownership_filter=filters.get("ownership_type", ""),
-                    primary_resident_age_filter=filters.get("primary_resident_age", ""),
-                    deceased_count_filter=filters.get("deceased_count", ""),
+                    added_after=_parse_added_bound(str(filters.get("added_after") or "")) or "",
+                    added_before=_parse_added_bound(str(filters.get("added_before") or "")) or "",
+                    **_vacancy_filter_args(filters),
                     page=1,
                     page_size=0,
                 )
@@ -2894,6 +2914,7 @@ def api_lists_add_properties(list_id: int):
                     ownership_filter=filters.get("ownership_type", ""),
                     primary_resident_age_filter=filters.get("primary_resident_age", ""),
                     deceased_count_filter=filters.get("deceased_count", ""),
+                    **_vacancy_filter_args(filters),
                     limit=0,
                 )
         else:

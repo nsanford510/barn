@@ -619,6 +619,7 @@
       </option>
       <option value="deceased_count" {% if sort=="deceased_count" %}selected{% endif %}>Deceased Count</option>
       <option value="outreach_score" {% if sort=="outreach_score" %}selected{% endif %}>Outreach Score</option>
+      <option value="ai_vacancy_confidence" {% if sort=="ai_vacancy_confidence" %}selected{% endif %}>AI Confidence</option>
     </select>
     <select name="condition">
       <option value="" {% if not condition_filter %}selected{% endif %}>All Condition</option>
@@ -634,6 +635,25 @@
       <option value="in_progress" {% if research_filter=="in_progress" %}selected{% endif %}>In Progress</option>
       <option value="failed" {% if research_filter=="failed" %}selected{% endif %}>Failed</option>
       <option value="pending" {% if research_filter=="pending" %}selected{% endif %}>Pending</option>
+    </select>
+    <select name="ai_verdict" title="AI vacancy verdict">
+      <option value="" {% if not ai_verdict_filter %}selected{% endif %}>All AI Verdicts</option>
+      <option value="likely_vacant" {% if ai_verdict_filter=="likely_vacant" %}selected{% endif %}>AI: Likely Vacant</option>
+      <option value="likely_occupied" {% if ai_verdict_filter=="likely_occupied" %}selected{% endif %}>AI: Likely Occupied</option>
+      <option value="unknown" {% if ai_verdict_filter=="unknown" %}selected{% endif %}>AI: Unknown</option>
+      <option value="none" {% if ai_verdict_filter=="none" %}selected{% endif %}>AI: Not Assessed</option>
+    </select>
+    <select name="ai_confidence" title="Minimum AI vacancy confidence">
+      <option value="" {% if not ai_confidence_filter %}selected{% endif %}>Any AI Confidence</option>
+      {% for pct in [50, 70, 80, 90] %}
+      <option value="{{ pct }}" {% if ai_confidence_filter==pct|string %}selected{% endif %}>AI Conf &ge; {{ pct }}%</option>
+      {% endfor %}
+    </select>
+    <select name="site_vacant" title="Site vacant">
+      <option value="" {% if not site_vacant_filter %}selected{% endif %}>All Site Vacant</option>
+      <option value="yes" {% if site_vacant_filter=="yes" %}selected{% endif %}>Site Vacant: Yes</option>
+      <option value="no" {% if site_vacant_filter=="no" %}selected{% endif %}>Site Vacant: No</option>
+      <option value="unknown" {% if site_vacant_filter=="unknown" %}selected{% endif %}>Site Vacant: Unknown</option>
     </select>
     <select name="outreach_stage">
       <option value="" {% if not outreach_stage_filter %}selected{% endif %}>All Stages</option>
@@ -701,6 +721,9 @@
           <th>VPT</th>
           <th>Delinquent</th>
           <th>Power</th>
+          <th>AI Verdict</th>
+          <th>AI Conf.</th>
+          <th>Site Vacant</th>
           <th>Tax Year</th>
           <th>Last Payment</th>
           <th>Owner Name</th>
@@ -758,6 +781,13 @@
           <td
             class="{% if r.power_status == 'ON' %}power-on{% elif r.power_status == 'OFF' %}power-off{% else %}power-unknown{% endif %}">
             {{ r.power_status or '-' }}</td>
+          <td
+            class="{% if r.ai_vacancy_verdict == 'likely_vacant' %}power-off{% elif r.ai_vacancy_verdict == 'likely_occupied' %}power-on{% endif %}"
+            style="white-space: nowrap;">
+            {{ r.ai_vacancy_verdict.replace("_", " ") if r.ai_vacancy_verdict else "-" }}</td>
+          <td>{% if r.ai_vacancy_confidence is not none %}{{ "%.0f"|format(r.ai_vacancy_confidence * 100) }}%{% else %}-{% endif %}</td>
+          <td class="{% if r.site_vacant %}power-off{% endif %}">
+            {% if r.site_vacant is none %}-{% elif r.site_vacant %}Yes{% else %}No{% endif %}</td>
           <td>{{ r.tax_year }}</td>
           <td>{{ r.last_payment }}</td>
           <td>{{ r.owner_name or "-" }}</td>
@@ -827,11 +857,11 @@
   <div class="pager">
     {% if page > 1 %}
     <a
-      href="?q={{ q }}&zip={{ zip_filter }}&city={{ city_filter }}&county={{ county_filter }}&owner_name={{ owner_name_filter }}&occupancy_type={{ occupancy_filter }}&ownership_type={{ ownership_filter }}&primary_resident_age={{ primary_resident_age_filter }}&deceased_count={{ deceased_count_filter }}&power={{ power_filter }}&vpt={{ vpt_filter }}&new={{ new_filter }}&delinquent={{ delinquent_filter }}&condition={{ condition_filter }}&outofstate={{ outofstate_filter }}&research={{ research_filter }}&outreach_stage={{ outreach_stage_filter }}&sort={{ sort }}&order={{ order }}&page_size={{ page_size }}&page={{ page - 1 }}">Prev</a>
+      href="?q={{ q }}&zip={{ zip_filter }}&city={{ city_filter }}&county={{ county_filter }}&owner_name={{ owner_name_filter }}&occupancy_type={{ occupancy_filter }}&ownership_type={{ ownership_filter }}&primary_resident_age={{ primary_resident_age_filter }}&deceased_count={{ deceased_count_filter }}&power={{ power_filter }}&vpt={{ vpt_filter }}&new={{ new_filter }}&delinquent={{ delinquent_filter }}&condition={{ condition_filter }}&outofstate={{ outofstate_filter }}&research={{ research_filter }}&outreach_stage={{ outreach_stage_filter }}&ai_verdict={{ ai_verdict_filter }}&ai_confidence={{ ai_confidence_filter }}&site_vacant={{ site_vacant_filter }}&sort={{ sort }}&order={{ order }}&page_size={{ page_size }}&page={{ page - 1 }}">Prev</a>
     {% endif %}
     <span class="muted">Page {{ page }} of {{ total_pages }}</span>
     {% if page < total_pages %} <a
-      href="?q={{ q }}&zip={{ zip_filter }}&city={{ city_filter }}&county={{ county_filter }}&owner_name={{ owner_name_filter }}&occupancy_type={{ occupancy_filter }}&ownership_type={{ ownership_filter }}&primary_resident_age={{ primary_resident_age_filter }}&deceased_count={{ deceased_count_filter }}&power={{ power_filter }}&vpt={{ vpt_filter }}&new={{ new_filter }}&delinquent={{ delinquent_filter }}&condition={{ condition_filter }}&outofstate={{ outofstate_filter }}&research={{ research_filter }}&outreach_stage={{ outreach_stage_filter }}&sort={{ sort }}&order={{ order }}&page_size={{ page_size }}&page={{ page + 1 }}">
+      href="?q={{ q }}&zip={{ zip_filter }}&city={{ city_filter }}&county={{ county_filter }}&owner_name={{ owner_name_filter }}&occupancy_type={{ occupancy_filter }}&ownership_type={{ ownership_filter }}&primary_resident_age={{ primary_resident_age_filter }}&deceased_count={{ deceased_count_filter }}&power={{ power_filter }}&vpt={{ vpt_filter }}&new={{ new_filter }}&delinquent={{ delinquent_filter }}&condition={{ condition_filter }}&outofstate={{ outofstate_filter }}&research={{ research_filter }}&outreach_stage={{ outreach_stage_filter }}&ai_verdict={{ ai_verdict_filter }}&ai_confidence={{ ai_confidence_filter }}&site_vacant={{ site_vacant_filter }}&sort={{ sort }}&order={{ order }}&page_size={{ page_size }}&page={{ page + 1 }}">
       Next</a>
       {% endif %}
   </div>

@@ -417,6 +417,20 @@ _CONDITION_BUCKETS = {
     "unscored": [("condition_score", "is.null")],
 }
 
+_AI_VERDICTS = ("likely_vacant", "likely_occupied", "unknown")
+
+
+def _parse_confidence_min(value: Any) -> float | None:
+    """Parse a minimum AI vacancy confidence; accepts 0-1 or a 0-100 percent."""
+    try:
+        n = float(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+    if n > 1:
+        n /= 100
+    return n if 0 < n <= 1 else None
+
+
 # map_markers column -> the bills column name callers already use.
 _VIEW_TO_BILL_KEYS = {
     "location": "location_of_property",
@@ -461,6 +475,9 @@ def get_bills_with_parcels_filtered(
     new_filter: str = "",
     added_after: str = "",
     added_before: str = "",
+    ai_verdict_filter: str = "",
+    ai_confidence_min: str = "",
+    site_vacant_filter: str = "",
     sort: str = "location_of_property",
     order: str = "asc",
     page: int = 1,
@@ -510,6 +527,21 @@ def get_bills_with_parcels_filtered(
         query = query.gte("added_at", added_after.strip())
     if (added_before or "").strip():
         query = query.lt("added_at", added_before.strip())
+    verdict = (ai_verdict_filter or "").strip().lower()
+    if verdict == "none":
+        query = query.is_("ai_vacancy_verdict", None)
+    elif verdict in _AI_VERDICTS:
+        query = query.eq("ai_vacancy_verdict", verdict)
+    confidence = _parse_confidence_min(ai_confidence_min)
+    if confidence is not None:
+        query = query.gte("ai_vacancy_confidence", confidence)
+    site_vacant = (site_vacant_filter or "").strip().lower()
+    if site_vacant == "yes":
+        query = query.is_("site_vacant", True)
+    elif site_vacant == "no":
+        query = query.is_("site_vacant", False)
+    elif site_vacant == "unknown":
+        query = query.is_("site_vacant", None)
     for column, expr in _CONDITION_BUCKETS.get((condition_filter or "").strip().lower(), []):
         op, _, value = expr.partition(".")
         if op == "is":
@@ -1016,6 +1048,9 @@ def add_properties_to_list_from_filter(
     new_filter: str = "",
     added_after: str = "",
     added_before: str = "",
+    ai_verdict_filter: str = "",
+    ai_confidence_min: str = "",
+    site_vacant_filter: str = "",
     limit: int = 500,
 ) -> int:
     rows, _ = get_bills_with_parcels_filtered(
@@ -1032,6 +1067,9 @@ def add_properties_to_list_from_filter(
         new_filter=new_filter,
         added_after=added_after,
         added_before=added_before,
+        ai_verdict_filter=ai_verdict_filter,
+        ai_confidence_min=ai_confidence_min,
+        site_vacant_filter=site_vacant_filter,
         page=1,
         page_size=limit,
     )

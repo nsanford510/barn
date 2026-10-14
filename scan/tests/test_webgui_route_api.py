@@ -130,6 +130,85 @@ class RouteApiTests(unittest.TestCase):
         kwargs = fake.add_properties_to_list_from_filter.call_args.kwargs
         self.assertEqual(("2026-10-08T23:46:00+00:00", ""), (kwargs["added_after"], kwargs["added_before"]))
 
+    def test_list_page_forwards_vacancy_filters(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context(
+            "/?ai_verdict=likely_vacant&ai_confidence=70&site_vacant=yes&sort=ai_vacancy_confidence"
+        ), patch.object(self.webgui_app, "db", fake), patch.object(
+            self.webgui_app, "render_template", return_value="rendered"
+        ) as render:
+            self.webgui_app.search_page.__wrapped__()
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual(
+            ("likely_vacant", "70", "yes", "ai_vacancy_confidence"),
+            (kwargs["ai_verdict_filter"], kwargs["ai_confidence_min"], kwargs["site_vacant_filter"], kwargs["sort"]),
+        )
+        ctx = render.call_args.kwargs
+        self.assertEqual(
+            ("likely_vacant", "70", "yes"),
+            (ctx["ai_verdict_filter"], ctx["ai_confidence_filter"], ctx["site_vacant_filter"]),
+        )
+
+    def test_select_all_and_add_to_list_forward_vacancy_filters(self) -> None:
+        fake = self._fake_db()
+        with self.webgui_app.app.test_request_context("/api/apn_list?ai_verdict=none&site_vacant=no"), patch.object(
+            self.webgui_app, "db", fake
+        ):
+            self.webgui_app.api_apn_list.__wrapped__()
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual(("none", "no"), (kwargs["ai_verdict_filter"], kwargs["site_vacant_filter"]))
+
+        fake.get_list.return_value = {"id": 3}
+        fake.add_properties_to_list_from_filter.return_value = 1
+        with self.webgui_app.app.test_request_context(
+            "/api/lists/3/add-properties", method="POST",
+            json={"apns": "all", "filters": {"ai_verdict": "likely_vacant", "ai_confidence": "90"}},
+        ), patch.object(self.webgui_app, "db", fake):
+            self.webgui_app.api_lists_add_properties.__wrapped__(3)
+        kwargs = fake.add_properties_to_list_from_filter.call_args.kwargs
+        self.assertEqual(("likely_vacant", "90"), (kwargs["ai_verdict_filter"], kwargs["ai_confidence_min"]))
+
+    def test_add_all_with_county_filter_does_not_pass_unknown_kwargs(self) -> None:
+        fake = self._fake_db()
+        fake.get_list.return_value = {"id": 3}
+        fake.add_properties_to_list.return_value = 0
+        with self.webgui_app.app.test_request_context(
+            "/api/lists/3/add-properties", method="POST",
+            json={"apns": "all", "filters": {"county": "ALAMEDA", "site_vacant": "yes"}},
+        ), patch.object(self.webgui_app, "db", fake):
+            self.webgui_app.api_lists_add_properties.__wrapped__(3)
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertNotIn("occupancy_filter", kwargs)
+        self.assertEqual("yes", kwargs["site_vacant_filter"])
+
+    def test_list_page_renders_vacancy_columns(self) -> None:
+        fake = self._fake_db()
+        fake.get_bills_with_parcels_filtered.return_value = ([{
+            "apn": "1-2-3", "location_of_property": "1 Main St", "city": "OAKLAND",
+            "ai_vacancy_verdict": "likely_vacant", "ai_vacancy_confidence": 0.85, "site_vacant": True,
+        }], 1)
+        import flask
+        import jinja2
+
+        app = self.webgui_app.app
+        env = app.jinja_env.overlay(loader=jinja2.FileSystemLoader(str(SCAN_DIR / "webgui" / "templates")))
+
+        def render(name, **ctx):
+            extra = {"request": flask.request, "session": flask.session, "g": flask.g, "config": app.config}
+            return env.get_template(name).render(**extra, **ctx)
+
+        with app.test_request_context("/?ai_verdict=likely_vacant&ai_confidence=80"), patch.object(
+            self.webgui_app, "db", fake
+        ), patch.object(self.webgui_app, "_parcel_zip_by_apn", return_value={}), patch.object(
+            self.webgui_app, "render_template", side_effect=render
+        ):
+            html = self.webgui_app.search_page.__wrapped__()
+        self.assertIn("<th>AI Verdict</th>", html)
+        self.assertIn("likely vacant", html)
+        self.assertIn("85%", html)
+        self.assertIn('<option value="80" selected>', html)
+        self.assertIn('<option value="likely_vacant" selected>', html)
+
     def test_list_and_gallery_templates_include_the_date_filter(self) -> None:
         import jinja2
 
