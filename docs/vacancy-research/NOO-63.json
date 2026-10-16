@@ -1,0 +1,41 @@
+{
+  "issue": "NOO-63",
+  "apn": "004 006300601",
+  "address": "1125 MANDELA PKWY, OAKLAND, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.99,
+  "rationale": "The parcel is documented as a vacant, unpaved lot in May 2016 after its building was reportedly demolished in January 2015; a 2026 Oakland planning table still identifies the parcel. Evidence supports a vacant lot, not an occupied dwelling. Vacancy likely began by Jan 2015; continuous duration is not independently proven.",
+  "vacancy_start": "2015-01-29",
+  "duration_as_of": "2026-10-16",
+  "duration_note": "About 11 years 8 months since reported demolition; official documentation confirms vacant land by 2016-05-03. Continuous vacancy after those observations is likely but not directly verified.",
+  "evidence": [
+    {
+      "source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003184%5CMEETING_2016-05-03.pdf",
+      "source_name": "Alameda County Environmental Health / Stellar Environmental Solutions, Site Development Strategy, 1125 Mandela Parkway",
+      "observed_date": "2016-05-03",
+      "detail": "Describes the exact property as a 10,000-square-foot vacant, unpaved parcel. It also identifies it as a former 1957–approximately 1969 service station."
+    },
+    {
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/boards-amp-commissions/documents/pc/2.4.2026-item-1-citywide-case-file-za26001-attach-f-housing-cap-anal-of-oakland-zoning-comp-w-sb-79-standards-in-tier-1-tod-zones-for-six-bart-stations-pc-2.4.26.pdf",
+      "source_name": "City of Oakland Planning Commission, 2026 zoning comparison attachment",
+      "observed_date": "2026-02-04",
+      "detail": "Lists 1125 Mandela Pkwy and APN 004 006300601 as a 0.230-acre parcel. Supports parcel identity and ongoing land-parcel characterization, but its numeric use code is not interpreted here as proof of vacancy."
+    },
+    {
+      "source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003184%5CMAPS_ASSESSOR.pdf",
+      "source_name": "Alameda County Assessor property history, parcel 4-63-6-1",
+      "observed_date": "2015-01-01",
+      "detail": "Identifies 1125 Mandela Pkwy and shows assessor use 4000, matching the county environmental report's description of county code 4000 as Vacant Industrial. Historical record only; it does not establish current occupancy."
+    },
+    {
+      "source_url": "https://localwiki.org/oakland/It_Only_Takes_a_Pair_of_Gloves_Mural",
+      "source_name": "Oakland LocalWiki, It Only Takes a Pair of Gloves Mural",
+      "observed_date": "2015-01-29",
+      "detail": "Reports that the building and mural at 1125 Mandela Parkway were demolished on January 29, 2015 for environmental cleanup. Community-edited secondary source; use as a likely start date, not sole proof."
+    }
+  ],
+  "limitations": [
+    "No evidence located establishing whether the parcel was redeveloped after the 2016 observation or proving uninterrupted vacancy to the present.",
+    "This finding concerns the parcel/building site and does not imply a residential unit was vacant for the entire period."
+  ]
+}
