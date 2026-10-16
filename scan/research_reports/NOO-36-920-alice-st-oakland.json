@@ -1,0 +1,36 @@
+{
+  "apn": "002-0073-060-00",
+  "address": "920 Alice St, Oakland, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.2,
+  "rationale": "The only exact-address vacancy signal found is an Oakland directory entry marked vacant in 1969. Current commercial listings apply to other units/APNs at 900–920 Alice, so they do not establish this APN’s occupancy. No dated current evidence verifies vacancy or occupancy; start and duration remain unknown.",
+  "vacancy_start": "unknown; historical directory lists 920 Alice as vacant in 1969, with no evidence of continuity",
+  "duration": "unknown; no continuous vacancy period can be established",
+  "evidence": [
+    {
+      "signal": "historical vacancy directory entry",
+      "detail": "A searchable 1969 Polk's Oakland city directory snippet reads 'VACANT 920 ALICE ST'. It is an old, undated-within-year record and does not establish current status or continuous vacancy since then.",
+      "source_url": "https://en.geneanet.org/fonds/bibliotheque/?collection_id=bibliotheque_premium_6259891&go=1&nom=ST+INTERSECTS&nom_collection=Polk%27s+Oakland+%28California%29+city+directory+%28Volume+1969%29&size=50",
+      "observed_at": "1969 directory; reviewed 2026-10-15"
+    },
+    {
+      "signal": "parcel/address identification",
+      "detail": "LoopNet's property record maps 920 Alice St, Oakland, to APN 002-0073-060-00 and describes it as a 716 SF commercial condominium. This is a secondary property record and says nothing about current occupancy.",
+      "source_url": "https://www.loopnet.com/property/920-alice-st-oakland-ca-94607/06001-002%20007306000/",
+      "observed_at": "Reviewed 2026-10-15; page crawled about 5 months earlier"
+    },
+    {
+      "signal": "nearby unit listing does not match subject APN",
+      "detail": "A 900–920 Alice listing markets a penthouse/flex unit for lease and lists APNs 002-0073-064-00 and 002-0073-065-00, not the subject APN 002-0073-060-00. It cannot establish this parcel's occupancy.",
+      "source_url": "https://www.showcase.com/900-920-alice-st-oakland-ca-94607/36272288/",
+      "observed_at": "Reviewed 2026-10-15; page crawled about 4 months earlier"
+    },
+    {
+      "signal": "nearby suite sale listing does not match subject APN",
+      "detail": "LoopNet markets 900 Alice, Suite 500, as an office condominium available for sale, with a Feb. 21, 2026 market date. This is a different unit/address and does not establish occupancy at APN 002-0073-060-00.",
+      "source_url": "https://www.loopnet.com/Listing/900-Alice-St-Oakland-CA/39527462/",
+      "observed_at": "Market date 2026-02-21; reviewed 2026-10-15"
+    }
+  ],
+  "report_md": "## Assessment (2026-10-15)\n\n**Verdict:** unknown (0.20). The subject is identified in a secondary property record as a 716 SF commercial condominium at APN 002-0073-060-00. The only exact-address vacancy entry located is in a 1969 directory; it is too old to establish present status.\n\n**Start/duration:** Unknown. A 1969 directory records the address as vacant at that time, but no evidence establishes continuous vacancy since then. Current 900–920 Alice marketing pages reviewed describe other units and list different APNs. They do not establish the status of this parcel.\n\n**Limits:** No dated, parcel-matched evidence of current occupancy or vacancy was verified in the public listings and directory searches. The reviewed evidence does not establish an exact vacancy start or duration."
+}
