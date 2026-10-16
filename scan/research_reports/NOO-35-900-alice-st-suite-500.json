@@ -1,0 +1,30 @@
+{
+  "apn": "002-0073-055-00",
+  "address": "900 Alice St, Suite 500, Oakland, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.74,
+  "rationale": "Suite 500 is actively marketed for lease and described as ready for immediate occupancy. This supports likely current vacancy, but listings do not prove physical vacancy or its start date; vacancy is only documented by the Oct. 1, 2026 lease listing.",
+  "vacancy_start": "unknown; available for lease by 2026-10-01",
+  "duration": "At least 14 days advertised as available as of 2026-10-15; actual vacancy duration is unknown.",
+  "evidence": [
+    {
+      "signal": "active commercial lease listing",
+      "detail": "MLS 41149967 is an active $4,800/month commercial lease listing for Suite 500, received/listed Oct. 1, 2026. The description calls 2,407 SF available and gives move-in features; listing availability is evidence of marketing, not conclusive proof of physical vacancy.",
+      "source_url": "https://www.coldwellbankerhomes.com/ca/oakland/900-alice-st-suite-500/pid_74048779/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "sale marketing and immediate occupancy claim",
+      "detail": "LoopNet's Suite 500 commercial condo listing says the remodeled office is ready for immediate occupancy and shows date on market Feb. 21, 2026. This supports availability but does not establish that it was empty on that date or continuously vacant.",
+      "source_url": "https://www.loopnet.com/Listing/900-Alice-St-Oakland-CA/39527462/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "parcel/address cross-reference",
+      "detail": "LoopNet property record identifies 900 Alice St, Oakland as APN 002-0073-055-00, commercial condominium, 1,729 SF, consistent with the suite listing.",
+      "source_url": "https://www.loopnet.com/property/900-alice-st-oakland-ca-94607/06001-002%20007305500/",
+      "observed_at": "2026-10-15"
+    }
+  ],
+  "report_md": "## Assessment (2026-10-15)\n\n**Verdict:** likely_vacant (0.74). The unit-specific active lease listing and its immediate-occupancy language indicate Suite 500 is probably being offered as vacant space. MLS marketing alone cannot prove physical vacancy.\n\n**Start/duration:** Exact vacancy start is unknown. The earliest firm date in the reviewed evidence is the lease listing received Oct. 1, 2026; therefore the unit had been advertised as available for at least 14 days by Oct. 15, 2026. A separate sale listing has been on market since Feb. 21, 2026, but that does not establish vacancy over that period.\n\n**Scope:** Suite 500 only. Other occupants at 900 Alice St in different suites do not establish Suite 500 occupancy. No utility, permit, code-enforcement, street-view, or vacancy-tax evidence was verified in this review."
+}
