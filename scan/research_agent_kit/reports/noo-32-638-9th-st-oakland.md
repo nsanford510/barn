@@ -22,4 +22,4 @@ Address: 638 9th St, Oakland, CA 94607
 
 ## Queue status
 
-This report has not been submitted to `submit_vacancy_finding`. The queue submission requires a valid agent claim token and `BARN_AGENT_TOKEN`; no agent token is configured in the supplied `/home/noob/barn/scan/.env`. The report is retained here for review and submission after an authorized queue claim is available.
+Submitted through `research_client.py` and `submit_vacancy_finding` on 2026-10-16. Finding ID: `91a1ce10-20e4-42ab-a0a2-0c3cd2f765e1`. The queue verdict is `unknown`, confidence `0.25`.
