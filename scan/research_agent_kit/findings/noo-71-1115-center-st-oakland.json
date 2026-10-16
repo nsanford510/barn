@@ -1,0 +1,32 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.25,
+  "rationale": "Public records show a 2011 tax-default auction listing and residential land-use classifications through 2024, but these do not prove vacancy or occupancy. No current direct occupancy evidence or vacancy start date was established.",
+  "evidence": [
+    {
+      "signal": "property_identity_and_sale_history",
+      "detail": "Redfin identifies the address as a single-family home and reports its last recorded sale on June 24, 1992. The page does not expose a date for its Street View image.",
+      "source_url": "https://www.redfin.com/CA/Oakland/1115-Center-St-94607/home/535848",
+      "observed_at": "accessed 2026-10-16; sale 1992-06-24"
+    },
+    {
+      "signal": "tax_default_sale_listing",
+      "detail": "Alameda County's Treasurer-Tax Collector report lists APN 4-85-8 / 1115 Center St among properties subject to tax-default sale. This indicates tax delinquency, not vacancy; whether it sold is not established by the cited entry.",
+      "source_url": "https://www.acgov.org/board/bos_calendar/documents/DocsAgendaReg_11_22_11/GENERAL%20ADMINISTRATION/Regular%20Calendar/TTX_Sale_Tax_Defaulted_Property.pdf",
+      "observed_at": "report printed 2011-11-01"
+    },
+    {
+      "signal": "residential_land_use_classification",
+      "detail": "Oakland lists the parcel as code 1100, single-family residential homes used as such. This land-use classification does not verify actual occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=09D82F49-CD60-482B-A33D-8CAB20E6A3F9&ID=6785905&M=F",
+      "observed_at": "2016-2018"
+    },
+    {
+      "signal": "residential_land_use_classification",
+      "detail": "A later City attachment lists the same parcel and address as code 1100, single-family residential homes used as such. This land-use classification does not verify actual occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=E4E0D13F-7635-4B47-B0FA-271A96F9B96C&ID=14301879&M=F",
+      "observed_at": "2021-2024"
+    }
+  ],
+  "report_md": "See docs/research/NOO-71-1115-center-st-oakland.md. Vacancy start and duration are not established. The BARN queue RPC was not submitted because the required BARN_SUPABASE_ANON_KEY is unavailable in this environment."
+}
