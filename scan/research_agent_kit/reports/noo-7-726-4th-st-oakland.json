@@ -1,0 +1,32 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.72,
+  "rationale": "Oakland's 2018–19 roll labels this parcel vacant industrial land, but that dated use code and a lessor account ending in 2021 do not establish current occupancy. A 2026 tax sale record also does not show whether anyone uses the site. No recent, direct occupancy or vacancy evidence was found, so start date and duration are unknown.",
+  "evidence": [
+    {
+      "signal": "historical vacant-land assessment classification",
+      "detail": "Oakland's 2018–19 attachment identifies TSENG TAN at 726 4TH ST, APN 001-0115-021-00, with land-use code 4000, 'Vacant indstrl land (may include misc. imps)'. This is a dated assessment classification, not proof of continuous or current vacancy.",
+      "source_url": "https://oakland.legistar.com/gateway.aspx?ID=5b3ad104-6d37-4590-a2aa-573ad17bd97c.pdf&M=F",
+      "observed_at": "2018-2019"
+    },
+    {
+      "signal": "lessor business account expiration",
+      "detail": "Oakland's September 2022 closed-business-account list shows TSENG TAN, 726 4TH ST, NAICS 531120 (lessors of nonresidential buildings), with an expiration date of 2021-12-31. The account closure does not establish that the property itself became vacant.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/finance/documents/business/open-closed-accounts/closed-business-accounts-september-2022.pdf",
+      "observed_at": "2021-12-31"
+    },
+    {
+      "signal": "county tax-sale listing",
+      "detail": "Alameda County's 2025 tax-sale agenda lists APN 1-115-21 at 726 4TH ST among parcels proposed for sale and records a 2007/08 delinquency notice. Tax delinquency and sale processing are not evidence of physical vacancy.",
+      "source_url": "https://www.alamedacountyca.gov/board/bos_calendar/documents/DocsAgendaReg_12_09_25/GENERAL%20ADMINISTRATION/Regular%20Calendar/Treasurer_396780.pdf",
+      "observed_at": "2025-11-18"
+    },
+    {
+      "signal": "tax auction closed without bids",
+      "detail": "The county's 2026 auction listing identifies the parcel and address, reports zero bids, and notes contamination-related cleanup orders. The auction record does not state whether the site is occupied.",
+      "source_url": "https://www.bid4assets.com/auction/index/1262012",
+      "observed_at": "2026-03-23"
+    }
+  ],
+  "report_md": "## Vacancy assessment\n\n**Verdict:** unknown (confidence 0.72)\n\nOakland's 2018–19 property-tax attachment classifies the parcel as vacant industrial land, while the City's business-account list shows a nonresidential lessor account at this address that expired on 2021-12-31. These are historical administrative signals; neither confirms whether the site is occupied now or when any present vacancy began. Alameda County listed the parcel in tax-sale materials in 2025 and its 2026 auction page reports zero bids, but these records also do not determine occupancy.\n\n**Estimated vacancy start:** unknown. The 2018–19 land-use code is not a dated observation of the building's occupancy.\n\n**Estimated vacancy duration:** unknown. No recent public source located in this review directly establishes continuous vacancy or current occupancy."
+}
