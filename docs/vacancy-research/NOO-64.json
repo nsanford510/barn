@@ -1,0 +1,35 @@
+{
+  "apn": "004-0063-020-00",
+  "address": "1429 11TH ST",
+  "city": "OAKLAND",
+  "state": "CA",
+  "zip": "94606",
+  "verdict": "likely_vacant",
+  "confidence": 0.82,
+  "rationale": "A current assessor-derived report classifies the parcel as vacant residential land (use code 1000) and reports land value equal to total value. This supports a likely-vacant parcel, but does not establish physical conditions or a vacancy start date; duration is unknown.",
+  "vacancy_start": null,
+  "vacancy_duration": "unknown",
+  "evidence": [
+    {
+      "signal": "assessor land-use classification and valuation",
+      "detail": "PropertyShark's report for 1429 11th St, APN 4-63-20, shows tax year 2026-2027, property type 'Vacant Residential Land, Zoned 4 Units or Less (1000)', and total market value equal to land value ($173,725). The report is a secondary assessor-data aggregator, not direct proof of current physical vacancy.",
+      "source_url": "https://www.propertyshark.com/mason/Property/38676820/1429-11-St-Oakland-CA-94606/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "meaning of use code 1000",
+      "detail": "Alameda County Assessor's use-code list defines 1000 as vacant residential land zoned for four units or less. This describes assessment classification, not occupancy duration.",
+      "source_url": "https://propinfo.acgov.org/UseCodeList/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "parcel and address cross-check",
+      "detail": "A City of Oakland planning attachment identifies 1429 11TH ST, Oakland 94606, APN 004 006302000, as a 0.076-acre RM-2 parcel. This confirms the parcel/address match and differs from the issue's ZIP 94607; it does not establish vacancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F",
+      "observed_at": "2026-02"
+    }
+  ],
+  "checked_but_not_found": [
+    "No parcel-specific recent permit, listing, sale, code-enforcement, utility, vacancy-tax, news, or dated street-view evidence establishing a vacancy start or continuous duration was located in this review."
+  ]
+}
