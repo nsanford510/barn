@@ -21,7 +21,7 @@ class Noo26VacancyResearchTest(unittest.TestCase):
         self.assertLessEqual(finding["confidence"], 1)
         self.assertGreater(len(finding["rationale"]), 0)
         self.assertLessEqual(len(finding["rationale"]), 500)
-        self.assertGreaterEqual(len(finding["evidence"]), 1)
+        self.assertGreaterEqual(len(finding["evidence"]), 3)
         for item in finding["evidence"]:
             self.assertTrue(item["source_url"].startswith(("https://", "http://")))
             self.assertTrue(item["signal"])
@@ -29,6 +29,10 @@ class Noo26VacancyResearchTest(unittest.TestCase):
             self.assertTrue(item["observed_at"])
         self.assertIn("1962", finding["report_md"])
         self.assertIn("current occupancy", finding["report_md"])
+        renovation_evidence = finding["evidence"][2]
+        self.assertEqual("2026-10-15", renovation_evidence["observed_at"])
+        self.assertIn("not proof", renovation_evidence["detail"])
+        self.assertIn("does not verify", finding["report_md"])
 
 
 if __name__ == "__main__":
