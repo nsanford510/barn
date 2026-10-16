@@ -1,0 +1,40 @@
+{
+  "issue": "NOO-54",
+  "apn": "003 005901900",
+  "address": "698 16TH ST, OAKLAND",
+  "city": "OAKLAND",
+  "zip_code": "94612",
+  "verdict": "likely_vacant",
+  "confidence": 0.78,
+  "rationale": "The 2025-26 Oakland assessment roll classifies APN 003-0059-019-00 as use code 3000, which Alameda County defines as vacant commercial land; a 2026 broker listing also markets 698 16th St as land. This supports an unimproved parcel, but neither source confirms whether the lot itself is actively used or when continuous vacancy began.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "vacancy_duration_note": "Not established. The current assessment use code and 2026 land listing support vacancy as an unimproved parcel, but neither establishes the start of continuous vacancy. The older 2015-2018 Oakland assessment attachment also records the parcel under code 3000, but it does not prove uninterrupted vacancy through today.",
+  "evidence": [
+    {
+      "signal": "current assessor use code for vacant commercial land",
+      "detail": "Oakland FY 2025-26 Preliminary Assessment Roll lists APN 003-0059-019-00 with use code 3000. Alameda County's use-code list defines 3000 as 'Vacant commercial land (may include misc. imps)'. Assessment use codes are for appraisal and are not a field inspection or proof of current use.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=undefined&GUID=61973545-CCA6-4FEA-A0DA-F79F7C713734&ID=14019286&M=F",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "assessor use-code definition",
+      "detail": "Alameda County Assessor's official code list defines 3000 as vacant commercial land and cautions that use codes are for assessment purposes and may not be continuously updated.",
+      "source_url": "https://propinfo.acgov.org/UseCodeList/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "land listed for sale",
+      "detail": "Broker Perry Lee's listings page shows 698 16th Street, Oakland, CA 94612 for sale at $649,000 and categorizes it as Land. A separate syndicated listing page describes the listing as off market, so current active listing status is not consistent across aggregators.",
+      "source_url": "https://www.ratemyagent.com/real-estate-agent/perry-lee-b21le8/sales/properties",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "older vacant-land assessment classification",
+      "detail": "An Oakland public assessment attachment associates 698 16th St and APN 003-0059-019-00 with use code 3000 (vacant commercial land); the record includes 2015 and 2017-2018 entries. This supports a historical vacant-land classification but not continuous vacancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=09D82F49-CD60-482B-A33D-8CAB20E6A3F9&ID=6785905&M=F",
+      "observed_at": "2018 (document period; precise entry dates not specified)"
+    }
+  ],
+  "report_md": "## Vacancy research — APN 003 005901900\n\n**Verdict:** likely_vacant (0.78 confidence).\n\n**Evidence:** Oakland's FY 2025-26 preliminary assessment roll lists APN 003-0059-019-00 with use code 3000. Alameda County defines code 3000 as vacant commercial land, while cautioning that assessor codes are for appraisal and are not continuously updated. A broker listings page reviewed 2026-10-15 lists 698 16th Street, Oakland, CA 94612 at $649,000 as Land. A separate syndicated listing says the offer is off market, so active marketing status is inconsistent. An older Oakland assessment attachment also associates 698 16th St and this APN with code 3000, with entries including 2015 and 2017-2018.\n\n**Vacancy start/duration:** not established. The old roll supports a vacant-land assessment classification by the 2015-2018 period, and the current roll repeats code 3000, but these do not establish continuous physical vacancy. The available sources also do not establish whether the lot is actively used (for example, for parking).\n\n**Limitations:** No recent site inspection, dated street-view observation, utility record, permit/enforcement record, or vacancy-tax filing was verified. Assessment use codes and sale listings are indirect evidence, not proof of use or non-use."
+}
