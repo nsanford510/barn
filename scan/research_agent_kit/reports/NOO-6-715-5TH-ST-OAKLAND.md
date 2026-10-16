@@ -1,6 +1,6 @@
 # Vacancy research: 715 5th St, Oakland (APN 1-115-13-9)
 
-Research checked October 15, 2026. This report is a prepared finding, not a queue submission; the task remains pending because the queue's claim RPC cannot target this APN.
+Research checked October 15, 2026. This report is a prepared finding, not a queue submission. This branch adds an optional exact-APN filter to the claim RPC and client; the live database must apply that migration before the task can be claimed and submitted.
 
 ```json
 {
