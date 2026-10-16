@@ -1,0 +1,26 @@
+{
+  "verdict": "likely_occupied",
+  "confidence": 0.78,
+  "rationale": "Labcorp currently lists a patient service center at 718 Webster St, Suite 101, with weekday hours for Oct 15, 2026, supporting active use of at least part of the property. No source establishes whole-building occupancy or a current vacancy interval; the 2020 fire caused temporary boarding, but reopening timing is unverified.",
+  "evidence": [
+    {
+      "signal": "current business listing",
+      "detail": "Labcorp's official location page identifies 718 Webster St, Suite 101, Oakland, CA 94607, offers routine lab work, welcomes walk-ins, and lists hours on Oct 15, 2026.",
+      "source_url": "https://locations.labcorp.com/ca/oakland/53662/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "fire and temporary boarding (historical)",
+      "detail": "Reporting on the Sep 16, 2020 five-alarm fire said the building was boarded up afterward and owners expected rebuilding to take six months to a year; this does not establish when it reopened or present vacancy.",
+      "source_url": "https://sf.eater.com/2020/9/17/21444041/rang-dong-huangcheng-noodle-house-oakland-chinatown-fire-closed",
+      "observed_at": "2020-09-17"
+    },
+    {
+      "signal": "APN/address cross-check",
+      "detail": "An Oakland city planning attachment indexes 718 Webster St, Oakland 94607 under APN 001 018701000, matching the subject parcel.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F",
+      "observed_at": "2026-10-15"
+    }
+  ],
+  "report_md": "## NOO-21 — 718 Webster St, Oakland (APN 001 018701000)\n\n**Verdict:** likely_occupied (0.78 confidence), based on current evidence of a Labcorp patient service center at Suite 101. This supports occupied commercial use in at least part of the parcel, not occupancy of every unit or the whole building.\n\n**Vacancy start/duration:** Not established. The Sep 2020 fire caused temporary boarding, but the available sources do not date reopening or show a continuous vacant period through the present. No supported vacancy interval can be assigned.\n\n**Evidence checked (observed 2026-10-15):**\n- Labcorp's official page names 718 Webster St, Suite 101, Oakland, CA 94607; lists routine lab work and walk-ins; and displays hours for the current week including Oct 15, 2026: https://locations.labcorp.com/ca/oakland/53662/\n- Eater's Sep 17, 2020 reporting describes the Sep 16 five-alarm fire, restaurants damaged, and the building boarded up after the fire; owners expected rebuilding could take six months to a year. It does not establish present condition or reopening date: https://sf.eater.com/2020/9/17/21444041/rang-dong-huangcheng-noodle-house-oakland-chinatown-fire-closed\n- Oakland city planning attachment maps the street address to APN 001 018701000: https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F\n\nNo reliable public evidence found here establishing an ongoing vacancy period."
+}
