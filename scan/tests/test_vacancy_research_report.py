@@ -34,6 +34,9 @@ class VacancyResearchReportTests(unittest.TestCase):
         self.assertEqual("unknown", finding["verdict"])
         self.assertIsNone(finding["estimated_vacancy_start_date"])
         self.assertIsNone(finding["estimated_vacancy_duration"])
+        self.assertIn("Vacancy start date: unknown", finding["report_md"])
+        self.assertIn("Vacancy duration: unknown", finding["report_md"])
+        self.assertIn("https://", finding["report_md"])
 
 
 if __name__ == "__main__":

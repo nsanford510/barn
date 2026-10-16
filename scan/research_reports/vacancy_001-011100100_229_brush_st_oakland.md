@@ -39,7 +39,8 @@ The parcel is a commercial storefront/restaurant, with documented restaurant ope
     {"source_url": "https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033", "date": "crawled 2025", "summary": "Third-party directory marks the listed restaurant permanently closed; building vacancy is unproven."}
   ],
   "estimated_vacancy_start_date": null,
-  "estimated_vacancy_duration": null
+  "estimated_vacancy_duration": null,
+  "report_md": "Vacancy start date: unknown. Vacancy duration: unknown; the evidence does not establish that the property is currently vacant. The parcel is commercial. Restaurant activity is documented in 2013 and 2014, and a City permit record documents restroom accessibility alterations in 2017. A county 2018 occupant entry may be a mailing record. A commercial lease listing in 2017 and a third-party restaurant closure label do not prove building vacancy. A third-party property summary lists permit entries from 2025-02-21 through 2026-05-24 but masks descriptions and statuses. Oakland's official Accela building-record search returned HTTP 403 in this session. Sources: https://sf.eater.com/2013/10/8/6356185/venga-paella-homestyle-spanish-in-oakland ; https://www.alamedamagazine.com/venga-paellas-manchego-con-membrillo/ ; https://oakland.legistar.com/View.ashx?GUID=6A7754CC-510C-44CB-807A-C0C7E579D7CD&ID=8871387&M=F ; https://www.loopnet.com/Listing/225-229-Brush-St-Oakland-CA/9242340/ ; https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003196%5CCAP_PP_L_2018-02-05.pdf ; https://www.propertyshark.com/mason/Property/38673400/229-Brush-St-Oakland-CA-94607/ ; https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033"
 }
 ```
 
