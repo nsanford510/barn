@@ -242,8 +242,8 @@
       <a href="/outreach" {% if active_nav == 'outreach' %}class="active"{% endif %}>Outreach</a>
     </div>
     <div class="topnav-user">
-      <span>{{ session.get('user_email', '') }}</span>
-      <a href="/logout">Logout</a>
+      <span>{{ session.get('user_email', '') }}{% if session.get('role') == 'admin' %} · admin{% endif %}</span>
+      <a href="/logout">Sign out</a>
     </div>
   </nav>
 

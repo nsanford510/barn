@@ -12,6 +12,7 @@ if str(SCAN_DIR) not in sys.path:
     sys.path.insert(0, str(SCAN_DIR))
 
 import research_queue
+from webgui_auth_helpers import signed_in_client
 
 
 def _load_webgui_app() -> ModuleType:
@@ -34,7 +35,7 @@ class VacancyResearchStatusEndpointTests(unittest.TestCase):
     def test_returns_the_queue_status(self) -> None:
         status = research_queue.summarize({"pending": 4, "done": 1}, {"unknown": 1}, [], [])
         with patch.object(research_queue, "status", return_value=status):
-            response = self.webgui_app.app.test_client().get("/api/vacancy-research/status")
+            response = signed_in_client(self.webgui_app).get("/api/vacancy-research/status")
 
         self.assertEqual(200, response.status_code)
         payload = response.get_json()
@@ -44,7 +45,7 @@ class VacancyResearchStatusEndpointTests(unittest.TestCase):
 
     def test_reports_an_error_when_the_queue_is_unavailable(self) -> None:
         with patch.object(research_queue, "status", side_effect=RuntimeError("relation does not exist")):
-            response = self.webgui_app.app.test_client().get("/api/vacancy-research/status")
+            response = signed_in_client(self.webgui_app).get("/api/vacancy-research/status")
 
         self.assertEqual(500, response.status_code)
         self.assertIn("relation does not exist", response.get_json()["error"])

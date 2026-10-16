@@ -1,0 +1,33 @@
+  {# Shared by login.html and reset_password.html. Expects supabase_url and supabase_anon_key. #}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
+  <script>
+    window.barnAuth = (function () {
+      var supabaseUrl = {{ supabase_url | tojson }};
+      var supabaseAnonKey = {{ supabase_anon_key | tojson }};
+
+      // Clear stale sessions pointing at a different Supabase URL (e.g. local dev vs prod).
+      try {
+        var storageKey = 'sb-' + supabaseUrl.replace(/^https?:\/\//, '').replace(/\..+/, '') + '-auth-token';
+        for (var i = localStorage.length - 1; i >= 0; i--) {
+          var k = localStorage.key(i);
+          if (k && k.endsWith('-auth-token') && k !== storageKey) localStorage.removeItem(k);
+        }
+      } catch (e) {}
+
+      function showMessage(text, kind) {
+        var container = document.querySelector('.login-container');
+        container.querySelectorAll('.error, .notice').forEach(function (el) { el.remove(); });
+        if (!text) return;
+        var div = document.createElement('div');
+        div.className = kind === 'notice' ? 'notice' : 'error';
+        div.textContent = text;
+        container.insertBefore(div, container.querySelector('form'));
+      }
+
+      var client = null;
+      if (window.supabase && window.supabase.createClient) {
+        client = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+      }
+      return { client: client, showMessage: showMessage };
+    })();
+  </script>

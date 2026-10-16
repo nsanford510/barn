@@ -1,1 +1,10 @@
 project_id = "zezhsmgtdzlagqwlvjui"
+
+[auth]
+# Invite-only: admins add users from the dashboard, then grant a role in user_roles.
+enable_signup = false
+site_url = "http://127.0.0.1:5000"
+additional_redirect_urls = ["http://127.0.0.1:5000/reset-password", "http://localhost:5000/reset-password"]
+
+[auth.email]
+enable_signup = false

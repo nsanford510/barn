@@ -10,6 +10,8 @@ import os
 import re
 import sys
 import html
+import hmac
+import time
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from pathlib import Path
@@ -18,7 +20,7 @@ from typing import Any, cast
 from urllib.parse import quote_plus, urlsplit
 
 # pyre-ignore[21]: Could not find import
-from flask import Flask, Response, render_template, request, send_from_directory, jsonify, redirect, url_for, session
+from flask import Flask, Response, g, render_template, request, send_from_directory, jsonify, redirect, url_for, session
 # pyre-ignore[21]
 from werkzeug.exceptions import HTTPException
 
@@ -84,7 +86,18 @@ if ENV_FILE.exists():
 SCOUT_API_KEY = os.environ.get("SCOUT_API_KEY", "")
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "vpt-local-secret-key-change-me")
+_DEFAULT_SECRET_KEY = "vpt-local-secret-key-change-me"
+app.secret_key = os.environ.get("SECRET_KEY") or _DEFAULT_SECRET_KEY
+_ON_VERCEL = bool(os.environ.get("VERCEL"))
+if _ON_VERCEL and app.secret_key == _DEFAULT_SECRET_KEY:
+    # Anyone who knows the default key could forge a session cookie.
+    raise RuntimeError("SECRET_KEY must be set to a long random value in production")
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=_ON_VERCEL,
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
+)
 
 _TRANSIENT_NETWORK_ERROR_NAMES = {
     "RemoteProtocolError",
@@ -475,14 +488,6 @@ def _get_claims_from_token(token: str) -> dict | None:
     return None
 
 
-def _verify_supabase_session() -> dict | None:
-    """Verify session's Supabase JWT and return claims dict if valid, else None."""
-    token = session.get("supabase_access_token")
-    if not token or not _supabase_configured():
-        return None
-    return _get_claims_from_token(token)
-
-
 def _verify_supabase_bearer_request() -> dict | None:
     """Verify Authorization: Bearer <jwt> from request headers."""
     if not _supabase_configured():
@@ -499,31 +504,156 @@ def _verify_supabase_bearer_request() -> dict | None:
     return _get_claims_from_token(token)
 
 
+# --- Access control ---------------------------------------------------------
+# Signing in with Supabase is not enough: the account also needs an 'admin' or
+# 'scout' row in public.user_roles (see web/supabase/migrations/*_scout_role_app_access.sql).
+APP_ROLES = ("admin", "scout")
+ROLE_RECHECK_SECONDS = 15 * 60
+
+# Endpoints reachable without signing in. Everything else requires a session.
+PUBLIC_ENDPOINTS = {
+    "ping",
+    "favicon",
+    "health",
+    "login",
+    "auth_callback",
+    "logout",
+    "reset_password",
+    "api_outreach_webhook_reply",
+    "static",
+}
+
+
+def _lookup_app_role(user_id: str) -> str | None:
+    """Return 'admin' or 'scout' for an approved user, None otherwise. Raises on DB errors."""
+    rows = (
+        db.get_client().table("user_roles").select("role").eq("user_id", user_id).execute().data
+        or []
+    )
+    roles = {str(r.get("role")) for r in rows}
+    for role in APP_ROLES:
+        if role in roles:
+            return role
+    return None
+
+
+def _start_session(claims: dict, role: str) -> None:
+    session.clear()
+    session.permanent = True
+    session["user_id"] = claims.get("sub")
+    session["user_email"] = claims.get("email") or "User"
+    session["role"] = role
+    session["role_checked_at"] = time.time()
+
+
+def _current_user() -> dict | None:
+    """The signed-in, approved user for this request (session cookie or Bearer token)."""
+    if "current_user" in g:
+        return g.current_user
+    user = None
+    if session.get("user_id") and session.get("role") in APP_ROLES:
+        if time.time() - float(session.get("role_checked_at") or 0) > ROLE_RECHECK_SECONDS:
+            try:
+                role = _lookup_app_role(session["user_id"])
+            except Exception:
+                role = session["role"]  # DB hiccup: keep the session, retry next request
+            else:
+                session["role_checked_at"] = time.time()
+            if role is None:
+                session.clear()  # access was revoked
+            else:
+                session["role"] = role
+        if session.get("user_id"):
+            user = {"id": session["user_id"], "email": session.get("user_email"), "role": session["role"]}
+    else:
+        claims = _verify_supabase_bearer_request()
+        if claims and claims.get("sub"):
+            try:
+                role = _lookup_app_role(claims["sub"])
+            except Exception:
+                role = None
+            if role:
+                user = {"id": claims["sub"], "email": claims.get("email"), "role": role}
+    g.current_user = user
+    return user
+
+
+def _wants_json() -> bool:
+    return request.path.startswith("/api/") or request.accept_mimetypes.best == "application/json"
+
+
+def _safe_next(target: str | None) -> str | None:
+    """Only allow same-site relative redirects."""
+    if target and target.startswith("/") and not target.startswith("//") and "\\" not in target:
+        return target
+    return None
+
+
+def _auth_failure():
+    if _wants_json():
+        return jsonify({"error": "Authentication required"}), 401
+    nxt = request.full_path.rstrip("?") if request.method == "GET" else None
+    return redirect(url_for("login", next=nxt) if nxt and nxt != "/" else url_for("login"))
+
+
+@app.before_request
+def _require_login():
+    if request.endpoint is None or request.endpoint in PUBLIC_ENDPOINTS:
+        return None
+    if _current_user() is None:
+        return _auth_failure()
+    return None
+
+
 def login_required(f):
-    """Compatibility decorator; authentication is disabled for local development."""
+    """Require an approved (admin or scout) user. Also enforced globally by _require_login."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        if _current_user() is None:
+            return _auth_failure()
         return f(*args, **kwargs)
     return decorated_function
 
 
+def admin_required(f):
+    """Require the admin role (scan control, deletes, admin page)."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = _current_user()
+        if user is None:
+            return _auth_failure()
+        if user["role"] != "admin":
+            if _wants_json():
+                return jsonify({"error": "Admin access required"}), 403
+            return "Admin access required", 403
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def _supabase_public_config() -> dict:
+    return {
+        "supabase_url": os.environ.get("SUPABASE_URL", ""),
+        "supabase_anon_key": os.environ.get("SUPABASE_PUBLISHABLE_KEY") or os.environ.get("SUPABASE_ANON_KEY", ""),
+    }
+
 
 @app.route("/login", methods=["GET"])
 def login():
-    """Login page – auth is handled by Supabase Auth on the client."""
-    if _verify_supabase_session():
-        return redirect(url_for("search_page"))
+    """Login page – credentials go to Supabase Auth in the browser."""
+    nxt = _safe_next(request.args.get("next"))
+    if _current_user():
+        return redirect(nxt or url_for("search_page"))
     return render_template(
         "login.html",
         error=request.args.get("error"),
-        supabase_url=os.environ.get("SUPABASE_URL", ""),
-        supabase_anon_key=os.environ.get("SUPABASE_PUBLISHABLE_KEY") or os.environ.get("SUPABASE_ANON_KEY", ""),
+        next_url=nxt or "",
+        **_supabase_public_config(),
     )
 
 
 @app.route("/auth/callback", methods=["POST"])
 def auth_callback():
-    """Accept Supabase access_token from client, verify, and create session."""
+    """Accept a Supabase access_token from the browser, check the user is approved, start a session."""
     if not _supabase_configured():
         return jsonify({"error": "Supabase not configured"}), 503
     data = request.get_json(silent=True) or {}
@@ -533,19 +663,27 @@ def auth_callback():
     claims = _get_claims_from_token(token)
     if not claims or not claims.get("sub"):
         return jsonify({"error": "Invalid or expired token"}), 401
-    session["supabase_access_token"] = token
-    session["user_id"] = claims.get("sub")
-    session["user_email"] = claims.get("email") or "User"
-    return jsonify({"ok": True, "redirect": url_for("search_page")})
+    try:
+        role = _lookup_app_role(claims["sub"])
+    except Exception:
+        return jsonify({"error": "Could not check account access. Try again."}), 503
+    if role is None:
+        return jsonify({"error": "Your account hasn't been approved yet. Ask an admin for access."}), 403
+    _start_session(claims, role)
+    return jsonify({"ok": True, "redirect": _safe_next(data.get("next")) or url_for("search_page")})
 
 
 @app.route("/logout")
 def logout():
     """Logout and clear session."""
-    session.pop("supabase_access_token", None)
-    session.pop("user_id", None)
-    session.pop("user_email", None)
-    return redirect(url_for("login"))
+    session.clear()
+    return redirect(url_for("login", signed_out=1))
+
+
+@app.route("/reset-password", methods=["GET"])
+def reset_password():
+    """Set a new password after a reset email or an invite (handled by supabase-js in the page)."""
+    return render_template("reset_password.html", **_supabase_public_config())
 
 
 # Re-exported from scan/geo_utils.py, the single implementation. This module
@@ -1687,7 +1825,7 @@ def api_favorites_toggle(apn: str):
 
 
 @app.route("/api/property/<path:apn>", methods=["DELETE"])
-@login_required
+@admin_required
 def api_property_delete(apn: str):
     """Permanently delete a property from the database."""
     cleaned_apn = _clean_apn(apn)
@@ -1700,7 +1838,7 @@ def api_property_delete(apn: str):
 
 
 @app.route("/api/property/bulk-delete", methods=["POST"])
-@login_required
+@admin_required
 def api_property_bulk_delete():
     """Permanently delete multiple properties from the database."""
     data = request.get_json() or {}
@@ -1891,7 +2029,7 @@ def scan_page():
 
 
 @app.route("/admin")
-@login_required
+@admin_required
 def admin_page():
     """Backward-compatible redirect to /scan."""
     return redirect(url_for("scan_page"))
@@ -1928,7 +2066,7 @@ def api_scan_status():
 
 
 @app.route("/api/scan/start", methods=["POST"])
-@login_required
+@admin_required
 def api_scan_start():
     """Start a scan."""
     try:
@@ -1956,7 +2094,7 @@ def api_scan_start():
 
 
 @app.route("/api/scan/stop", methods=["POST"])
-@login_required
+@admin_required
 def api_scan_stop():
     """Stop continuous scan."""
     try:
@@ -2056,7 +2194,7 @@ def api_vacancy_research_status():
 
 
 @app.route("/api/fleet/stop", methods=["POST"])
-@login_required
+@admin_required
 def api_fleet_stop():
     """Pause every running node of the fleet run; nodes finish their lookup and idle."""
     from webgui import fleet_status
@@ -2067,7 +2205,7 @@ def api_fleet_stop():
 
 
 @app.route("/api/fleet/resume", methods=["POST"])
-@login_required
+@admin_required
 def api_fleet_resume():
     """Resume paused or failed nodes of the fleet run."""
     from webgui import fleet_status
@@ -2078,7 +2216,7 @@ def api_fleet_resume():
 
 
 @app.route("/api/scan/resume", methods=["POST"])
-@login_required
+@admin_required
 def api_scan_resume():
     """Resume the latest interrupted scan job from its last checkpoint."""
     try:
@@ -3630,8 +3768,9 @@ def api_outreach_webhook_reply():
     """Webhook endpoint for OpenClaw to report incoming replies."""
     # Verify webhook secret
     secret = request.headers.get("X-Webhook-Secret", "")
-    expected = db.get_outreach_setting("openclaw_webhook_secret", "")
-    if expected and secret != expected:
+    expected = db.get_outreach_setting("openclaw_webhook_secret", "") or ""
+    # Fail closed: with no secret configured, nobody can post replies.
+    if not expected or not hmac.compare_digest(secret.encode(), str(expected).encode()):
         return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json(silent=True) or {}
