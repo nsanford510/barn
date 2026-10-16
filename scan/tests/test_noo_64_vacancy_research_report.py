@@ -11,7 +11,7 @@ class Noo64VacancyResearchReportTest(unittest.TestCase):
         report = json.loads(REPORT.read_text(encoding="utf-8"))
 
         self.assertEqual("004-0063-020-00", report["apn"])
-        self.assertEqual("likely_vacant", report["verdict"])
+        self.assertEqual("unknown", report["verdict"])
         self.assertGreaterEqual(report["confidence"], 0)
         self.assertLessEqual(report["confidence"], 1)
         self.assertLessEqual(len(report["rationale"]), 500)
@@ -20,6 +20,7 @@ class Noo64VacancyResearchReportTest(unittest.TestCase):
         self.assertTrue(report["evidence"])
         self.assertTrue(all(item["source_url"].startswith("https://") for item in report["evidence"]))
         self.assertTrue(any("duration" in item["detail"].lower() for item in report["evidence"]))
+        self.assertTrue(any("925 sq ft" in item["detail"] for item in report["evidence"]))
 
 
 if __name__ == "__main__":
