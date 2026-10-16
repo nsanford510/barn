@@ -1,0 +1,30 @@
+{
+  "address": "271 5TH ST, OAKLAND, CA 94607",
+  "apn": "001-0153-004-00",
+  "verdict": "likely_vacant",
+  "confidence": 0.9,
+  "rationale": "Oakland parcel GIS reports this parcel as use code 4000 with no buildings, no building area, and $0 improvement value. Alameda County defines 4000 as vacant industrial land, and the 2019-20 roll also records vacant industrial use. This supports vacant land but does not establish a continuous vacancy start date.",
+  "estimated_vacancy_start_date": null,
+  "estimated_vacancy_duration": "Unknown. The parcel was classified as vacant industrial land by February 2019 (about 7 years 8 months before October 2026), and current GIS still reports no buildings; these records do not prove continuous vacancy.",
+  "evidence": [
+    {
+      "signal": "Current parcel use and building characteristics",
+      "detail": "Oakland's parcel GIS record for 271 5TH ST OAKLAND 94607 returns use code 4000, a 2,500 sq ft lot, zero buildings, zero building area, and $0 improvement value. The record's last-document date is 2000-10-27; this is not evidence of a vacancy start date.",
+      "source_url": "https://gismaps.oaklandca.gov/server/rest/services/Oakland_Parcels/MapServer/0/query?where=FULL_SITUSADDRESS%3D%27271%205TH%20ST%20OAKLAND%2094607%27&outFields=PRINTPARCEL%2CFULL_SITUSADDRESS%2CSHP_USECODE%2CSHP_IMPRVMTS_VALUE%2CPC_NO_BUILDINGS%2CPC_BLDG_AREA%2CPC_BLDG_YEAR%2CLAST_DOCUMENT_DATE%2CPC_LOT_SIZE&returnGeometry=false&f=json",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "Meaning of assessor use code 4000",
+      "detail": "Alameda County defines use code 4000 as vacant industrial land, which may include miscellaneous improvements.",
+      "source_url": "https://propinfo.acgov.org/UseCodeList/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "Historical vacant-land classification",
+      "detail": "The City of Oakland FY 2019-20 preliminary assessment roll lists APN 001-0153-004-00 with use code 400; the roll is dated 2019-02-28. This supports the classification by 2019, not continuous vacancy since then.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=FD559A38-265D-4724-80F7-A5F39270C71F&ID=7129314&M=F",
+      "observed_at": "2019-02-28"
+    }
+  ],
+  "report_md": "## Finding\n\n**Verdict:** likely_vacant (0.90 confidence).\n\nOakland parcel GIS reports the exact parcel as use code 4000, with no buildings, no building area, and $0 improvement value. Alameda County defines 4000 as vacant industrial land. The FY 2019-20 Oakland assessment roll also lists the parcel with code 400. Together these support a vacant-land classification.\n\n**Vacancy start and duration:** unknown. The parcel was classified as vacant industrial land by February 2019 (about 7 years 8 months before October 2026), and current GIS still reports no buildings. Neither source proves the parcel was continuously vacant or dates the start of any vacancy. The 2000-10-27 last-document date in GIS is not a vacancy date.\n\nSources: [Oakland parcel GIS](https://gismaps.oaklandca.gov/server/rest/services/Oakland_Parcels/MapServer/0/query?where=FULL_SITUSADDRESS%3D%27271%205TH%20ST%20OAKLAND%2094607%27&outFields=PRINTPARCEL%2CFULL_SITUSADDRESS%2CSHP_USECODE%2CSHP_IMPRVMTS_VALUE%2CPC_NO_BUILDINGS%2CPC_BLDG_AREA%2CPC_BLDG_YEAR%2CLAST_DOCUMENT_DATE%2CPC_LOT_SIZE&returnGeometry=false&f=json); [Alameda County use codes](https://propinfo.acgov.org/UseCodeList/); [Oakland FY 2019-20 assessment roll](https://oakland.legistar.com/View.ashx?GUID=FD559A38-265D-4724-80F7-A5F39270C71F&ID=7129314&M=F)."
+}
