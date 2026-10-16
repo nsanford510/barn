@@ -1,0 +1,26 @@
+{
+  "verdict": "likely_vacant",
+  "confidence": 0.68,
+  "rationale": "The industrial building was marketed for sale in 2025 with electrical wiring removed and repairs needed, and a listing dated 2025-10-02 still describes the space as available for lease. This supports likely vacancy, but marketing does not prove actual or continuous vacancy; exact duration is unknown.",
+  "evidence": [
+    {
+      "signal": "commercial space marketed for lease",
+      "detail": "LoopNet lists 112 4th St as currently available industrial space and gives 2025-10-02 as the date on market. This supports a possible vacancy period from fall 2025, but a listing date alone does not establish that the building was empty or continuously vacant.",
+      "source_url": "https://www.loopnet.com/Listing/112-4th-St-Oakland-CA/37915415/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "sale brochure reports electrical wiring removed",
+      "detail": "Gordon Commercial's 112 4th Street sale brochure identifies the larger parcel as APN 1-163-5, offers the industrial building for sale, and notes electrical wiring had been removed and repairs were required. This suggests the building may not have been operational, but does not prove occupancy status.",
+      "source_url": "https://www.gordoncommercial.com/wp-content/uploads/2025/02/112_4thStreetOAK_ForSale_F1b-1.pdf",
+      "observed_at": "2025-02"
+    },
+    {
+      "signal": "historical code-enforcement blight record",
+      "detail": "Oakland's Q4 2019 code-enforcement report lists 112 4TH ST, Oakland, under Housing Blight and shows a verified violation in the 2018-2019 record. This is a historical condition signal, not proof of current or continuous vacancy.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf",
+      "observed_at": "2019-05-29"
+    }
+  ],
+  "report_md": "## Vacancy finding \u2014 112 4th St, Oakland (APN 001 016300500)\n\n**Verdict:** likely_vacant (confidence 0.68). The commercial building is listed as currently available for lease, with LoopNet reporting a 2025-10-02 on-market date. A February 2025 sale brochure says electrical wiring was removed and repairs were needed. Together these support likely vacancy or non-operation, but neither listing nor the wiring note proves that the property was empty.\n\n**Vacancy start:** not confirmed. The 2025-10-02 listing is the earliest dated evidence located that the full commercial space was being marketed for lease, not a verified vacancy start. **Duration:** unknown; it may have been vacant since being marketed in October 2025 (about one year as of 2026-10-15), but continuous vacancy is not established. Oakland's 2018-2019 blight record is an older condition signal and does not bridge the gap.\n\nSources: [LoopNet listing](https://www.loopnet.com/Listing/112-4th-St-Oakland-CA/37915415/), [Gordon Commercial sale brochure](https://www.gordoncommercial.com/wp-content/uploads/2025/02/112_4thStreetOAK_ForSale_F1b-1.pdf), [Oakland Q4 2019 code-enforcement report](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf)."
+}
