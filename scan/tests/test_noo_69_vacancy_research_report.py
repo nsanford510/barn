@@ -33,6 +33,9 @@ class Noo69VacancyResearchReportTest(unittest.TestCase):
             self.assertTrue(item["signal"])
             self.assertTrue(item["detail"])
 
+    def test_incomplete_permit_index_is_only_a_limitation(self):
+        self.assertTrue(any("permit number, type, or status" in item for item in self.report["limitations"]))
+
 
 if __name__ == "__main__":
     unittest.main()

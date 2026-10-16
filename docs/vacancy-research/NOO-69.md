@@ -24,3 +24,5 @@ The evidence does not support a vacancy start date or a claim that vacancy was c
 ## Scope and limits
 
 This report uses public records and public listing data only. No current utility record or 2026 field observation was located. The assessor classification is not an occupancy census, and the listing is time-sensitive.
+
+PropertyShark's permit section currently displays an issued date of 2025-11-18 but leaves the permit number, type, and status blank. I could not corroborate this fragment in a public City of Oakland permit record, so it is treated only as an unverified lead and does not change the vacancy verdict or duration assessment. [PropertyShark permit section](https://www.propertyshark.com/mason/Property/38676902/1468-8-St-Oakland-CA-94607/)

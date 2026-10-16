@@ -30,6 +30,7 @@
   "limitations": [
     "No dated source establishes the first day of vacancy or continuous vacancy duration.",
     "No current 2026 field observation, utility record, or current code-enforcement result was found.",
-    "The assessor use code is an appraisal classification and may not be continuously updated; it is not proof of who is present at a property."
+    "The assessor use code is an appraisal classification and may not be continuously updated; it is not proof of who is present at a property.",
+    "PropertyShark displays an issued date of 2025-11-18 in its permit section but no permit number, type, or status; this uncorroborated fragment is not evidence of occupancy or vacancy duration."
   ]
 }
