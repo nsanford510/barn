@@ -15,7 +15,8 @@ class Noo65VacancyResearchReportTests(unittest.TestCase):
 
     def test_report_identifies_the_requested_property_and_allowed_verdict(self) -> None:
         self.assertEqual("NOO-65", self.report["issue"])
-        self.assertEqual("004-0067-016-00", self.report["apn"])
+        self.assertEqual("004 006701600", self.report["apn"])
+        self.assertEqual("004-0067-016-00", self.report["apn_normalized"])
         self.assertEqual("800 CENTER ST, OAKLAND, CA 94607", self.report["address"])
         self.assertIn(self.report["verdict"], {"likely_vacant", "likely_occupied", "unknown"})
         self.assertGreaterEqual(self.report["confidence"], 0)
@@ -50,6 +51,7 @@ class Noo65VacancyResearchReportTests(unittest.TestCase):
 
     def test_markdown_report_preserves_the_same_timing_caveat(self) -> None:
         self.assertIn("Vacancy start: unknown; documented vacant by 1997-04-18", self.report["report_md"])
+        self.assertIn("APN: 004 006701600 (normalized as 004-0067-016-00)", self.report["report_md"])
         self.assertIn("do not establish uninterrupted vacancy", self.report["report_md"])
         self.assertIn("https://deh.acgov.org/landwater-assets/docs/public-notices/RO0000454_FACT_SHT_2021-09-15.pdf", self.report["report_md"])
         self.assertIn("use code 3000", self.report["report_md"])
