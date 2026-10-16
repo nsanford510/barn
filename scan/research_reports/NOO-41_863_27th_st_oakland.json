@@ -1,0 +1,32 @@
+{
+  "issue": "NOO-41",
+  "apn": "003 000502702",
+  "address": "863 27TH ST, OAKLAND, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.9,
+  "rationale": "Public property listings describe this parcel as a 5,000-sq-ft vacant/raw land lot, not an occupied dwelling; listings date to at least March 2017. This supports vacant land, but no source establishes when the lot became vacant or any residential vacancy duration.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "duration_note": "Unknown. Listing history shows the parcel marketed as land by March 2017, but that does not establish when it became vacant.",
+  "evidence": [
+    {
+      "signal": "Listed as vacant land",
+      "detail": "Zillow identifies the property as VacantLand and calls it a vacant lot; its price history shows a listing dated March 9, 2022 and earlier listings from 2017.",
+      "source_url": "https://www.zillow.com/homedetails/863-27th-St-Oakland-CA-94607/2099021915_zpid/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "Raw land with no utility on site",
+      "detail": "Compass describes development status as Raw Land and reports no utilities on site. Its listing history includes active listings in 2023 and 2025.",
+      "source_url": "https://www.compass.com/homedetails/863-27th-St-Oakland-CA-94607/1Q1H6N_pid/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "Commercial offering as a vacant lot",
+      "detail": "The SVN brochure describes 863 27th Street as a 5,000-square-foot lot offered for development; it does not document when the parcel became vacant.",
+      "source_url": "https://images1.showcase.com/d2/RsUXeS9CMCKswhREQxNDvVmY2ZTm6xybqjDDXFfQWJA/document.pdf",
+      "observed_at": "2025"
+    }
+  ],
+  "report_md": "# Vacancy research: 863 27th St, Oakland\n\n- **APN:** 003 000502702 (also identified in public listing records as 3-5-27-2)\n- **Verdict:** likely_vacant (vacant land)\n- **Confidence:** 0.90\n- **Vacancy start/duration:** Unknown. Public listing history supports that the parcel was marketed as vacant/raw land by March 2017, but this is not a verified vacancy start date.\n\n## Evidence\n\n1. [Zillow property page](https://www.zillow.com/homedetails/863-27th-St-Oakland-CA-94607/2099021915_zpid/) identifies the parcel as VacantLand and describes it as a vacant lot. It shows listing history reaching March 2017. This supports land use/status, not the date the parcel became vacant.\n2. [Compass property page](https://www.compass.com/homedetails/863-27th-St-Oakland-CA-94607/1Q1H6N_pid/) describes the development status as Raw Land and reports no utilities on site. Its recorded active listings include 2023 and 2025.\n3. [SVN commercial brochure](https://images1.showcase.com/d2/RsUXeS9CMCKswhREQxNDvVmY2ZTm6xybqjDDXFfQWJA/document.pdf) offers 863 27th Street as a 5,000-square-foot development lot.\n\n## Limits\n\nThe available evidence concerns a vacant parcel, not a residence. It cannot establish a residential vacancy period or the date the parcel became vacant. No direct utility, municipal vacancy-tax, permit, or dated street-view evidence was found in this research."
+}
