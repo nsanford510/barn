@@ -1,0 +1,38 @@
+{
+  "verdict": "likely_occupied",
+  "confidence": 0.91,
+  "rationale": "Active leasing is documented at this mixed-use apartment building: its manager advertises Unit P, Zillow lists Unit D, and a rental broker marks Unit F rented. This supports occupancy of at least part of the property, not full occupancy. No evidence establishes a period when the whole building was vacant; duration is undetermined.",
+  "evidence": [
+    {
+      "signal": "Active rental offering by property manager",
+      "detail": "Crown Fortune Properties identifies 1006 Jefferson Street as apartments over ground-floor retail and says Unit P is available now for $1,395/month on a one-year lease. Current offer indicates active management and residential use, but does not itself prove a tenant currently occupies the unit.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.crownfortune.com/apartments/1006-jefferson-street-p"
+    },
+    {
+      "signal": "Another unit listed for rent",
+      "detail": "Zillow's building page identifies Unit D as a studio available for rent at $1,395/month. A rental listing indicates turnover/availability of an individual unit, not vacancy of the whole building.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.zillow.com/b/1006-jefferson-st-oakland-ca-5Z2mwG/"
+    },
+    {
+      "signal": "Unit marked rented",
+      "detail": "SF Bay Rental Co. lists 1006 Jefferson St Unit F as Rented, a one-bedroom apartment. This is direct evidence of a rental transaction for one unit, though the page does not establish the rental date or present tenant status.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.sfbayrentalco.com/property/1006-jefferson-st-unit-f-oakland-2"
+    },
+    {
+      "signal": "City enforcement record is not a vacancy finding",
+      "detail": "Oakland's 2019 quarterly report logs case 1900997 at 1006 Jefferson St as a zoning complaint about a massage business at 1010 Jefferson St; the case was Non-Actionable. It provides no evidence that 1006 Jefferson was vacant.",
+      "observed_at": "2019-04-04",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf"
+    },
+    {
+      "signal": "City tax roll property use",
+      "detail": "Oakland's 2024 tax roll lists APN 002 003501200 at 1006 Jefferson St with use code 3200: store on first floor, with offices and apartment/loft on second and third floors. This confirms mixed-use classification, not actual occupancy.",
+      "observed_at": "2024",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=E4E0D13F-7635-4B47-B0FA-271A96F9B96C&ID=14301879&M=F"
+    }
+  ],
+  "report_md": "# Vacancy research: 1006 Jefferson St, Oakland\n\n**APN:** 002 003501200  \n**Research date:** 2026-10-15  \n**Verdict:** likely_occupied (0.91)\n\n## Assessment\n\nThe available evidence supports ongoing residential leasing at this mixed-use building, including an individual unit marked rented and current rental offers by the property manager and on Zillow. It does not show that every apartment is occupied; listed units may be vacant during normal turnover. No reviewed source documents a whole-building vacancy period, so a vacancy start date and duration cannot be determined.\n\n## Evidence and limits\n\n- The manager's own Unit P page calls it available now at $1,395/month on a one-year lease: https://www.crownfortune.com/apartments/1006-jefferson-street-p\n- Zillow's building page lists Unit D for rent: https://www.zillow.com/b/1006-jefferson-st-oakland-ca-5Z2mwG/\n- SF Bay Rental Co. marks Unit F rented but gives no rental date: https://www.sfbayrentalco.com/property/1006-jefferson-st-unit-f-oakland-2\n- Oakland's 2019 enforcement report lists a zoning case concerning a massage business at 1010 Jefferson St, marked Non-Actionable; this is not a vacancy signal for 1006: https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf\n- Oakland's 2024 tax roll codes the parcel as a first-floor store with offices and apartment/loft above, confirming mixed use but not occupancy: https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=E4E0D13F-7635-4B47-B0FA-271A96F9B96C&ID=14301879&M=F\n\n**Duration:** No evidence supports a whole-building vacancy start or duration. Individual vacancies/lease dates are not established by these sources."
+}
