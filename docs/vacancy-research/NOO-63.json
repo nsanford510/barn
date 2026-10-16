@@ -3,8 +3,8 @@
   "apn": "004 006300601",
   "address": "1125 MANDELA PKWY, OAKLAND, CA 94607",
   "verdict": "likely_vacant",
-  "confidence": 0.99,
-  "rationale": "The parcel is documented as a vacant, unpaved lot in May 2016 after its building was reportedly demolished in January 2015; a 2026 Oakland planning table still identifies the parcel. Evidence supports a vacant lot, not an occupied dwelling. Vacancy likely began by Jan 2015; continuous duration is not independently proven.",
+  "confidence": 0.97,
+  "rationale": "A 2026 Oakland planning table identifies this parcel with Alameda County use code 1000, which the County defines as residential vacant; a 2016 county environmental report also calls it a vacant, unpaved lot. A secondary source dates demolition to Jan 2015. This supports a vacant parcel, though the exact start and uninterrupted duration are not proven.",
   "vacancy_start": "2015-01-29",
   "duration_as_of": "2026-10-16",
   "duration_note": "About 11 years 8 months since reported demolition; official documentation confirms vacant land by 2016-05-03. Continuous vacancy after those observations is likely but not directly verified.",
@@ -19,7 +19,13 @@
       "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/boards-amp-commissions/documents/pc/2.4.2026-item-1-citywide-case-file-za26001-attach-f-housing-cap-anal-of-oakland-zoning-comp-w-sb-79-standards-in-tier-1-tod-zones-for-six-bart-stations-pc-2.4.26.pdf",
       "source_name": "City of Oakland Planning Commission, 2026 zoning comparison attachment",
       "observed_date": "2026-02-04",
-      "detail": "Lists 1125 Mandela Pkwy and APN 004 006300601 as a 0.230-acre parcel. Supports parcel identity and ongoing land-parcel characterization, but its numeric use code is not interpreted here as proof of vacancy."
+      "detail": "Lists 1125 Mandela Pkwy, APN 004 006300601, and Alameda County use code 1000. Alameda County's vacant land survey defines use code 1000 as Residential Vacant. This is an assessor classification, not direct proof of physical condition on the observation date."
+    },
+    {
+      "source_url": "https://district4.acgov.org/wp-content/uploads/sites/14/2021/11/ACFPCVacantLandSurveyReport.pdf",
+      "source_name": "Alameda County Farm Bureau, Ashland Cherryland Vacant Land Survey Report",
+      "observed_date": "2021-11-01",
+      "detail": "Defines Alameda County Assessor use code 1000 as Residential Vacant. Used only to interpret the code shown for this APN in Oakland's 2026 table."
     },
     {
       "source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003184%5CMAPS_ASSESSOR.pdf",
@@ -35,7 +41,7 @@
     }
   ],
   "limitations": [
-    "No evidence located establishing whether the parcel was redeveloped after the 2016 observation or proving uninterrupted vacancy to the present.",
+    "The 2026 use code is an assessor classification, not direct onsite observation; no evidence located establishes the exact physical condition or uninterrupted vacancy throughout the period.",
     "This finding concerns the parcel/building site and does not imply a residential unit was vacant for the entire period."
   ]
 }
