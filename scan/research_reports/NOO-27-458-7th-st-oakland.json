@@ -1,0 +1,36 @@
+{
+  "apn": "001 020101600",
+  "address": "458 7TH ST, OAKLAND, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.82,
+  "rationale": "Occupancy evidence conflicts: a commercial rental listing describes the address as currently occupied by a bail-bonds business, while Aladdin’s current Oakland page lists another address. Neither establishes occupancy today or a vacancy start date.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "evidence": [
+    {
+      "signal": "commercial_rental_listing",
+      "detail": "AppFolio lists 458 7th Street as available now, but describes the space as currently occupied by a bail-bonds business and says not to disturb tenants. Current occupancy is not independently confirmed.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://eminvest.appfolio.com/listings/listings"
+    },
+    {
+      "signal": "business_location",
+      "detail": "Aladdin Bail Bonds’ current Oakland office page lists 201 4th Street Suite 101, not 458 7th Street. This suggests the 458 listing may be stale, but does not establish vacancy.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://locations.aladdinbailbonds.com/ca/oakland/bail-bonds-oakland-ca-86107.html"
+    },
+    {
+      "signal": "property_profile",
+      "detail": "PropertyShark identifies 458 7th Street / alternate address 701 Broadway, parcel 1-201-16, as a commercial one-story store and reports a 2005 sale. It gives no vacancy dates.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.propertyshark.com/mason/Property/38674070/458-7-St-Oakland-CA-94607/"
+    },
+    {
+      "signal": "municipal_parcel_record",
+      "detail": "City of Oakland Legistar attachment pairs 458 7TH ST OAKLAND 94607 with APN 001 020101600. This confirms parcel identity, not occupancy.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F"
+    }
+  ],
+  "report_md": "# Vacancy research: 458 7th St, Oakland\n\n**APN:** 001 020101600  \n**Research date:** 2026-10-15  \n**Verdict:** unknown (confidence 0.82)  \n**Vacancy start / duration:** undetermined; no reliable dated evidence identifies when a vacancy began.\n\n## Evidence\n\n- An AppFolio commercial listing identifies 458 7th Street, says the space is available now, and describes it as currently occupied by a bail-bonds business. The listing also asks visitors not to disturb tenants. It does not establish present occupancy independently. [AppFolio listing](https://eminvest.appfolio.com/listings/listings)\n- Aladdin Bail Bonds’ current Oakland page lists 201 4th Street Suite 101 rather than 458 7th Street. This suggests that the commercial listing could be stale, but does not establish the premises are vacant. [Aladdin Oakland office](https://locations.aladdinbailbonds.com/ca/oakland/bail-bonds-oakland-ca-86107.html)\n- PropertyShark identifies the parcel as 458 7th Street / alternate address 701 Broadway, parcel 1-201-16, a commercial one-story store. It reports a 2005 sale but no vacancy-relevant dates. [PropertyShark property page](https://www.propertyshark.com/mason/Property/38674070/458-7-St-Oakland-CA-94607/)\n- Oakland Legistar pairs the address with APN 001 020101600, confirming parcel identity but not occupancy. [Oakland Legistar record](https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F)\n\n## Assessment\n\nThe available sources conflict on whether the commercial space is currently occupied. They do not establish a vacancy start or duration. Verdict remains unknown pending reliable current occupancy evidence."
+}
