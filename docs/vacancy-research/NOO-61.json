@@ -1,11 +1,11 @@
 {
   "apn": "004004900800",
   "address": "5TH ST (500 Kirkham site), Oakland, CA 94607",
-  "verdict": "likely_vacant",
-  "confidence": 0.90,
-  "rationale": "The City described the assembled 500 Kirkham site, including this APN, as vacant excess land in 2016. A 2025 offering still markets the parcel assembly as a development site with a proposed housing plan. This supports vacant land, not a move-out date or uninterrupted vacancy; duration is evidenced only at dated observations.",
-  "vacancy_start": "No later than 2016-04-21 (City ordinance/term sheet describes the 500 Kirkham site as vacant land).",
-  "vacancy_duration": "About 9 years 3 months between the 2016 official description and the 2025-08-12 feasibility/marketing material; continuity and present-day status are not proven.",
+  "verdict": "likely_occupied",
+  "confidence": 0.78,
+  "rationale": "The City described the larger 500 Kirkham parcel assembly as vacant land in 2016; this APN is part of it. June 2026 reporting citing the interim-use application says the site is currently used for shipping containers and commercial semi-trucks, with a temporary parking permit sought. This supports active nonresidential use, not residential occupancy; the exact APN footprint and start date remain uncertain.",
+  "vacancy_start": "The site was documented as vacant land on 2016-04-21. A June 2026 report says the larger site is currently used for commercial vehicle/container parking; when this use began is unknown.",
+  "vacancy_duration": "Not determinable. Vacant land was documented in 2016; commercial parking/storage use was reported by 2026-06-26. The onset and continuity of the intervening use are unknown.",
   "evidence": [
     {
       "signal": "Official site described as vacant land",
@@ -30,7 +30,13 @@
       "detail": "LoopNet's public property record maps 5th St, Oakland 94607 to APN 004-0049-008-00 and records a for-sale listing dated 2025-10-09. Its land-use and lot-size fields are aggregated third-party data and are not treated as official occupancy evidence.",
       "source_url": "https://www.loopnet.com/property/5th-st-oakland-ca-94607/06001-004%20004900800/",
       "observed_at": "2025-10-09"
+    },
+    {
+      "signal": "Current nonresidential use as container/truck parking",
+      "detail": "A June 26, 2026 report on the 500 Kirkham site quotes the interim-use application seeking a five-year conditional use permit for about 250 automotive-fee parking spaces while the site is marketed for housing. The report says the site is currently used for shipping containers and commercial semi-trucks. The target APN is one of the parcels in the larger site; the exact parking footprint by APN is not shown.",
+      "source_url": "https://sfyimby.com/2026/06/temporary-parking-proposed-for-500-kirkham-street-west-oakland.html",
+      "observed_at": "2026-06-26"
     }
   ],
-  "report_md": "# NOO-61 vacancy research\n\n**Parcel:** APN 004 004900800 (also formatted 004-0049-008-00), 5th St, Oakland, CA 94607. This APN is one of the contiguous parcels in the larger 500 Kirkham site; do not conflate it with a standalone occupied address.\n\n**Verdict:** likely_vacant (0.90 confidence), referring to vacant land rather than an unoccupied building. Oakland's 2016 ordinance and attached term sheet describe the site as a vacant lot/excess land. The 2019 CEQAnet record identifies this APN in the 500 Kirkham project. Colliers' 2025 offering material lists the parcel among the site APNs, describes 5th Street frontage and a proposed housing feasibility plan dated 2025-08-12. LoopNet records a parcel-specific for-sale listing dated 2025-10-09. The latter two sources support continued development-site status, but marketing/plans do not prove the exact parcel was physically unused every day or establish its current condition.\n\n**Start and duration:** vacant-land description documented no later than 2016-04-21. A later observation appears in 2025-08-12 feasibility material, about 9 years 3 months after the City description. Treat this as the span between dated evidence, not confirmed continuous vacancy; exact onset and duration remain unknown.\n\n**Limits:** The City record and CEQAnet describe a multi-parcel assembly, so the strongest vacancy evidence applies to the site as a whole. No parcel-level utility, code-enforcement, occupancy, or recent street-view evidence was established in this research. The City approved development plans in 2019, but approval is not evidence of construction or occupancy."
+  "report_md": "# NOO-61 vacancy research\n\n**Parcel:** APN 004 004900800 (also formatted 004-0049-008-00), 5th St, Oakland, CA 94607. This APN is one of the contiguous parcels in the larger 500 Kirkham site.\n\n**Verdict:** likely_occupied (0.78 confidence), meaning the site is reported in active nonresidential use, not that it contains occupied housing. Oakland described the assembled site as a vacant lot in 2016. The 2019 CEQAnet record lists this APN among the 500 Kirkham parcels. Colliers' 2025 offering material lists this APN in the larger site and presents a proposed housing feasibility plan. Most recently, a June 26, 2026 report quotes the interim-use application for a five-year, approximately 250-space parking use and says the site is currently used for shipping containers and commercial semi-trucks. This supports current physical use of the assembly, though the precise portion of the assembly used for parking is not mapped to each APN.\n\n**Vacancy period:** no continuous vacancy duration can be established. The larger site was documented as vacant land on 2016-04-21; active container/truck parking was reported by 2026-06-26. The start date of that use, and any intervening periods of vacancy, are unknown. Residential occupancy is not established by the sources reviewed.\n\n**Limits:** The City and CEQAnet records describe a multi-parcel assembly, and the recent parking report is site-wide rather than APN-specific. The temporary-use permit was reported as filed/requested, not as approved. The current-use statement is from the reporter's account of the application materials; parcel-level utilities, code-enforcement, occupancy, or dated street-view evidence were not established."
 }
