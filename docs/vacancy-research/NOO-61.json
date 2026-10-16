@@ -1,0 +1,36 @@
+{
+  "apn": "004004900800",
+  "address": "5TH ST (500 Kirkham site), Oakland, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.90,
+  "rationale": "The City described the assembled 500 Kirkham site, including this APN, as vacant excess land in 2016. A 2025 offering still markets the parcel assembly as a development site with a proposed housing plan. This supports vacant land, not a move-out date or uninterrupted vacancy; duration is evidenced only at dated observations.",
+  "vacancy_start": "No later than 2016-04-21 (City ordinance/term sheet describes the 500 Kirkham site as vacant land).",
+  "vacancy_duration": "About 9 years 3 months between the 2016 official description and the 2025-08-12 feasibility/marketing material; continuity and present-day status are not proven.",
+  "evidence": [
+    {
+      "signal": "Official site described as vacant land",
+      "detail": "Oakland's April 21, 2016 ordinance and attached DDA term sheet describe the 500 Kirkham site as approximately 2.85 acres of excess land and a vacant lot. The site is bounded by 5th, 7th, Kirkham, and Union Streets; it was assembled from contiguous parcels.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=73210053-D4C0-4D6E-9036-4A1B45D87CB7&ID=4403786&M=F",
+      "observed_at": "2016-04-21"
+    },
+    {
+      "signal": "APN linked to the 500 Kirkham site",
+      "detail": "California's CEQAnet record for the City of Oakland's 500 Kirkham project lists APN 004 004900800 among the four project parcels. The 2019 record concerns an approved development, not proof construction occurred.",
+      "source_url": "https://ceqanet.lci.ca.gov/2012102047/20",
+      "observed_at": "2019-09-04"
+    },
+    {
+      "signal": "Recent development-site marketing",
+      "detail": "Colliers' offering material identifies APN 004-0049-008 as part of the 500 Kirkham site, lists 537 feet of frontage on 5th Street, and presents a proposed 249-unit housing feasibility plan dated 2025-08-12. It describes an offering for sale and planned development, rather than existing occupied buildings.",
+      "source_url": "https://images1.showcase.com/d2/_a7p5dyKiPm3Mu1fAWCMTUBwKkJzZ8hj2ZEpPRbO_78/document.pdf",
+      "observed_at": "2025-08-12"
+    },
+    {
+      "signal": "Parcel-level public-record listing",
+      "detail": "LoopNet's public property record maps 5th St, Oakland 94607 to APN 004-0049-008-00 and records a for-sale listing dated 2025-10-09. Its land-use and lot-size fields are aggregated third-party data and are not treated as official occupancy evidence.",
+      "source_url": "https://www.loopnet.com/property/5th-st-oakland-ca-94607/06001-004%20004900800/",
+      "observed_at": "2025-10-09"
+    }
+  ],
+  "report_md": "# NOO-61 vacancy research\n\n**Parcel:** APN 004 004900800 (also formatted 004-0049-008-00), 5th St, Oakland, CA 94607. This APN is one of the contiguous parcels in the larger 500 Kirkham site; do not conflate it with a standalone occupied address.\n\n**Verdict:** likely_vacant (0.90 confidence), referring to vacant land rather than an unoccupied building. Oakland's 2016 ordinance and attached term sheet describe the site as a vacant lot/excess land. The 2019 CEQAnet record identifies this APN in the 500 Kirkham project. Colliers' 2025 offering material lists the parcel among the site APNs, describes 5th Street frontage and a proposed housing feasibility plan dated 2025-08-12. LoopNet records a parcel-specific for-sale listing dated 2025-10-09. The latter two sources support continued development-site status, but marketing/plans do not prove the exact parcel was physically unused every day or establish its current condition.\n\n**Start and duration:** vacant-land description documented no later than 2016-04-21. A later observation appears in 2025-08-12 feasibility material, about 9 years 3 months after the City description. Treat this as the span between dated evidence, not confirmed continuous vacancy; exact onset and duration remain unknown.\n\n**Limits:** The City record and CEQAnet describe a multi-parcel assembly, so the strongest vacancy evidence applies to the site as a whole. No parcel-level utility, code-enforcement, occupancy, or recent street-view evidence was established in this research. The City approved development plans in 2019, but approval is not evidence of construction or occupancy."
+}
