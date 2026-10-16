@@ -1,0 +1,42 @@
+{
+  "apn": "004004900800",
+  "address": "5TH ST (500 Kirkham site), Oakland, CA 94607",
+  "verdict": "likely_occupied",
+  "confidence": 0.78,
+  "rationale": "The City described the larger 500 Kirkham parcel assembly as vacant land in 2016; this APN is part of it. June 2026 reporting citing the interim-use application says the site is currently used for shipping containers and commercial semi-trucks, with a temporary parking permit sought. This supports active nonresidential use, not residential occupancy; the exact APN footprint and start date remain uncertain.",
+  "vacancy_start": "The site was documented as vacant land on 2016-04-21. A June 2026 report says the larger site is currently used for commercial vehicle/container parking; when this use began is unknown.",
+  "vacancy_duration": "Not determinable. Vacant land was documented in 2016; commercial parking/storage use was reported by 2026-06-26. The onset and continuity of the intervening use are unknown.",
+  "evidence": [
+    {
+      "signal": "Official site described as vacant land",
+      "detail": "Oakland's April 21, 2016 ordinance and attached DDA term sheet describe the 500 Kirkham site as approximately 2.85 acres of excess land and a vacant lot. The site is bounded by 5th, 7th, Kirkham, and Union Streets; it was assembled from contiguous parcels.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=73210053-D4C0-4D6E-9036-4A1B45D87CB7&ID=4403786&M=F",
+      "observed_at": "2016-04-21"
+    },
+    {
+      "signal": "APN linked to the 500 Kirkham site",
+      "detail": "California's CEQAnet record for the City of Oakland's 500 Kirkham project lists APN 004 004900800 among the four project parcels. The 2019 record concerns an approved development, not proof construction occurred.",
+      "source_url": "https://ceqanet.lci.ca.gov/2012102047/20",
+      "observed_at": "2019-09-04"
+    },
+    {
+      "signal": "Recent development-site marketing",
+      "detail": "Colliers' offering material identifies APN 004-0049-008 as part of the 500 Kirkham site, lists 537 feet of frontage on 5th Street, and presents a proposed 249-unit housing feasibility plan dated 2025-08-12. It describes an offering for sale and planned development, rather than existing occupied buildings.",
+      "source_url": "https://images1.showcase.com/d2/_a7p5dyKiPm3Mu1fAWCMTUBwKkJzZ8hj2ZEpPRbO_78/document.pdf",
+      "observed_at": "2025-08-12"
+    },
+    {
+      "signal": "Parcel-level public-record listing",
+      "detail": "LoopNet's public property record maps 5th St, Oakland 94607 to APN 004-0049-008-00 and records a for-sale listing dated 2025-10-09. Its land-use and lot-size fields are aggregated third-party data and are not treated as official occupancy evidence.",
+      "source_url": "https://www.loopnet.com/property/5th-st-oakland-ca-94607/06001-004%20004900800/",
+      "observed_at": "2025-10-09"
+    },
+    {
+      "signal": "Current nonresidential use as container/truck parking",
+      "detail": "A June 26, 2026 report on the 500 Kirkham site quotes the interim-use application seeking a five-year conditional use permit for about 250 automotive-fee parking spaces while the site is marketed for housing. The report says the site is currently used for shipping containers and commercial semi-trucks. The target APN is one of the parcels in the larger site; the exact parking footprint by APN is not shown.",
+      "source_url": "https://sfyimby.com/2026/06/temporary-parking-proposed-for-500-kirkham-street-west-oakland.html",
+      "observed_at": "2026-06-26"
+    }
+  ],
+  "report_md": "# NOO-61 vacancy research\n\n**Parcel:** APN 004 004900800 (also formatted 004-0049-008-00), 5th St, Oakland, CA 94607. This APN is one of the contiguous parcels in the larger 500 Kirkham site.\n\n**Verdict:** likely_occupied (0.78 confidence), meaning the site is reported in active nonresidential use, not that it contains occupied housing. Oakland described the assembled site as a vacant lot in 2016. The 2019 CEQAnet record lists this APN among the 500 Kirkham parcels. Colliers' 2025 offering material lists this APN in the larger site and presents a proposed housing feasibility plan. Most recently, a June 26, 2026 report quotes the interim-use application for a five-year, approximately 250-space parking use and says the site is currently used for shipping containers and commercial semi-trucks. This supports current physical use of the assembly, though the precise portion of the assembly used for parking is not mapped to each APN.\n\n**Vacancy period:** no continuous vacancy duration can be established. The larger site was documented as vacant land on 2016-04-21; active container/truck parking was reported by 2026-06-26. The start date of that use, and any intervening periods of vacancy, are unknown. Residential occupancy is not established by the sources reviewed.\n\n**Limits:** The City and CEQAnet records describe a multi-parcel assembly, and the recent parking report is site-wide rather than APN-specific. The temporary-use permit was reported as filed/requested, not as approved. The current-use statement is from the reporter's account of the application materials; parcel-level utilities, code-enforcement, occupancy, or dated street-view evidence were not established."
+}
