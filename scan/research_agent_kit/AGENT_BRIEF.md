@@ -21,6 +21,9 @@ account to obtain information.
    If you were assigned particular zip codes, pass them on every claim, e.g.
    `python research_client.py claim --zip 94601,94607`. You then only receive
    properties in those zip codes, and `null` means none are left there.
+   If you were assigned one APN, claim it with `python research_client.py claim
+   --apn '003 003700503'`. This exact filter requires the migration
+   `supa_migration_claim_vacancy_by_apn.sql` to have been applied.
 
 2. **Research** that property. You have until `lease_expires_at` (45 minutes by
    default). If you need longer, run

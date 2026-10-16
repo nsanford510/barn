@@ -50,9 +50,10 @@ so vacancy duration is unknown. The appropriate queue verdict is `unknown`.
   is unverified. No reliable issue/publication date was established.
   [Brochure](https://assets.cushmanwakefield.com/-/pmedia/219699/0/2020-brush-street-oakland_flyer-v4.pdf?rev=5da6881aa9c8afe8830b73dd4c9c8f37a725d0f49a9cf10b67c609b3f89720496e886c3f4d429779ffceb0d7abfeea51b4e28bcfb107073c61070a630691c319)
 
-## Queue submission fields
+## Queue finding
 
 **Rationale (246 characters):** Oakland MRP reports list Kraft Automotive at this address through FY 2021–22, while a current broker listing markets the building for sale without stating vacancy. Evidence is mixed and leaves a multi-year gap; vacancy start/duration are unknown.
 
-The final finding must be submitted through `submit_vacancy_finding` with the
-assigned claim token. This report is not itself a database submission.
+**Submitted:** 2026-10-15 through `submit_vacancy_finding`  
+**Finding ID:** `b5814978-6b25-4ba1-9436-ff0650b78ef4`  
+**Queue status:** `done`
