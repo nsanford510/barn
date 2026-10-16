@@ -1,0 +1,34 @@
+{
+  "apn": "001-0195-006-00",
+  "address": "701 Franklin St, Oakland, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.85,
+  "rationale": "The currently indexed broker flyer says the building is 90% vacant; a 2018 listing also reported roughly 90% vacancy, vacant upper floors, and three occupied ground-floor shops. This supports likely partial vacancy, but the undated flyer is promotional and present retail occupancy is unverified.",
+  "evidence": [
+    {
+      "signal": "Broker flyer reports substantial vacancy",
+      "detail": "A flyer for The George Hotel says the property is 90% vacant and labels the SRO units vacant for 50 years. It has no visible publication date; checked 2026-10-15. Treat it as current marketing evidence, not independent verification or precise duration evidence.",
+      "source_url": "https://images3.loopnet.com/d2/Z_mMW6lcnyHv0QzzemqkaAMqA1b22UASc6Ff4JJQaxk/document.pdf",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "Historical vacancy classification",
+      "detail": "Oakland Planning and Building Department's 2018-09-20 preliminary residential-hotel map labels 701 Franklin St as Vacant. This dated classification does not establish current occupancy or whether any ground-floor retail space was occupied.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/planning-commission/2018/item-8-for-publication-sep-26.pdf",
+      "observed_at": "2018-09-20"
+    },
+    {
+      "signal": "Upper floors vacant; ground-floor retail partly occupied",
+      "detail": "A LoopNet listing posted 2018-03-16 describes the building as roughly 90% vacant, says the upper two floors were vacant, and reports three of six ground-floor retail units occupied. Former hotel rooms appeared last occupied in 1962; owners reportedly believed they were last rented in the late 1960s.",
+      "source_url": "https://www.loopnet.com/Listing/701-705-Franklin-St-Oakland-CA/11949353/",
+      "observed_at": "2018-03-16"
+    },
+    {
+      "signal": "Recent reference to a renovation estimate",
+      "detail": "When checked on 2026-10-15, a contractor estimating firm's website listed 701 Franklin Street among sample project estimates, describing a $2.3M downtown renovation and a five-page takeoff. The page gives no permit, construction, completion, or occupancy date; this is not proof that work occurred or that the building is occupied.",
+      "source_url": "https://www.iambuilders.com/construction-takeoff-oakland/",
+      "observed_at": "2026-10-15"
+    }
+  ],
+  "report_md": "# Vacancy research: 701 Franklin St, Oakland\n\n**APN:** 001-0195-006-00  \n**Research date:** 2026-10-15  \n**Verdict:** likely_vacant (confidence 0.85)\n\n## Finding\n\nA broker flyer for The George Hotel says the property is 90% vacant and labels its SRO units vacant for 50 years. The flyer is currently indexed and was checked on 2026-10-15, but it has no visible publication date and is marketing material, so the occupancy claim is not independently verified. The 2018 sale listing independently described the building as roughly 90% vacant, with vacant upper floors and three occupied street-level retail units. Oakland's 2018 planning inventory also labels 701 Franklin St vacant. Together these sources support likely substantial vacancy, while allowing for partial ground-floor occupancy.\n\nThe former hotel rooms were reportedly last occupied around 1962, with the former owners believing they were last rented in the late 1960s. That suggests upper-floor vacancy began circa 1962–1969 (about 57–64 years by October 2026), but it is a retrospective listing statement. The flyer's “vacant for 50 years” slogan is approximate and not date-stamped. For the building as a whole, roughly 90% vacancy is documented in 2018 and asserted by the currently indexed flyer; continuity between those observations is unverified. Do not describe the entire property as continuously empty.\n\nA contractor estimating firm's website, checked 2026-10-15, includes 701 Franklin Street among sample estimates for a $2.3M downtown renovation and describes a five-page takeoff. It gives no permit, construction, completion, or occupancy date, so it is not evidence that the work occurred or that the property is occupied. No current tenant roster, utility record, permit status, or recent street-level occupancy evidence was confirmed in this search.\n\n## Sources\n\n- TRI Commercial/CORFAC International, *The George Hotel* marketing flyer (undated; checked 2026-10-15): https://images3.loopnet.com/d2/Z_mMW6lcnyHv0QzzemqkaAMqA1b22UASc6Ff4JJQaxk/document.pdf\n- City of Oakland, Planning and Building Department, *Preliminary Identification of Residential Hotels – Downtown & West Oakland*, dated 2018-09-20: https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/planning-commission/2018/item-8-for-publication-sep-26.pdf\n- LoopNet, *701-705 Franklin St*, listing dated 2018-03-16: https://www.loopnet.com/Listing/701-705-Franklin-St-Oakland-CA/11949353/\n- I AM Builders, *Construction Takeoff Services Oakland*, page checked 2026-10-15: https://www.iambuilders.com/construction-takeoff-oakland/\n"
+}
