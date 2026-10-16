@@ -1,0 +1,54 @@
+{
+  "apn": "003 002100800",
+  "address": "2321 SAN PABLO AVE, OAKLAND, CA 94612",
+  "verdict": "likely_vacant",
+  "confidence": 0.87,
+  "rationale": "Oakland's FY 2025-26 final and FY 2026-27 preliminary assessment rolls both list this exact APN as use code 1000, which Alameda County defines as vacant residential land. A secondary public-record permit page reports fire-damage demolition finalized in May 2025. These support likely vacancy, but do not establish current physical condition, move-out date, or continuous vacancy; a combined-parcel listing claims leased units.",
+  "vacancy_start": "First official vacancy-related signal found: the City of Oakland FY 2025-26 assessment roll prepared 2025-04-09 classifies this APN as use code 1000. Actual vacancy onset or last-occupancy date is unknown.",
+  "vacancy_duration": "Physical vacancy duration is unknown. Oakland's FY 2025-26 final roll (prepared 2025-04-09) and FY 2026-27 preliminary roll (prepared 2026-03-23) both classify the parcel as code 1000, nearly 12 months apart. This records land-use classifications, not continuous physical vacancy; the latest roll is about 7 months old.",
+  "evidence": [
+    {
+      "signal": "Oakland FY 2026-27 preliminary assessment roll again classifies the exact APN as use code 1000",
+      "detail": "The City of Oakland FY 2026-27 Preliminary Landscape and Lighting Assessment Roll, with a 2026-03-23 footer, lists APN 003-0021-008-00 with use code 1000. Alameda County defines 1000 as vacant residential land zoned for four or fewer units. This is the latest official vacancy-related classification found; it is a preliminary land-use record and not proof of occupancy on the date of research.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=98960195-0F2B-4DB3-8895-AF61933F57B1&ID=15426144&M=F",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Oakland FY 2025-26 final assessment roll classifies the exact APN as use code 1000",
+      "detail": "The City of Oakland FY 2025-26 Landscape and Lighting Assessment Roll lists APN 003-0021-008-00 with use code 1000. The document cover identifies June 3, 2025; page footers show 2025-04-09. Alameda County defines 1000 as vacant residential land zoned for four or fewer units. This documents a land-use classification, not the last occupancy date or continuous physical vacancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=undefined&GUID=83E8A6A8-2D60-4CBC-8F51-327CBC7B8C09&ID=14230005&M=F",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Official county use-code definition",
+      "detail": "Alameda County's assessor property-search code list defines code 1000 as 'Vacant residential land, zoned 4 units or less,' confirming the meaning of the Oakland assessment-roll entries.",
+      "source_url": "https://propinfo.acgov.org/UseCodeList/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Secondary public-record-derived page reports fire-damage demolition permit marked final",
+      "detail": "Redfin reports a non-residential demolition permit marked Final on 2025-05-27, described as demolition of an existing one-story building due to fire damage. It also shows county use as vacant residential land and a May 2026 county-record update. Redfin warns its permit history may be incomplete or inaccurate and displays legacy building facts, so the actual permit and current site condition were not independently confirmed.",
+      "source_url": "https://www.redfin.com/CA/Oakland/2321-San-Pablo-Ave-94612/home/49876921",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Official Oakland attachment identifies the exact address, APN, and parcel size",
+      "detail": "An Oakland Legistar attachment identifies 2321 San Pablo Ave, Oakland 94612, APN 003 002100800, and a 3,000 sq ft lot. This helps distinguish the subject parcel from nearby parcels but provides no occupancy evidence. Search indexing exposed the row; direct attachment retrieval returned an error.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Conflicting marketing occupancy claim concerns a multi-parcel 2321-2323 assemblage",
+      "detail": "LoopNet markets 2321-2323 San Pablo as 100% leased and identifies the subject APN in tax details, but its listing describes a 5,489 sq ft combined site, while Oakland identifies the subject parcel as 3,000 sq ft. The lease claim is not clearly attributable to this APN and does not establish occupancy of the subject parcel.",
+      "source_url": "https://www.loopnet.com/Listing/2321-2323-San-Pablo-Ave-Oakland-CA/38424343/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Oakland permit-search guidance",
+      "detail": "The City says building, code-enforcement, and planning records after 1987 are available through the Online Permit Center. The Accela portal did not expose a parcel-specific result in this research pass; no underlying city permit or code-enforcement record was independently retrieved.",
+      "source_url": "https://www.oaklandca.gov/Planning-Building/Permit-Process-Overview/Permit-Services-Questions-Portal",
+      "observed_at": "2026-10-16"
+    }
+  ],
+  "report_md": "## Vacancy assessment\n\n**Verdict:** likely_vacant (0.87 confidence).\n\nThe strongest evidence is parcel-specific: Oakland's FY 2025-26 final assessment roll and FY 2026-27 preliminary roll both list APN 003-0021-008-00 under use code 1000. Alameda County defines code 1000 as vacant residential land zoned for four or fewer units. The two city rolls are dated about 11.5 months apart, which supports a recurring vacant-land classification. It does not prove that no one occupied the site throughout that interval or that it remains physically vacant today.\n\nRedfin reports a fire-damage demolition permit marked final on 2025-05-27, but this is secondary reporting and its permit history may be incomplete or inaccurate. Its page retains older building facts. A LoopNet listing calls the broader 2321-2323 assemblage 100% leased, but describes a 5,489 sq ft site versus 3,000 sq ft for this APN, so it is not clear evidence of occupancy at this parcel. No direct current site observation, utility record, or parcel-specific city permit/code-enforcement result was confirmed.\n\n**Start/duration:** The first official vacancy-related signal found is the FY 2025-26 roll prepared 2025-04-09; the next FY 2026-27 preliminary roll dated 2026-03-23 repeats the code 1000 classification. These records are nearly 12 months apart. Actual move-out date and continuous physical vacancy duration remain unknown.\n\n**Sources:** [Oakland FY 2026-27 preliminary roll](https://oakland.legistar.com/View.ashx?GUID=98960195-0F2B-4DB3-8895-AF61933F57B1&ID=15426144&M=F); [Oakland FY 2025-26 final roll](https://oakland.legistar.com/View.ashx?G=undefined&GUID=83E8A6A8-2D60-4CBC-8F51-327CBC7B8C09&ID=14230005&M=F); [Alameda County use-code list](https://propinfo.acgov.org/UseCodeList/); [Redfin exact-parcel record](https://www.redfin.com/CA/Oakland/2321-San-Pablo-Ave-94612/home/49876921); [LoopNet combined-parcel listing](https://www.loopnet.com/Listing/2321-2323-San-Pablo-Ave-Oakland-CA/38424343/)."
+}
