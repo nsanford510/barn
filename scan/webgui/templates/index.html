@@ -728,14 +728,6 @@
           <th>Site Vacant</th>
           <th>Tax Year</th>
           <th>Last Payment</th>
-          <th>Owner Name</th>
-          <th>Occupancy</th>
-          <th>Ownership</th>
-          <th>Primary Resident</th>
-          <th>Resident Age</th>
-          <th>Resident Phone</th>
-          <th>Deceased</th>
-          <th>Mailing Address</th>
           <th>Maps</th>
           <th>Bill</th>
           <th>Condition</th>
@@ -793,20 +785,6 @@
             {% if r.site_vacant is none %}-{% elif r.site_vacant %}Yes{% else %}No{% endif %}</td>
           <td>{{ r.tax_year }}</td>
           <td>{{ r.last_payment }}</td>
-          <td>{{ r.owner_name or "-" }}</td>
-          <td>{{ r.prop_occupancy_type or "-" }}</td>
-          <td>{{ r.prop_ownership_type or "-" }}</td>
-          <td>{{ r.primary_resident_name or "-" }}</td>
-          <td>{{ r.primary_resident_age or "-" }}</td>
-          <td>{{ r.primary_resident_phone_number or "-" }}</td>
-          <td>{% if r.deceased_count is not none %}{{ r.deceased_count }}{% else %}-{% endif %}</td>
-          <td>
-            {% if r.mailing_search_url %}
-            <a href="{{ r.mailing_search_url }}" target="_blank" rel="noopener" title="Search Owner">{{ r.mailing_address }}</a>
-            {% else %}
-            {{ r.mailing_address }}
-            {% endif %}
-          </td>
           <td>
             {% if r.maps_url %}
             <a href="{{ r.maps_url }}" target="_blank" rel="noopener">Map</a>
