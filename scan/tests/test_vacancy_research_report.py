@@ -28,15 +28,15 @@ class VacancyResearchReportTests(unittest.TestCase):
         self.assertIsInstance(finding["evidence"], list)
         self.assertTrue(all(item.get("source_url", "").startswith("https://") for item in finding["evidence"]))
 
-    def test_unknown_verdict_does_not_invent_vacancy_timing(self):
+    def test_vpt_bill_evidence_supports_estimated_vacancy_timing(self):
         finding = load_finding()
 
-        self.assertEqual("unknown", finding["verdict"])
-        self.assertIsNone(finding["estimated_vacancy_start_date"])
-        self.assertIsNone(finding["estimated_vacancy_duration"])
-        self.assertIn("Vacancy start date: unknown", finding["report_md"])
-        self.assertIn("Vacancy duration: unknown", finding["report_md"])
-        self.assertIn("https://", finding["report_md"])
+        self.assertEqual("likely_vacant", finding["verdict"])
+        self.assertIn("calendar year 2024", finding["estimated_vacancy_start_date"])
+        self.assertIn("2025", finding["estimated_vacancy_duration"])
+        self.assertIn("$6,000", finding["report_md"])
+        self.assertIn("petition", finding["report_md"])
+        self.assertTrue(any("propertytax.alamedacountyca.gov" in item["source_url"] for item in finding["evidence"]))
 
 
 if __name__ == "__main__":

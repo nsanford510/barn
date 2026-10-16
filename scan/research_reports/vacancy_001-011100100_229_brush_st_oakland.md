@@ -1,14 +1,14 @@
 # Vacancy research: 229 Brush St, Oakland (APN 001-0111-001-00)
 
 **Research date:** 2026-10-15  
-**Verdict:** `unknown`  
-**Confidence:** 0.35  
-**Estimated vacancy start:** Unknown  
-**Estimated vacancy duration:** Unknown; the public record reviewed does not establish that the property is currently vacant or bound the start of any vacancy.
+**Verdict:** `likely_vacant`
+**Confidence:** 0.78
+**Estimated vacancy start:** During calendar year 2024 (exact date unknown)
+**Estimated vacancy duration:** About 1–2 years through calendar year 2025; the VPT charge was assessed again for 2025.
 
 ## Rationale
 
-The parcel is a commercial storefront/restaurant, with documented restaurant operation in 2013–14, an accessibility-restroom permit in 2017, and a county 2018 record listing an occupant at the address. A 2017 commercial lease listing later became inactive, but that does not establish vacancy or occupancy. No reliable recent evidence establishes current use or when vacancy may have begun.
+Alameda County secured tax bills for this APN itemize a $6,000 Oakland VPT charge for tax years 2025–26 and 2026–27, corresponding to calendar years 2024 and 2025. This strongly supports likely vacancy across those years. Oakland describes VPT notices as likely-vacant determinations that owners may petition; no current site observation or petition disposition confirms physical vacancy.
 
 ## Evidence
 
@@ -21,14 +21,17 @@ The parcel is a commercial storefront/restaurant, with documented restaurant ope
 | 2018-02-05 | Alameda County Environmental Health's report includes APN 001 011100100 and the address under an “OCCUPANT” field. | A public record tying an occupant/mailing entry to the address, but not strong proof of actual site use. | [Alameda County Environmental Health PDF](https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003196%5CCAP_PP_L_2018-02-05.pdf) |
 | 2025-02 through 2026-05 | A third-party property summary lists permit entries for 229 Brush St dated 2025-02-21, 2026-02-03, 2026-02-24, 2026-03-19, and 2026-05-24. The record descriptions and statuses are masked. | Possible recent building activity, but the available summary does not identify the work or show that anyone occupied the property. | [PropertyShark permit summary](https://www.propertyshark.com/mason/Property/38673400/229-Brush-St-Oakland-CA-94607/) |
 | Crawled 2025 | MapQuest labels Venga Paella Popup & Catering “Permanently closed” at this address. | Weak, third-party business-directory evidence that the listed restaurant may have closed; it does not establish whether the building is vacant or occupied by another user. | [MapQuest](https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033) |
+| Tax year 2024–25 | The County bill portal search for APN 1-111-1 showed no MEAS-W Oakland VPT line item. | A useful comparison year; absence of the charge is not proof of occupancy. | [Alameda County secured tax bill search](https://propertytax.alamedacountyca.gov/search) |
+| Tax year 2025–26 (calendar year 2024) | The County secured bill portal itemizes “MEAS-W OAKLAND VPT” at $6,000; both installments show paid. | Parcel-specific municipal VPT assessment supports likely vacancy during calendar year 2024. | [Alameda County secured tax bill search](https://propertytax.alamedacountyca.gov/search) |
+| Tax year 2026–27 (calendar year 2025) | The County secured bill portal again itemizes “MEAS-W OAKLAND VPT” at $6,000. | A second successive VPT assessment supports likely vacancy during 2025; it does not establish present physical condition or petition outcome. | [Alameda County secured tax bill search](https://propertytax.alamedacountyca.gov/search); [Oakland FY 2026–27 petition form](https://www.oaklandca.gov/files/assets/city/v/1/finance/documents/vpt/vpt-fy-26-27-en/oakland-vpt-petition-of-vacancy-fy-26-27.pdf) |
 
 ## Finding payload for the vacancy research queue
 
 ```json
 {
-  "verdict": "unknown",
-  "confidence": 0.35,
-  "rationale": "The parcel is a commercial storefront/restaurant, with documented restaurant operation in 2013–14, an accessibility-restroom permit in 2017, and a county 2018 record listing an occupant at the address. A 2017 commercial lease listing later became inactive, but that does not establish vacancy or occupancy. No reliable recent evidence establishes current use or when vacancy may have begun.",
+  "verdict": "likely_vacant",
+  "confidence": 0.78,
+  "rationale": "Alameda County secured bills for tax years 2025-26 and 2026-27 both itemize a $6,000 MEAS-W Oakland VPT charge, corresponding to calendar years 2024 and 2025. This strongly supports likely vacancy across both years. Oakland treats notices as likely-vacant determinations that can be petitioned; no current site observation or case disposition confirms physical vacancy.",
   "evidence": [
     {"source_url": "https://sf.eater.com/2013/10/8/6356185/venga-paella-homestyle-spanish-in-oakland", "date": "2013-10-08", "summary": "Reported Venga Paella opened at 229 Brush St and described restaurant service."},
     {"source_url": "https://www.alamedamagazine.com/venga-paellas-manchego-con-membrillo/", "date": "2014-07", "summary": "Identified Venga Paella at 229 Brush St and described a meal there."},
@@ -36,14 +39,17 @@ The parcel is a commercial storefront/restaurant, with documented restaurant ope
     {"source_url": "https://www.loopnet.com/Listing/225-229-Brush-St-Oakland-CA/9242340/", "date": "2017-09-20", "summary": "Commercial listing history records 225–229 Brush St offered for lease; this does not establish vacancy."},
     {"source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003196%5CCAP_PP_L_2018-02-05.pdf", "date": "2018-02-05", "summary": "County report lists the APN and address under an occupant field, which may be a mailing entry."},
     {"source_url": "https://www.propertyshark.com/mason/Property/38673400/229-Brush-St-Oakland-CA-94607/", "date": "2025-02-21 to 2026-05-24", "summary": "Third-party property summary lists several permit entries but masks descriptions and statuses; recent permits alone do not establish occupancy."},
-    {"source_url": "https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033", "date": "crawled 2025", "summary": "Third-party directory marks the listed restaurant permanently closed; building vacancy is unproven."}
+    {"source_url": "https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033", "date": "crawled 2025", "summary": "Third-party directory marks the listed restaurant permanently closed; building vacancy is unproven."},
+    {"source_url": "https://propertytax.alamedacountyca.gov/search", "date": "2024-25 through 2026-27 tax years", "summary": "County secured tax bill search for APN 1-111-1: no Oakland VPT line in 2024-25; 2025-26 and 2026-27 bills each itemize MEAS-W OAKLAND VPT at $6,000. 2025-26 installments were paid."},
+    {"source_url": "https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT", "date": "accessed 2026-10-15", "summary": "Oakland explains VPT notices indicate likely vacancy based on available data and can be petitioned."},
+    {"source_url": "https://www.oaklandca.gov/files/assets/city/v/1/finance/documents/vpt/vpt-fy-26-27-en/oakland-vpt-petition-of-vacancy-fy-26-27.pdf", "date": "tax year 2026-27", "summary": "Official Oakland petition form maps calendar year 2025 to tax year 2026-27."}
   ],
-  "estimated_vacancy_start_date": null,
-  "estimated_vacancy_duration": null,
-  "report_md": "Vacancy start date: unknown. Vacancy duration: unknown; the evidence does not establish that the property is currently vacant. The parcel is commercial. Restaurant activity is documented in 2013 and 2014, and a City permit record documents restroom accessibility alterations in 2017. A county 2018 occupant entry may be a mailing record. A commercial lease listing in 2017 and a third-party restaurant closure label do not prove building vacancy. A third-party property summary lists permit entries from 2025-02-21 through 2026-05-24 but masks descriptions and statuses. Oakland's official Accela building-record search returned HTTP 403 in this session. The City's VPT overview says a notice identifies properties as likely vacant during the subject calendar year based on available data and allows owners to petition; no parcel-specific notice or resolved VPT determination is in the evidence reviewed. Sources: https://sf.eater.com/2013/10/8/6356185/venga-paella-homestyle-spanish-in-oakland ; https://www.alamedamagazine.com/venga-paellas-manchego-con-membrillo/ ; https://oakland.legistar.com/View.ashx?GUID=6A7754CC-510C-44CB-807A-C0C7E579D7CD&ID=8871387&M=F ; https://www.loopnet.com/Listing/225-229-Brush-St-Oakland-CA/9242340/ ; https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0003196%5CCAP_PP_L_2018-02-05.pdf ; https://www.propertyshark.com/mason/Property/38673400/229-Brush-St-Oakland-CA-94607/ ; https://www.mapquest.com/us/california/venga-paella-popup-catering-286045033 ; https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT"
+  "estimated_vacancy_start_date": "during calendar year 2024 (exact date unknown)",
+  "estimated_vacancy_duration": "about 1-2 years through calendar year 2025; VPT assessed again for 2025",
+  "report_md": "Vacancy start date: during calendar year 2024 (exact date unknown). Estimated duration: about 1-2 years through calendar year 2025, with VPT assessed again for 2025. Alameda County secured tax bill portal records for APN 1-111-1 itemize MEAS-W OAKLAND VPT at $6,000 in tax years 2025-26 and 2026-27, corresponding to calendar years 2024 and 2025; the 2025-26 installments show paid. The 2024-25 bill showed no VPT line. These assessments strongly support likely vacancy during those years, but Oakland describes the notice basis as likely-vacant and allows petitions. No current site observation or petition disposition establishes physical vacancy in 2026. Historic restaurant operation (2013-14), a 2017 permit, the 2018 occupant entry, listing history, and third-party closure label are context only. County bill search: https://propertytax.alamedacountyca.gov/search ; Oakland VPT overview: https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT ; City calendar/tax year mapping: https://www.oaklandca.gov/files/assets/city/v/1/finance/documents/vpt/vpt-fy-26-27-en/oakland-vpt-petition-of-vacancy-fy-26-27.pdf"
 }
 ```
 
 ## Limits
 
-The subject is a commercial building, so residential utility assumptions were not used. The third-party permit summary lists recent entries, but masks descriptions and statuses. Oakland's [official Accela building-record search](https://aca-prod.accela.com/OAKLAND/Cap/CapHome.aspx?TabName=Home&module=Building) returned HTTP 403 in this session, so the entries could not be verified or interpreted against the primary record. The City's [VPT overview](https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT) says a vacancy notice identifies a parcel as likely vacant during the subject calendar year based on available data and allows an owner to petition; no parcel-specific notice or resolved determination was available in the evidence reviewed. No reliable current evidence establishes occupancy or vacancy in 2026. The close-of-business listing is not treated as proof that the structure itself is empty.
+The subject is a commercial building, so residential utility assumptions were not used. The parcel-specific VPT bill rows are strong evidence of Oakland's likely-vacant determinations for 2024 and 2025, but the bill alone does not establish the City's underlying inspection or data, whether an owner petition changed the determination, or current occupancy in 2026. Oakland's [VPT overview](https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT) describes notices as likely-vacant and allows an owner to petition. The County's public search uses APN 1-111-1 for the subject parcel. No current site observation was available.
