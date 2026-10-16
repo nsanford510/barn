@@ -26,6 +26,7 @@ class Noo20VacancyFindingTests(unittest.TestCase):
         self.assertTrue(all(item["source_url"].startswith("https://") for item in finding["evidence"]))
         self.assertIn("Vacancy start:** unknown", finding["report_md"])
         self.assertIn("Duration:** unknown", finding["report_md"])
+        self.assertIn("City of Oakland VPT information", finding["report_md"])
         self.assertTrue(all(item["detail"].strip() for item in finding["evidence"]))
 
 
