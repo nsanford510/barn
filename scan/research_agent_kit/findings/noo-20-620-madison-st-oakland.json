@@ -1,0 +1,38 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.25,
+  "rationale": "Public records identify a one-unit historic residence, but off-market status and tax/fee records do not establish occupancy. No dated vacancy indicator or vacancy start was found; duration is unknown.",
+  "evidence": [
+    {
+      "signal": "current listing status",
+      "detail": "Zillow marks the property off market, explicitly meaning it is not currently listed there for sale or rent; this does not establish vacancy.",
+      "source_url": "https://www.zillow.com/homedetails/620-Madison-St-Oakland-CA-94607/24737433_zpid/",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "residential property and permit history",
+      "detail": "Realtor.com describes a 3-bedroom, 1-bath, 1,150-sq-ft single-family home; displayed permits are from 2013 and earlier, with no recent activity shown.",
+      "source_url": "https://www.realtor.com/realestateandhomes-detail/620-Madison-St_Oakland_CA_94607_M24876-77891",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "historic property record",
+      "detail": "City of Oakland planning EIR lists 620 Madison St as an 1888-89 historic resource (survey rating C); this establishes property identity and age, not current occupancy.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/lake-merritt-station-draft-environmental-impact-report-volume-ii.pdf",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "parcel and unit count",
+      "detail": "Alameda County Waste Management Authority FY 2025-26 preliminary levy roll identifies APN 001-0173-013-00 at 620 Madison St with one unit; unit count does not prove occupancy.",
+      "source_url": "https://www.stopwaste.org/sites/default/files/ACWMA%20-%20Preliminary%20Levy%20Roll%20FY%202025-26.pdf",
+      "observed_at": "2026-10-15"
+    },
+    {
+      "signal": "historical unit count",
+      "detail": "The authority FY 2023-24 fee report also lists the parcel as one unit, offering no vacancy or occupancy finding.",
+      "source_url": "https://www.stopwaste.org/sites/default/files/Alameda%20County%20Waste%20Management%20Authority%20-%20Prelim%20Data%20Report%20FY%202023-24.pdf",
+      "observed_at": "2026-10-15"
+    }
+  ],
+  "report_md": "## Vacancy finding — 620 Madison St, Oakland (APN 001-0173-013-00)\n\n**Verdict:** unknown (confidence 0.25). Public listings describe a one-unit historic residence, but the accessible evidence does not establish present occupancy. Zillow says off market, which only means not listed on Zillow. County fee rolls report one unit in FY 2023-24 and FY 2025-26; they are not vacancy records. The visible third-party permit history ends in 2013. No reliable, dated vacancy indicator was located.\n\n**Vacancy start:** unknown. **Duration:** unknown; no supported start date or continuous-vacancy period can be determined from these sources.\n\nSources: [Zillow property page](https://www.zillow.com/homedetails/620-Madison-St-Oakland-CA-94607/24737433_zpid/), [Realtor.com property page](https://www.realtor.com/realestateandhomes-detail/620-Madison-St_Oakland_CA_94607_M24876-77891), [City of Oakland planning EIR](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/lake-merritt-station-draft-environmental-impact-report-volume-ii.pdf), [FY 2025-26 county levy roll](https://www.stopwaste.org/sites/default/files/ACWMA%20-%20Preliminary%20Levy%20Roll%20FY%202025-26.pdf), [FY 2023-24 county fee report](https://www.stopwaste.org/sites/default/files/Alameda%20County%20Waste%20Management%20Authority%20-%20Prelim%20Data%20Report%20FY%202023-24.pdf)."
+}
