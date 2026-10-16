@@ -24,6 +24,8 @@ class Noo70VacancyFindingTest(unittest.TestCase):
         self.assertTrue(all(item["source_url"].startswith("https://") for item in finding["evidence"]))
         self.assertIn("2022-01-05", finding["vacancy_start"])
         self.assertIn("original vacancy date is unknown", finding["rationale"])
+        city_notice = next(item for item in finding["evidence"] if item["signal"] == "planning")
+        self.assertIn("vacant lot", city_notice["detail"])
 
 
 if __name__ == "__main__":

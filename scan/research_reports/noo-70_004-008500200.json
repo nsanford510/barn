@@ -2,8 +2,8 @@
   "apn": "004 008500200",
   "address": "1469 12TH ST, OAKLAND, CA 94607",
   "verdict": "likely_vacant",
-  "confidence": 0.83,
-  "rationale": "A January 2022 sale listing explicitly marketed this APN as a vacant lot. Oakland's September 2023 planning notice later proposed a new 1,650 sq ft home at the same address/APN, consistent with a vacant site. A property record still classifies it as vacant residential land. No source confirms whether construction or occupancy followed; the original vacancy date is unknown.",
+  "confidence": 0.88,
+  "rationale": "A January 2022 listing marketed this APN as a vacant lot; Oakland's September 2023 notice also describes the site as a vacant lot and lists a new-home proposal. PropertyShark classifies it as vacant residential land. No evidence confirms whether construction or occupancy followed, so current status is uncertain; original vacancy date is unknown.",
   "vacancy_start": "at_least 2022-01-05",
   "vacancy_duration_as_of": "2026-10-16: at least 4 years, 9 months, 11 days",
   "evidence": [
@@ -15,7 +15,7 @@
     },
     {
       "signal": "planning",
-      "detail": "Oakland's applications-on-file notice for the week ending 2023-09-29 identifies APN 004 008500200 and case PLN23024, a design review proposal for a new 1,650 sq ft single-family home. A proposal is not proof that construction did not later occur.",
+      "detail": "Oakland's applications-on-file notice for the week ending 2023-09-29 identifies APN 004 008500200 and case PLN23024. It labels the historic area as 'Oakland Point (vacant lot)' and lists design review for a new 1,650 sq ft single-family home. This supports vacant-site status in 2023, but the proposal does not establish whether construction or occupancy followed.",
       "observed_at": "2023-09-29",
       "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/zo/active-apps/2023/applications-on-file-week-ending-september-29-2023.pdf"
     },
@@ -26,5 +26,5 @@
       "source_url": "https://www.propertyshark.com/mason/Property/38495904/1469-12-St-Oakland-CA-94607/"
     }
   ],
-  "report_md": "## Vacancy assessment\n\n**Verdict:** likely_vacant (0.83 confidence).\n\n**Vacancy start/duration:** vacant land is documented by the January 5, 2022 listing. If still vacant, the evidence supports at least 4 years, 9 months, and 11 days as of October 16, 2026. The date any prior structure became vacant or was removed is unknown.\n\n**Evidence:** Homes.com reproduces the January 2022 listing language calling this a vacant lot and reports sale on March 15, 2022. Oakland's September 29, 2023 applications notice identifies the same APN and a design-review proposal for a new 1,650 sq ft single-family home. PropertyShark's property page classifies it as vacant residential land.\n\n**Limitation:** The 2023 application is a proposal, not a construction outcome. The secondary property classification supports but does not independently verify the parcel's current condition. No reviewed source establishes that the proposed home was or was not built after the notice.\n\n**Sources:**\n- [Homes.com listing and sale history](https://www.homes.com/property/1469-12th-st-oakland-ca/tpr0b65wkm1pg/)\n- [City of Oakland applications on file, week ending 2023-09-29](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/zo/active-apps/2023/applications-on-file-week-ending-september-29-2023.pdf)\n- [PropertyShark parcel record](https://www.propertyshark.com/mason/Property/38495904/1469-12-St-Oakland-CA-94607/)"
+  "report_md": "## Vacancy assessment\n\n**Verdict:** likely_vacant (0.88 confidence).\n\n**Vacancy start/duration:** vacant land is documented by the January 5, 2022 listing, and Oakland's September 29, 2023 notice also describes the site as a vacant lot. The evidence supports vacant-site status at observations 1 year, 8 months, and 24 days apart. Current vacancy and any longer duration are unconfirmed. The date any prior structure became vacant or was removed is unknown.\n\n**Evidence:** Homes.com reproduces the January 2022 listing language calling this a vacant lot and reports sale on March 15, 2022. Oakland's September 29, 2023 applications notice identifies the same APN, describes the site as a vacant lot, and lists a design-review proposal for a new 1,650 sq ft single-family home. PropertyShark's parcel page classifies it as vacant residential land.\n\n**Limitation:** The 2023 application is a proposal, not a construction outcome. The secondary property classification does not independently verify the parcel's current physical condition. No reviewed source establishes whether the proposed home was built or occupied after the notice.\n\n**Sources:**\n- [Homes.com listing and sale history](https://www.homes.com/property/1469-12th-st-oakland-ca/tpr0b65wkm1pg/)\n- [City of Oakland applications on file, week ending 2023-09-29](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/zo/active-apps/2023/applications-on-file-week-ending-september-29-2023.pdf)\n- [PropertyShark parcel record](https://www.propertyshark.com/mason/Property/38495904/1469-12-St-Oakland-CA-94607/)"
 }
