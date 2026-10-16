@@ -16,8 +16,16 @@
       "source_name": "DecisionDepot case record, Center 5th Street LLC v. City of Oakland, 25CV148214",
       "observed_date": "2026-08-07",
       "published_date": "2026-08-05",
-      "supports": "The court record concerns 375 Center Street and describes Oakland's 2023 vacant-property-tax assessment and denial of the owner's challenge. City evidence included blight/disrepair and no associated business license; the owner's storage claim did not establish qualifying use or the required 40% occupied storage area.",
-      "limitation": "Published case-record reproduction, not the court docket-hosted original; confirms a 2023 assessment only, not continuous or present-day vacancy."
+      "supports": "The court record concerns 375 Center Street and describes notices issued 2024-03-22 and 2024-05-03 for the 2023 vacant-property-tax assessment, the 2024-07-02 administrative hearing, and denial of the owner's writ petition on 2026-08-07. City evidence included blight/disrepair and no associated business license; the owner's storage claim did not establish qualifying use or the required 40% occupied storage area. The court record says the City acknowledged a redevelopment planning permit could support an exemption in 2024 and later if in place.",
+      "limitation": "Published case-record reproduction, not the court docket-hosted original; confirms a 2023 assessment only, not continuous or present-day vacancy. It also records a possible later-year redevelopment exemption without establishing whether one was granted."
+    },
+    {
+      "source_url": "https://www.decisiondepot.legal/cases/257447",
+      "source_name": "DecisionDepot compliance order, same case",
+      "observed_date": "2026-08-24",
+      "published_date": "2026-08-21",
+      "supports": "The court had received no objections to the proposed judgment and would enter it; the compliance hearing was vacated.",
+      "limitation": "Published case-record reproduction, not the court portal's original; procedural outcome only, no evidence of present-day occupancy."
     },
     {
       "source_url": "https://sfyimby.com/2024/02/two-story-residence-proposed-at-375-center-street-oakland.html",
