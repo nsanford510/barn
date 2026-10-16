@@ -1,0 +1,34 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.2,
+  "rationale": "Recent permit and listing records show active rehabilitation, but neither utility, inspection, nor occupancy data establishes whether any units are vacant. Because this is a mixed-use, multi-unit building, construction alone cannot establish whole-property vacancy or its start date.",
+  "estimated_vacancy_start_date": null,
+  "estimated_vacancy_duration": null,
+  "evidence": [
+    {
+      "signal": "building permits / construction",
+      "detail": "A property page for 322 Broadway lists the building as under construction and shows residential building alteration permits issued Jan 7, 2026 and electrical work issued May 20, 2026. This supports active rehabilitation but does not establish whether all or any units are vacant.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.realtor.com/realestateandhomes-detail/322-Broadway_Oakland_CA_94607_M97116-41652"
+    },
+    {
+      "signal": "rehabilitation / ownership change",
+      "detail": "The Jack London Improvement District's 2025 Q2 update says rehabilitation at 322 Broadway at 4th changed course with new ownership. It gives no occupancy or vacancy dates.",
+      "observed_at": "2025-05",
+      "source_url": "https://ctycms.com/ca-jack-london/docs/board-q2-2025-agenda-packet.pdf"
+    },
+    {
+      "signal": "sale / listing history",
+      "detail": "The MLS listing history shows the property active for sale from July 2023 through January 2025 and sold in March 2025 for $650,000. Sale and listing status do not prove vacancy.",
+      "observed_at": "2025-03-01",
+      "source_url": "https://www.bhhs.com/california-properties-ca301/ca/322-broadway-oakland-94607/pid-350261964"
+    },
+    {
+      "signal": "property identity / historic use",
+      "detail": "Oakland's 2020 heritage staff report identifies 322 Broadway (APN 1-139-14) as the Buswell Block and documents its historic multi-building use. No occupancy finding is made.",
+      "observed_at": "2020-07-13",
+      "source_url": "https://cao-94612.s3.us-west-2.amazonaws.com/documents/Heritage-2020-Staff-report-with-attachments.pdf"
+    }
+  ],
+  "report_md": "# Vacancy research: 322 Broadway, Oakland (APN 001-013901400)\n\n**Verdict:** unknown  \n**Confidence:** 0.20  \n**Estimated vacancy start / duration:** not estimable from available public evidence.\n\nThe public record supports ongoing rehabilitation but does not establish current occupancy or an uninterrupted vacancy period. Realtor.com lists the property as under construction and records residential building alteration and electrical permits issued in 2026. A 2025 Jack London Improvement District update says rehabilitation changed course with new ownership. Listing history shows a 2023-2025 sale campaign and a March 2025 sale. These facts can coincide with vacant premises, but do not prove it; a multi-unit mixed-use property may also be partly occupied during phased work. No dated utility shutoff, official vacancy declaration, confirmed code finding, or dated occupancy evidence was located.\n\n## Sources\n\n- [Realtor.com property and permit history](https://www.realtor.com/realestateandhomes-detail/322-Broadway_Oakland_CA_94607_M97116-41652) — under-construction label; residential alteration issued 2026-01-07; electrical work issued 2026-05-20. Third-party property page; occupancy status is not provided.\n- [Jack London Improvement District, Q2 2025 board packet](https://ctycms.com/ca-jack-london/docs/board-q2-2025-agenda-packet.pdf) — rehabilitation at 322 Broadway at 4th changed course with new ownership; no occupancy details.\n- [Berkshire Hathaway HomeServices / CRMLS listing history](https://www.bhhs.com/california-properties-ca301/ca/322-broadway-oakland-94607/pid-350261964) — listing and sale history through March 2025; no vacancy statement.\n- [City of Oakland, 2020 heritage staff report](https://cao-94612.s3.us-west-2.amazonaws.com/documents/Heritage-2020-Staff-report-with-attachments.pdf) — identifies 322 Broadway and APN 1-139-14; not occupancy evidence.\n\n**Conclusion:** Unknown. Do not infer a vacancy start date or duration from construction, listing, or sale records alone."
+}
