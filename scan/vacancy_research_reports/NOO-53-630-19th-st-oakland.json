@@ -1,0 +1,28 @@
+{
+  "issue": "NOO-53",
+  "apn": "003 004100600",
+  "address": "630 19TH ST, OAKLAND",
+  "city": "OAKLAND",
+  "zip_code": "94612",
+  "verdict": "likely_vacant",
+  "confidence": 0.68,
+  "rationale": "Transwestern currently markets 4,300 SF at this address for lease; its 2025 brochure also calls the ~4,000-RSF building available. This supports likely vacancy, but marketing does not prove the building is unoccupied, and no dated vacancy onset is established.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "vacancy_duration_note": "Not established. The brochure bears a 2025 copyright but gives no publication or availability start date; the current listing has no listing-history date.",
+  "evidence": [
+    {
+      "signal": "commercial space marketed for lease",
+      "detail": "Transwestern's LoopNet listings page lists 630 19th St, Oakland, CA 94612 as a 4,300 SF industrial space for lease at $24/SF/YR.",
+      "source_url": "https://www.loopnet.com/company/transwestern-real-estate-services/ccsn62fl/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "commercial space advertised as available",
+      "detail": "Transwestern brochure identifies 630 19th Street, Oakland, CA 94612 and says a free-standing building of approximately 4,000 RSF is available. It has a 2025 copyright but no publication or availability start date.",
+      "source_url": "https://images1.showcase.com/d2/xLhepjxkwdSG2gQYPgVBdQRAGCa3NlwUASHpFopS6hk/document.pdf",
+      "observed_at": "2025 (copyright year; date not specified)"
+    }
+  ],
+  "report_md": "## Vacancy research — APN 003 004100600\n\n**Verdict:** likely_vacant (0.68 confidence).\n\n**Evidence:** Transwestern's LoopNet broker listings page lists 630 19th St, Oakland, CA 94612 as a 4,300 SF industrial space for lease at $24/SF/YR (reviewed 2026-10-16). A Transwestern brochure bearing 2025 copyright identifies the same address and says a free-standing building of approximately 4,000 RSF is available. Neither source gives the original marketing date or confirms the building was empty on inspection.\n\n**Vacancy start/duration:** not established. The brochure is evidence the space was advertised available under a 2025-copyright brochure, but its publication date is absent; it does not establish when physical vacancy began. The listing likewise has no listing-history date.\n\n**Limitations:** A lease listing supports probable availability, not conclusive physical vacancy or continuous vacancy. No dated occupancy record, public utility record, or inspection record was found in this review."
+}
