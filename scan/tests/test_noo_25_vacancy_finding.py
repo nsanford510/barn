@@ -10,7 +10,7 @@ class Noo25VacancyFindingTests(unittest.TestCase):
     def test_finding_obeys_queue_constraints_and_keeps_unsupported_duration_unknown(self) -> None:
         finding = json.loads(FINDING_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual("001019302600", finding["apn"])
+        self.assertEqual("001 019302600", finding["apn"])
         self.assertIn(finding["verdict"], {"likely_vacant", "likely_occupied", "unknown"})
         self.assertGreaterEqual(finding["confidence"], 0)
         self.assertLessEqual(finding["confidence"], 1)
