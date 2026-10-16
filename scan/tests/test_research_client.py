@@ -71,6 +71,21 @@ class RequestTests(unittest.TestCase):
         self.assertNotIn("p_zip_codes", plain)
         self.assertEqual(["94601", "94607"], targeted["p_zip_codes"])
 
+    def test_claim_sends_only_the_requested_apn_when_given(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen:
+            research_client.claim(apn=" 001 015300500 ")
+
+        body = json.loads(urlopen.call_args[0][0].data)
+        self.assertEqual("001 015300500", body["p_apn"])
+
+    def test_cli_apn_flag_reaches_the_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen, \
+                patch("sys.stdout", new_callable=io.StringIO):
+            code = research_client.main(["claim", "--apn", "001 015300500", "--city", "OAKLAND"])
+
+        self.assertEqual(0, code)
+        self.assertEqual("001 015300500", json.loads(urlopen.call_args[0][0].data)["p_apn"])
+
     def test_zip_codes_are_flattened_and_deduplicated(self) -> None:
         self.assertEqual(
             ["94601", "94607", "94621"],
