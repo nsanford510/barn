@@ -58,7 +58,7 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.append_properties_to_list(BIGINT, TEXT[]) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.append_properties_to_list(BIGINT, TEXT[]) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.append_properties_to_list(BIGINT, TEXT[]) TO authenticated;
 
 CREATE OR REPLACE FUNCTION public.reorder_list_properties(
@@ -133,5 +133,5 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.reorder_list_properties(BIGINT, TEXT[]) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.reorder_list_properties(BIGINT, TEXT[]) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.reorder_list_properties(BIGINT, TEXT[]) TO authenticated;

@@ -128,7 +128,7 @@ GRANT EXECUTE ON FUNCTION public.submit_vacancy_finding(TEXT, UUID, TEXT, REAL, 
 -- ============================================================
 -- map_markers (read by the list, gallery and map views): same columns, plus ai_vacant_since.
 -- ============================================================
-CREATE OR REPLACE VIEW public.map_markers AS
+CREATE OR REPLACE VIEW public.map_markers WITH (security_invoker = true) AS
  SELECT b.apn,
     b.location_of_property AS location,
     b.parcel_number,
@@ -177,5 +177,8 @@ CREATE OR REPLACE VIEW public.map_markers AS
           WHERE lp.apn = b.apn AND l.name = 'Favorites'::text
          LIMIT 1) fav ON true
   WHERE b.lat IS NOT NULL AND b.lng IS NOT NULL;
+
+-- Run as the caller so the base tables' RLS applies; signed-in users only.
+REVOKE ALL ON public.map_markers FROM anon;
 
 NOTIFY pgrst, 'reload schema';
