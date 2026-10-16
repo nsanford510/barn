@@ -71,6 +71,23 @@ class RequestTests(unittest.TestCase):
         self.assertNotIn("p_zip_codes", plain)
         self.assertEqual(["94601", "94607"], targeted["p_zip_codes"])
 
+    def test_claim_targets_an_exact_apn_through_the_dedicated_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen:
+            research_client.claim(apn=" 001 021701901 ")
+
+        request = urlopen.call_args[0][0]
+        self.assertTrue(request.full_url.endswith("/rpc/claim_vacancy_research_for_apn"))
+        self.assertEqual(
+            {"p_agent_token": "agent-token", "p_apn": "001 021701901", "p_lease_minutes": 45},
+            json.loads(request.data),
+        )
+
+    def test_claim_rejects_a_blank_apn_without_calling_the_server(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen") as urlopen:
+            with self.assertRaisesRegex(research_client.ClientError, "apn must not be blank"):
+                research_client.claim(apn="  ")
+        urlopen.assert_not_called()
+
     def test_zip_codes_are_flattened_and_deduplicated(self) -> None:
         self.assertEqual(
             ["94601", "94607", "94621"],
@@ -92,6 +109,15 @@ class RequestTests(unittest.TestCase):
             code = research_client.main(["claim", "--zip", "94601,94607", "--zip", "94621"])
         self.assertEqual(0, code)
         self.assertEqual(["94601", "94607", "94621"], json.loads(urlopen.call_args[0][0].data)["p_zip_codes"])
+
+    def test_cli_apn_flag_reaches_the_targeted_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen, \
+                patch("sys.stdout", new_callable=io.StringIO):
+            code = research_client.main(["claim", "--apn", "001 021701901"])
+        self.assertEqual(0, code)
+        request = urlopen.call_args[0][0]
+        self.assertTrue(request.full_url.endswith("/rpc/claim_vacancy_research_for_apn"))
+        self.assertEqual("001 021701901", json.loads(request.data)["p_apn"])
 
     def test_submit_maps_the_finding_to_rpc_parameters(self) -> None:
         finding = {

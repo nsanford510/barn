@@ -22,6 +22,10 @@ account to obtain information.
    `python research_client.py claim --zip 94601,94607`. You then only receive
    properties in those zip codes, and `null` means none are left there.
 
+   If you were assigned one exact APN, use `python research_client.py claim
+   --apn "001 021701901"`. This requires the targeted-claim migration to be
+   applied on the BARN database.
+
 2. **Research** that property. You have until `lease_expires_at` (45 minutes by
    default). If you need longer, run
    `python research_client.py extend --token <claim_token>` before it expires;
