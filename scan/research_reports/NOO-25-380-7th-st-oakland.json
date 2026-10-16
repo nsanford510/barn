@@ -1,0 +1,36 @@
+{
+  "apn": "001019302600",
+  "address": "380 7TH ST, OAKLAND, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.25,
+  "rationale": "Public sources identify a residential property but provide no reliable occupancy signal or dated vacancy evidence. Zillow marks it off market, which does not establish vacancy; a 2022 business-account closure at this address is not proof the residence was empty. Vacancy start and duration cannot be determined.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "evidence": [
+    {
+      "signal": "property_profile",
+      "detail": "Zillow identifies the address as a 3,016 sq ft, 8-bedroom, 4-bath single-family property, built in 1926, and says it is off market (not currently listed for sale or rent on Zillow). Off-market status does not establish occupancy.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.zillow.com/homedetails/380-7th-St-Oakland-CA-94607/152719244_zpid/"
+    },
+    {
+      "signal": "municipal_parcel_record",
+      "detail": "City of Oakland FY 2025-26 preliminary assessment roll lists 380 7TH ST, Oakland 94607 against APN 001 019302600. The record confirms address/APN identity, not occupancy.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F"
+    },
+    {
+      "signal": "business_account_closure",
+      "detail": "A County Assessor-hosted list of closed business accounts records a lessor business at 380 7TH ST with a 12/31/2022 closure date. This concerns a business account and is not reliable evidence that the residence became vacant.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://cao-94612.s3.us-west-2.amazonaws.com/documents/Closed-Business-Accounts-Dec-2023.pdf"
+    },
+    {
+      "signal": "code_enforcement_lookup",
+      "detail": "Oakland directs public users to its Accela portal to search property complaints by address; the general portal page does not disclose a property-specific complaint result. No vacancy inference is made from this lookup route.",
+      "observed_at": "2026-10-15",
+      "source_url": "https://www.oaklandca.gov/Planning-Building/Code-Enforcement-Services/Check-Status-of-Your-Property-Complaint"
+    }
+  ],
+  "report_md": "# Vacancy research: 380 7th St, Oakland\n\n**APN:** 001-0193-026-00 (normalized queue APN: `001019302600`)  \n**Research date:** 2026-10-15  \n**Verdict:** unknown (confidence 0.25)  \n**Vacancy start / duration:** undetermined; no dated vacancy evidence found.\n\n## Evidence\n\n- Zillow describes the subject as a 3,016 sq ft, 8-bedroom, 4-bath single-family home built in 1926. It is marked off market, meaning it is not listed on Zillow for sale or rent. That does not show whether anyone occupies it. [Zillow property page](https://www.zillow.com/homedetails/380-7th-St-Oakland-CA-94607/152719244_zpid/)\n- Oakland's FY 2025-26 preliminary assessment roll matches the address to APN 001 019302600. It confirms parcel identity, not current use or occupancy. [Oakland Legistar assessment roll](https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F)\n- The Alameda County Assessor-hosted December 2023 closed-business-account list includes a lessor business at 380 7TH ST with closure date 12/31/2022. A business account closure is not evidence that the dwelling became vacant. [Closed business accounts PDF](https://cao-94612.s3.us-west-2.amazonaws.com/documents/Closed-Business-Accounts-Dec-2023.pdf)\n- Oakland provides an Accela complaint lookup by address, but the public page itself contains no subject-specific result. [Oakland complaint-status lookup instructions](https://www.oaklandca.gov/Planning-Building/Code-Enforcement-Services/Check-Status-of-Your-Property-Complaint)\n\n## Assessment\n\nThe available address-specific evidence confirms a residential parcel but supplies no reliable current occupancy signal, utility shutoff, vacancy-tax record, dated imagery showing prolonged vacancy, or subject-specific code complaint. No vacancy start date or duration can be supported. Keep the verdict unknown pending stronger evidence."
+}
