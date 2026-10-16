@@ -7,7 +7,7 @@ Research checked 2026-10-16. Public sources only.
 - **Verdict:** `unknown`
 - **Confidence:** 0.25
 - **Vacancy start / duration:** Not established. No dated evidence found that identifies when the home became vacant, and the current occupancy status is not established.
-- **Rationale:** Public records identify a single-family home and show a 2011 tax-default auction listing, a 2016-2018 residential parcel classification, and residential classification in a 2021-2024 City assessment. These are financial or land-use records, not proof of vacancy or occupancy. No current, direct occupancy evidence was located.
+- **Rationale:** Public records show a 2011 tax-default auction listing, a $1,176.39 City special-assessment lien covering tax years 2021-2025, and residential use code 1100. These are financial or land-use records, not proof of vacancy or occupancy. No current, direct occupancy evidence was located.
 
 ## Evidence reviewed
 
@@ -17,6 +17,8 @@ Research checked 2026-10-16. Public sources only.
 | Tax-default auction listing | Alameda County's Treasurer-Tax Collector report lists APN 4-85-8 / 1115 Center St, Oakland among properties subject to tax-default sale, with the report printed November 1, 2011. This signals tax delinquency, not vacancy; the excerpt does not establish whether the property sold. | Report printed 2011-11-01 | [Alameda County tax-default sale report](https://www.acgov.org/board/bos_calendar/documents/DocsAgendaReg_11_22_11/GENERAL%20ADMINISTRATION/Regular%20Calendar/TTX_Sale_Tax_Defaulted_Property.pdf) |
 | Residential land-use classification | Oakland's City Council attachment lists APN 004-0085-008-00 at 1115 Center St with code `1100-Single fam rsdntl homes used as such` for 2016-2018. The code is a property classification and does not verify actual occupancy. | 2016-2018 | [City of Oakland attachment](https://oakland.legistar.com/View.ashx?GUID=09D82F49-CD60-482B-A33D-8CAB20E6A3F9&ID=6785905&M=F) |
 | Residential land-use classification | A later Oakland attachment lists the same APN and address with code `1100-Single fam rsdntl homes used as such` for 2021-2024. Again, this is not direct occupancy evidence. | 2021-2024 | [City of Oakland assessment attachment](https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=E4E0D13F-7635-4B47-B0FA-271A96F9B96C&ID=14301879&M=F) |
+
+| Current special-assessment lien and land-use classification | A City of Oakland attachment dated January 20, 2026 lists APN 004-0085-008-00 for tax years 2021-2025 with $1,001.39 delinquent, a $175 administrative charge, and a $1,176.39 lien; it retains use code `1100-Single fam rsdntl homes used as such`. Delinquency and a use code do not establish vacancy or occupancy. | Attachment dated 2026-01-20; interest calculated through 2025-12 | [City of Oakland attachment](https://oakland.legistar.com/View.ashx?GUID=7DFCF982-F0A0-4306-937C-0B06CB56F8F8&ID=15063787&M=F) |
 
 ## Limits and next steps
 
