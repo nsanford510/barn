@@ -1,0 +1,35 @@
+{
+  "apn": "001-0209-015-00",
+  "address": "578 7TH ST, OAKLAND, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.57,
+  "rationale": "Public reporting documented a vacant former commercial building in 2021; a Jan 2025 listing still calls the existing restaurant/market vacant. A 57-unit redevelopment was proposed, but no source located confirms it was built or occupied. The evidence supports vacancy through Jan 2025, not continuous vacancy or present occupancy in Oct 2026; status and total duration remain unknown.",
+  "vacancy_start": "By 2021-09 (documented; exact start unknown)",
+  "vacancy_duration": "Observed vacant in Sep 2021 and Jan 2025; continuous duration and status after Jan 2025 unknown",
+  "evidence": [
+    {
+      "source_name": "LoopNet listing",
+      "source_url": "https://www.loopnet.com/Listing/578-7th-St-Oakland-CA/34514940/",
+      "observed_at": "2025-01-17",
+      "details": "Identifies APN 001-0209-015-00 and describes current use as Vacant Restaurant and Market; existing single-story commercial building. Listing now says no longer advertised."
+    },
+    {
+      "source_name": "San Francisco YIMBY",
+      "source_url": "https://sfyimby.com/2021/09/development-permit-filed-for-578-7th-street-downtown-oakland.html",
+      "observed_at": "2021-09",
+      "details": "Reports existing single-story commercial structure was vacant and slated for demolition for proposed housing."
+    },
+    {
+      "source_name": "City of Oakland Appendix C: Sites Inventory",
+      "source_url": "https://cao-94612.s3.amazonaws.com/documents/Appendix-C-Sites-Inventory_clean.pdf",
+      "observed_at": "2021-11-30",
+      "details": "PLN21175 at the matching APN/address is Approved-Pending Appeal for 57 units with expected completion 2025-12-31; planning pipeline entry does not establish completion or occupancy."
+    },
+    {
+      "source_name": "Stanley Saitowitz / Natoma Architects project page",
+      "source_url": "https://www.saitowitz.com/578-7th-street",
+      "observed_at": "2026-10-15",
+      "details": "Describes proposed 55-home project and design imagery; no completion date or occupancy evidence."
+    }
+  ]
+}
