@@ -71,6 +71,15 @@ class RequestTests(unittest.TestCase):
         self.assertNotIn("p_zip_codes", plain)
         self.assertEqual(["94601", "94607"], targeted["p_zip_codes"])
 
+    def test_claim_sends_apn_only_when_given(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen:
+            research_client.claim()
+            research_client.claim(apn=" 002 000902900 ")
+
+        plain, targeted = (json.loads(c[0][0].data) for c in urlopen.call_args_list)
+        self.assertNotIn("p_apn", plain)
+        self.assertEqual("002 000902900", targeted["p_apn"])
+
     def test_zip_codes_are_flattened_and_deduplicated(self) -> None:
         self.assertEqual(
             ["94601", "94607", "94621"],
@@ -92,6 +101,13 @@ class RequestTests(unittest.TestCase):
             code = research_client.main(["claim", "--zip", "94601,94607", "--zip", "94621"])
         self.assertEqual(0, code)
         self.assertEqual(["94601", "94607", "94621"], json.loads(urlopen.call_args[0][0].data)["p_zip_codes"])
+
+    def test_cli_apn_flag_reaches_the_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen, \
+                patch("sys.stdout", new_callable=io.StringIO):
+            code = research_client.main(["claim", "--apn", "002 000902900"])
+        self.assertEqual(0, code)
+        self.assertEqual("002 000902900", json.loads(urlopen.call_args[0][0].data)["p_apn"])
 
     def test_submit_maps_the_finding_to_rpc_parameters(self) -> None:
         finding = {
@@ -135,6 +151,12 @@ class RequestTests(unittest.TestCase):
             code = research_client.main(["claim", "--city", "OAKLAND"])
         self.assertEqual(0, code)
         self.assertEqual({"apn": "1-2"}, json.loads(stdout.getvalue()))
+
+    def test_migration_claim_signature_and_filter_support_exact_apn(self) -> None:
+        migration = (SCAN_DIR / "db_migrations" / "supa_migration_vacancy_research.sql").read_text()
+        self.assertIn("p_apn           TEXT    DEFAULT NULL", migration)
+        self.assertIn("t.apn = TRIM(p_apn)", migration)
+        self.assertIn("claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT)", migration)
 
 
 if __name__ == "__main__":
