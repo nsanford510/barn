@@ -1,0 +1,19 @@
+{
+  "issue": "NOO-30",
+  "address": "715 M L KING JR WAY, OAKLAND, CA 94607",
+  "apn": "001 021701901",
+  "research_date": "2026-10-15",
+  "verdict": "unknown",
+  "confidence": 0.15,
+  "rationale": "Public records identify a four-unit residence and a listing reports an October 2019 HVAC permit for a four-unit residential building. The FY 2025-26 county fee roll lists four units but does not measure occupancy. No dated evidence establishes current occupancy or a vacancy start; duration is unknown.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "finding_id": "06af433b-0fe6-4ca8-9f29-a8f062b63466",
+  "sources": [
+    "https://www.redfin.com/CA/Oakland/715-M-L-King-Jr-94612/home/1561980",
+    "https://www.stopwaste.org/sites/default/files/ACWMA%20-%20Preliminary%20Levy%20Roll%20FY%202025-26.pdf",
+    "https://www.stopwaste.org/sites/default/files/Alameda%20County%20Waste%20Management%20Authority%20-%20Prelim%20Data%20Report%20FY%202023-24.pdf",
+    "https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT",
+    "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F"
+  ]
+}

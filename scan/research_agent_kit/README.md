@@ -34,9 +34,6 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
 - Target zip codes: tell the agent to claim with `--zip 94601,94607` (repeatable
   or comma-separated; combines with `--city`). It only filters what that agent
   is handed; the properties must already be in the queue.
-- Target a specific queued property: `python research_client.py claim --apn "001 021701901"`.
-  This requires applying `db_migrations/supa_migration_vacancy_research_exact_apn_claim.sql`
-  after the base vacancy-research migration.
 - Watch progress: `python research_queue.py status`, or **Scan > Vacancy** in the
   web UI.
 - Retry failures: `python research_queue.py requeue --status failed`.
