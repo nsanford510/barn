@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 FINDING_PATH = Path(__file__).parents[1] / "research_reports" / "noo-34-vacancy-finding.json"
+MIGRATION_PATH = Path(__file__).parents[1] / "db_migrations" / "supa_migration_vacancy_research.sql"
 
 
 class Noo34VacancyFindingTest(unittest.TestCase):
@@ -34,6 +35,15 @@ class Noo34VacancyFindingTest(unittest.TestCase):
         evidence_text = " ".join(item["detail"] for item in self.finding["evidence"])
         self.assertIn("94606", evidence_text)
         self.assertIn("conflicts", evidence_text)
+
+    def test_queue_claim_rpc_can_target_the_researched_apn(self):
+        migration = MIGRATION_PATH.read_text(encoding="utf-8")
+        self.assertIn("p_apn           TEXT    DEFAULT NULL", migration)
+        self.assertIn("AND (p_apn IS NULL OR t.apn = p_apn)", migration)
+        self.assertIn(
+            "claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT) TO anon, authenticated, service_role",
+            migration,
+        )
 
 
 if __name__ == "__main__":
