@@ -82,8 +82,21 @@ def parse_zip_codes(values: list[str] | None) -> list[str]:
     return zips
 
 
-def claim(city: str = "", lease_minutes: int = 45, zip_codes: list[str] | None = None) -> dict[str, Any] | None:
+def claim(
+    city: str = "",
+    lease_minutes: int = 45,
+    zip_codes: list[str] | None = None,
+    apn: str | None = None,
+) -> dict[str, Any] | None:
     """One property to research, or None when nothing matching is left in the queue."""
+    if apn is not None:
+        apn = apn.strip()
+        if not apn:
+            raise ClientError("apn cannot be empty")
+        return call("claim_vacancy_research_for_apn", {
+            "p_apn": apn,
+            "p_lease_minutes": lease_minutes,
+        })
     params: dict[str, Any] = {"p_lease_minutes": lease_minutes, "p_city": city or ""}
     if zip_codes:
         params["p_zip_codes"] = zip_codes
@@ -120,6 +133,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--city", default="")
     p.add_argument("--zip", action="append", default=None, metavar="ZIP[,ZIP...]",
                    help="only claim properties in these zip codes (repeatable or comma-separated)")
+    p.add_argument("--apn", default=None, help="claim one exact APN (uses the targeted queue RPC)")
     p.add_argument("--lease-minutes", type=int, default=45)
 
     p = sub.add_parser("submit", help="submit a finding and close the claim")
@@ -141,7 +155,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "claim":
             result: Any = claim(
-                city=args.city, lease_minutes=args.lease_minutes, zip_codes=parse_zip_codes(args.zip)
+                city=args.city, lease_minutes=args.lease_minutes, zip_codes=parse_zip_codes(args.zip),
+                apn=args.apn,
             )
         elif args.command == "submit":
             try:
