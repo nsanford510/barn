@@ -57,6 +57,14 @@ class VacancyFilterTests(unittest.TestCase):
             client = self._run(site_vacant_filter=raw)
             self.assertIn((("site_vacant", expected), {}), client.log["is_"])
 
+    def test_sort_puts_nulls_last_in_both_directions(self) -> None:
+        for order in ("asc", "desc"):
+            client = self._run(sort="ai_vacancy_confidence", order=order)
+            self.assertIn(
+                (("ai_vacancy_confidence",), {"desc": order == "desc", "nullsfirst": False}),
+                client.log["order"],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

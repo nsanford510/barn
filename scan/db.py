@@ -557,7 +557,8 @@ def get_bills_with_parcels_filtered(
             query = query.lt(column, float(value))
 
     sort_column = {"location_of_property": "location", "latitude": "lat", "longitude": "lng"}.get(sort, sort)
-    query = query.order(sort_column, desc=(order or "asc").lower() == "desc")
+    # Rows with no value (e.g. unassessed AI confidence) sink in both directions.
+    query = query.order(sort_column, desc=(order or "asc").lower() == "desc", nullsfirst=False)
 
     # page_size == 0 means "everything"; PostgREST still needs an explicit range.
     if page_size and page_size > 0:
