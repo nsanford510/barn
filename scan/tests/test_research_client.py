@@ -108,6 +108,16 @@ class RequestTests(unittest.TestCase):
         self.assertEqual(0.2, body["p_confidence"])
         self.assertEqual([], body["p_evidence"])
         self.assertEqual("notes", body["p_report_md"])
+        self.assertNotIn("p_vacant_since", body)    # omitted, so older RPC deployments still accept it
+
+    def test_submit_sends_vacant_since_unless_it_is_a_placeholder(self) -> None:
+        base = {"claim_token": "c-1", "verdict": "likely_vacant", "confidence": 0.8, "rationale": "boarded"}
+        for value, expected in (("2019-08", "2019-08"), (" 2021 ", "2021"), ("not determinable", None),
+                                ("Unknown", None), ("", None), (None, None)):
+            with patch.object(research_client.urllib.request, "urlopen", return_value=_response("{}")) as urlopen:
+                research_client.submit({**base, "vacant_since": value})
+            body = json.loads(urlopen.call_args[0][0].data)
+            self.assertEqual(expected, body.get("p_vacant_since"), value)
 
     def test_submit_without_a_claim_token_never_calls_the_server(self) -> None:
         with patch.object(research_client.urllib.request, "urlopen") as urlopen:

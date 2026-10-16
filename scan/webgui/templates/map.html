@@ -384,6 +384,13 @@
       <option value="off">Power OFF</option>
       <option value="unknown">Unknown</option>
     </select>
+    <select id="filter-ai-verdict" title="AI vacancy verdict">
+      <option value="">All AI Verdicts</option>
+      <option value="likely_vacant">AI: Likely Vacant</option>
+      <option value="likely_occupied">AI: Likely Occupied</option>
+      <option value="unknown">AI: Unknown</option>
+      <option value="none">AI: Not Assessed</option>
+    </select>
     <label>
       <input type="checkbox" id="filter-vpt" />
       VPT Only
@@ -419,6 +426,12 @@
   const map = L.map('map').setView([37.8044, -122.2712], 12);
   const pageParams = new URLSearchParams(window.location.search);
   let activeListId = (pageParams.get('list_id') || '').trim();
+  // /map?ai_verdict=likely_vacant preselects the verdict filter.
+  (function () {
+    const select = document.getElementById('filter-ai-verdict');
+    const wanted = (pageParams.get('ai_verdict') || '').trim();
+    if (select && [...select.options].some(o => o.value === wanted)) select.value = wanted;
+  })();
 
   // Add OpenStreetMap tiles
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -786,6 +799,17 @@
       conditionBadge = `<span class="condition-badge ${condClass}">${score.toFixed(1)}/10</span>`;
     }
 
+    let vacancyField = '';
+    if (item.ai_vacancy_verdict) {
+      const verdictClass = item.ai_vacancy_verdict === 'likely_vacant' ? 'power-off'
+        : (item.ai_vacancy_verdict === 'likely_occupied' ? 'power-on' : 'power-unknown');
+      const conf = (item.ai_vacancy_confidence !== null && item.ai_vacancy_confidence !== undefined)
+        ? ` (${Math.round(item.ai_vacancy_confidence * 100)}%)` : '';
+      const length = item.ai_vacancy_length
+        ? ` · vacant ${escapeHtmlAttr(item.ai_vacancy_length)} (since ${escapeHtmlAttr(item.ai_vacant_since)})` : '';
+      vacancyField = `<div class="field"><span class="label">AI Verdict:</span> <span class="value ${verdictClass}">${escapeHtmlAttr(item.ai_vacancy_verdict.replace('_', ' '))}${conf}</span>${length}</div>`;
+    }
+
     const streetviewImg = `<img class="popup-streetview" src="/api/streetview/${encodeURIComponent(apn)}" onerror="this.style.display='none'" alt="Satellite map">`;
     const locationText = item.location || 'Unknown Location';
     const locationHtml = item.property_search_url
@@ -808,6 +832,7 @@
           <div class="field"><span class="label">APN:</span> <span class="value">${item.apn}</span></div>
           ${item.sort_order !== null && item.sort_order !== undefined ? `<div class="field"><span class="label">Route Order:</span> <span class="value">${Number(item.sort_order) + 1}</span></div>` : ''}
           <div class="field"><span class="label">Condition:</span> ${conditionBadge}</div>
+          ${vacancyField}
           <div class="field"><span class="label">Owner Name:</span> <span class="value">${item.owner_name || '-'}</span></div>
           <div class="field"><span class="label">VPT:</span> <span class="value ${vptClass}">${item.has_vpt}${item.vpt_marker ? ' (' + item.vpt_marker + ')' : ''}</span></div>
           <div class="field"><span class="label">Delinquent:</span> <span class="value ${item.delinquent === 'Yes' ? 'delinquent-yes' : 'delinquent-no'}">${item.delinquent}</span></div>
@@ -867,6 +892,7 @@
     const isNew = document.getElementById('filter-new').checked;
     const delinquent = document.getElementById('filter-delinquent').checked;
     const fav = document.getElementById('filter-fav').checked;
+    const aiVerdict = document.getElementById('filter-ai-verdict').value;
 
     const params = new URLSearchParams();
     if (q) params.set('q', q);
@@ -878,6 +904,7 @@
     if (isNew) params.set('new', '1');
     if (delinquent) params.set('delinquent', '1');
     if (fav) params.set('fav', '1');
+    if (aiVerdict) params.set('ai_verdict', aiVerdict);
     if (activeListId) params.set('list_id', activeListId);
 
     const loadingEl = document.getElementById('loading');

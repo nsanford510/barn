@@ -167,6 +167,9 @@ class FindingsTests(unittest.TestCase):
         client.table.assert_called_with("vacancy_findings")
         client.builder.eq.assert_called_with("apn", "1-2-3")
         self.assertEqual("", findings[0]["evidence"][0]["source_url"])
+        self.assertIn("report_md", client.builder.select.call_args.args[0])
+        self.assertIn("vacant_since", client.builder.select.call_args.args[0])
+        self.assertEqual("", findings[0]["report_md"])       # missing report normalised for the template
 
 
 class CliTests(unittest.TestCase):

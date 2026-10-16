@@ -279,8 +279,12 @@
   </div>
 
   <!-- AI Vacancy Research -->
-  <div class="panel">
+  <div class="panel" id="vacancy-research">
     <h2>Vacancy Research</h2>
+    {# The newest finding explains the current verdict only if it wrote it; other scanners update bills directly. #}
+    {% set first = property.vacancy_findings[0] if property.vacancy_findings else none %}
+    {% set latest = first if first and first.rationale == property.ai_vacancy_rationale else none %}
+    {% set earlier = property.vacancy_findings[1:] if latest else property.vacancy_findings %}
     {% if property.ai_vacancy_verdict %}
     <dl class="kv-grid">
       <dt>Verdict</dt>
@@ -290,16 +294,37 @@
         </span>
         {% if property.ai_vacancy_confidence is not none %}({{ "%.0f"|format(property.ai_vacancy_confidence * 100) }}% confidence){% endif %}
       </dd>
-      <dt>Rationale</dt>
+      <dt>Vacant For</dt>
+      <dd>{% if property.ai_vacancy_length %}{{ property.ai_vacancy_length }} (since {{ property.ai_vacant_since }}){% else %}-{% endif %}</dd>
+      <dt>Why</dt>
       <dd style="white-space:pre-wrap;">{{ property.ai_vacancy_rationale or "-" }}</dd>
       <dt>Updated</dt>
-      <dd>{{ property.ai_vacancy_updated_at or "-" }}</dd>
+      <dd>{{ property.ai_vacancy_updated_at or "-" }}{% if latest %} · {{ latest.agent }}{% endif %}</dd>
     </dl>
+    {% if latest and latest.evidence %}
+    <h3 style="font-size:14px;margin:14px 0 6px;">Evidence</h3>
+    <ul style="margin:0 0 0 18px;font-size:14px;">
+      {% for item in latest.evidence %}
+      <li>
+        <strong>{{ item.signal or "evidence" }}</strong>{% if item.observed_at %} ({{ item.observed_at }}){% endif %}{% if item.detail %}: {{ item.detail }}{% endif %}
+        {% if item.source_url %}<a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">source &#8594;</a>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if latest and latest.report_md %}
+    <details style="margin-top:10px;font-size:14px;" open>
+      <summary>Full research notes</summary>
+      <div style="margin-top:6px;white-space:pre-wrap;max-height:420px;overflow-y:auto;">{{ latest.report_md }}</div>
+    </details>
+    {% endif %}
     {% else %}
     <div style="color:var(--muted);font-size:14px;">Not researched yet.</div>
     {% endif %}
-    {% for finding in property.vacancy_findings %}
-    <details style="margin-top:10px;font-size:14px;">
+    {% if earlier %}
+    <h3 style="font-size:14px;margin:16px 0 4px;">{% if property.ai_vacancy_verdict %}Earlier research{% else %}Research history{% endif %}</h3>
+    {% for finding in earlier %}
+    <details style="margin-top:6px;font-size:14px;">
       <summary>
         {{ (finding.created_at or "")[:10] }} · {{ finding.agent }} ·
         {{ (finding.verdict or "").replace("_", " ") }}
@@ -316,8 +341,12 @@
         {% endfor %}
       </ul>
       {% endif %}
+      {% if finding.report_md %}
+      <div style="margin-top:6px;white-space:pre-wrap;max-height:300px;overflow-y:auto;color:var(--muted);">{{ finding.report_md }}</div>
+      {% endif %}
     </details>
     {% endfor %}
+    {% endif %}
   </div>
 
   <!-- Research Links -->

@@ -14,9 +14,21 @@ def _fmt_value(value: Any) -> str:
     text = "null" if value is None else str(value)
     if len(text) > _MAX_VALUE_LEN:
         text = text[:_MAX_VALUE_LEN] + "...(truncated)"
-    if text == "" or any(c in text for c in ' "=\n\t'):
-        text = '"' + text.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
+    if text == "" or any(c in ' "=' or not c.isprintable() for c in text):
+        text = '"' + "".join(_escape(c) for c in text) + '"'
     return text
+
+
+_ESCAPES = {"\\": "\\\\", '"': '\\"', "\n": "\\n", "\r": "\\r", "\t": "\\t"}
+
+
+def _escape(c: str) -> str:
+    """Escape control characters so one log record always stays on one terminal line."""
+    if c in _ESCAPES:
+        return _ESCAPES[c]
+    if not c.isprintable() and c != " ":
+        return f"\\x{ord(c):02x}" if ord(c) < 256 else f"\\u{ord(c):04x}"
+    return c
 
 
 def kv(**fields: Any) -> str:
@@ -27,20 +39,20 @@ class _KVLogger:
     def __init__(self, logger: logging.Logger):
         self._logger = logger
 
-    def _log(self, level: int, action: str, fields: dict[str, Any]) -> None:
+    def _log(self, level: int, action: str, fields: dict[str, Any], /) -> None:
         if self._logger.isEnabledFor(level):
             self._logger.log(level, "%s %s", action, kv(**fields) if fields else "")
 
-    def debug(self, action: str, **fields: Any) -> None:
+    def debug(self, action: str, /, **fields: Any) -> None:
         self._log(logging.DEBUG, action, fields)
 
-    def info(self, action: str, **fields: Any) -> None:
+    def info(self, action: str, /, **fields: Any) -> None:
         self._log(logging.INFO, action, fields)
 
-    def warning(self, action: str, **fields: Any) -> None:
+    def warning(self, action: str, /, **fields: Any) -> None:
         self._log(logging.WARNING, action, fields)
 
-    def error(self, action: str, **fields: Any) -> None:
+    def error(self, action: str, /, **fields: Any) -> None:
         self._log(logging.ERROR, action, fields)
 
 

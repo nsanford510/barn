@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-BARN is a monorepo. `web/` contains the Vite + React + TypeScript site; app code lives in `web/src`, tests in `web/src/test`, and Supabase assets in `web/supabase/`. `scan/` contains the Python scanner and Flask UI, with reusable modules in `scan/scanner/`, tests in `scan/tests/`, and service units in `scan/service/`. `android/` contains the Kotlin Scout app under `android/app/src/main` with JVM tests in `android/app/src/test`. Root `deploy.sh` and `scripts/` handle deployment and maintenance.
+BARN is a monorepo. `web/` contains the Vite + React + TypeScript site; app code lives in `web/src`, tests in `web/src/test`, and Supabase assets in `web/supabase/`. `scan/` contains the Python scanner and Flask UI, with reusable modules in `scan/scanner/`, tests in `scan/tests/`, and service units in `scan/service/`. `android/` contains the Kotlin Scout app under `android/app/src/main` with JVM tests in `android/app/src/test`. `symphony/` contains the Symphony agent orchestrator (Python, spec: https://github.com/openai/symphony/blob/main/SPEC.md) with modules in `symphony/symphony/` and tests in `symphony/tests/`. Root `deploy.sh` and `scripts/` handle deployment and maintenance.
 
 ## Build, Test, and Development Commands
 - `cd web && npm install && npm run dev` starts the web app locally.
@@ -9,6 +9,7 @@ BARN is a monorepo. `web/` contains the Vite + React + TypeScript site; app code
 - `cd scan && ./install.sh` creates `.venv`, installs Python deps, and installs Playwright Chromium.
 - `cd scan && source .venv/bin/activate && python run_all.py --city=OAKLAND` runs the scanner plus Flask UI.
 - `cd scan && source .venv/bin/activate && python -m unittest discover -s tests` runs scanner tests.
+- `cd symphony && source ../scan/.venv/bin/activate && pip install -r requirements.txt && python -m unittest discover -s tests` runs Symphony tests; `python -m symphony path/to/WORKFLOW.md --port 4100` runs the orchestrator.
 - `cd android && ./gradlew test` runs JVM tests; `cd android && ./gradlew assembleDebug` builds a debug APK.
 
 ## Coding Style & Naming Conventions

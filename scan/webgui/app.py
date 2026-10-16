@@ -173,6 +173,40 @@ def _normalize_ai_verdict(value: Any) -> str:
     return {"vacant": "likely_vacant", "occupied": "likely_occupied"}.get(v, v)
 
 
+def _vacancy_length(since: Any, today: Any = None) -> str:
+    """'~7 yr 2 mo' from a YYYY / YYYY-MM / YYYY-MM-DD vacancy start; '' when unusable."""
+    m = re.fullmatch(r"(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?", str(since or "").strip())
+    if not m:
+        return ""
+    today = today or datetime.now(timezone.utc).date()
+    year, month = int(m[1]), int(m[2] or 1)
+    if not 1 <= month <= 12:
+        return ""
+    if m[2] is None:  # year precision: don't invent months
+        years = today.year - year
+        return "" if years < 0 else (f"~{years} yr" if years else "<1 yr")
+    months = (today.year - year) * 12 + today.month - month
+    if m[3] and today.day < int(m[3]):
+        months -= 1
+    if months < 0:
+        return ""
+    if months == 0:
+        return "<1 mo"
+    years, months = divmod(months, 12)
+    return "~" + " ".join(([f"{years} yr"] if years else []) + ([f"{months} mo"] if months else []))
+
+
+def _vacancy_fields(r: dict[str, Any]) -> dict[str, Any]:
+    """Verdict, confidence and vacancy start/length as every property view shows them."""
+    since = str(r.get("ai_vacant_since") or "").strip()
+    return {
+        "ai_vacancy_verdict": _normalize_ai_verdict(r.get("ai_vacancy_verdict")),
+        "ai_vacancy_confidence": r.get("ai_vacancy_confidence"),
+        "ai_vacant_since": since,
+        "ai_vacancy_length": _vacancy_length(since),
+    }
+
+
 def _split_multi_filter(value: str) -> list[str]:
     return [item.strip().upper() for item in (value or "").split(",") if item.strip()]
 
@@ -620,8 +654,7 @@ def _build_list_view_row(
         "outreach_score": r.get("outreach_score"),
         "outreach_stage": r.get("outreach_stage") or "",
         "research_status": r.get("research_status") or "",
-        "ai_vacancy_verdict": _normalize_ai_verdict(r.get("ai_vacancy_verdict")),
-        "ai_vacancy_confidence": r.get("ai_vacancy_confidence"),
+        **_vacancy_fields(r),
         "site_vacant": r.get("site_vacant"),
         "owner_name": r.get("owner_name") or "",
         "latitude": r.get("lat") if r.get("lat") is not None else r.get("latitude"),
@@ -696,6 +729,7 @@ def search_page():
         "deceased_count",
         "outreach_score",
         "ai_vacancy_confidence",
+        "ai_vacant_since",
     }
     if sort not in allowed_sorts:
         sort = "location_of_property"
@@ -846,6 +880,7 @@ def gallery_page():
     owner_name_filter = (request.args.get("owner_name") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
     added_after_filter, added_before_filter = _added_range_args()
+    vacancy_filters = _vacancy_filter_args(request.args)
     sort = request.args.get("sort") or "location_of_property"
     order = request.args.get("order") or "asc"
     page = max(int(request.args.get("page") or 1), 1)
@@ -856,6 +891,8 @@ def gallery_page():
         "tracer_number", "tax_year", "pdf_file", "situs_zip", "last_payment",
         "delinquent", "power_status", "city", "has_vpt", "condition_score",
         "primary_resident_age", "deceased_count", "outreach_score",
+        "ai_vacancy_confidence",
+        "ai_vacant_since",
     }
     if sort not in allowed_sorts:
         sort = "location_of_property"
@@ -899,6 +936,8 @@ def gallery_page():
         new_filter=new_filter,
         added_after=added_after_filter,
         added_before=added_before_filter,
+        ai_verdict_filter=vacancy_filters["ai_verdict_filter"],
+        ai_confidence_min=vacancy_filters["ai_confidence_min"],
         sort=sort,
         order=order,
         page=query_page,
@@ -957,6 +996,7 @@ def gallery_page():
                 "outreach_stage": r.get("outreach_stage") or "",
                 "deceased_count": r.get("deceased_count"),
                 "prop_occupancy_type": r.get("prop_occupancy_type") or "",
+                **_vacancy_fields(r),
                 "in_selected_list": apn in selected_list_apns,
                 "maps_url": (
                     f"https://www.google.com/maps/search/?api=1&query="
@@ -995,6 +1035,7 @@ def gallery_page():
         new_filter=new_filter,
         added_after_filter=added_after_filter,
         added_before_filter=added_before_filter,
+        ai_verdict_filter=vacancy_filters["ai_verdict_filter"],
         list_id=selected_list_id,
         selected_list=selected_list,
         sort=sort,
@@ -1040,6 +1081,7 @@ def api_apn_list():
         "power_status", "city", "has_vpt", "condition_score",
         "primary_resident_age", "deceased_count", "outreach_score",
         "ai_vacancy_confidence",
+        "ai_vacant_since",
     }
     if sort not in allowed_sorts:
         sort = "location_of_property"
@@ -1136,8 +1178,7 @@ def property_detail(apn: str):
     return_to = _safe_return_to(request.args.get("return_to"), fallback=url_for("search_page"))
     property_data = {
         "apn": apn,
-        "ai_vacancy_verdict": _normalize_ai_verdict(row.get("ai_vacancy_verdict")),
-        "ai_vacancy_confidence": row.get("ai_vacancy_confidence"),
+        **_vacancy_fields(row),
         "ai_vacancy_rationale": row.get("ai_vacancy_rationale") or "",
         "ai_vacancy_updated_at": str(row.get("ai_vacancy_updated_at") or "")[:10],
         "vacancy_findings": vacancy_findings,
@@ -1309,6 +1350,7 @@ def _row_matches_map_filters(
     owner_name_filter: str,
     new_filter: str,
     favorites_set: set[str],
+    ai_verdict_filter: str = "",
 ) -> bool:
     apn = str(row.get("apn") or "").strip()
     location = str(row.get("location_of_property") or "").strip()
@@ -1371,6 +1413,14 @@ def _row_matches_map_filters(
     if owner_name_filter and owner_name_filter.lower() not in owner_name.lower():
         return False
 
+    verdict_filter = (ai_verdict_filter or "").strip().lower()
+    if verdict_filter:
+        verdict = _normalize_ai_verdict(row.get("ai_vacancy_verdict"))
+        if verdict_filter == "none" and verdict:
+            return False
+        if verdict_filter != "none" and verdict != verdict_filter:
+            return False
+
     return True
 
 
@@ -1421,6 +1471,9 @@ def _get_list_map_rows(list_id: int) -> list[dict[str, Any]]:
                 "owner_name",
                 "zip_code",
                 "added_at",
+                "ai_vacancy_verdict",
+                "ai_vacancy_confidence",
+                "ai_vacant_since",
             ]
         ),
         "apn",
@@ -1461,6 +1514,7 @@ def api_markers():
     delinquent_filter = (request.args.get("delinquent") or "").strip()
     new_filter = (request.args.get("new") or "").strip()
     owner_name_filter = (request.args.get("owner_name") or "").strip()
+    ai_verdict_filter = (request.args.get("ai_verdict") or "").strip()
     list_id_raw = (request.args.get("list_id") or "").strip()
     try:
         page = max(int(request.args.get("page") or 1), 1)
@@ -1501,6 +1555,7 @@ def api_markers():
                 owner_name_filter=owner_name_filter,
                 new_filter=new_filter,
                 favorites_set=favorites_set,
+                ai_verdict_filter=ai_verdict_filter,
             ):
                 continue
             filtered_rows.append(row)
@@ -1522,6 +1577,7 @@ def api_markers():
             research_filter="",
             owner_name_filter=owner_name_filter,
             new_filter=new_filter,
+            ai_verdict_filter=ai_verdict_filter,
             sort="location_of_property",
             order="asc",
             page=page,
@@ -1570,6 +1626,7 @@ def api_markers():
             "streetview_url": f"https://www.google.com/maps/@?api=1&map_action=pano&viewpoint={lat},{lng}" if lat and lng else "",
             "condition_score": r["condition_score"],
             "owner_name": r.get("owner_name") or "",
+            **_vacancy_fields(r),
             "in_route": bool(list_id_raw),
         })
 

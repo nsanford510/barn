@@ -79,6 +79,7 @@ are weak evidence of the present state.
       "observed_at": "2026-03"
     }
   ],
+  "vacant_since": "2024-06",
   "report_md": "Optional longer write-up in Markdown."
 }
 ```
@@ -86,6 +87,12 @@ are weak evidence of the present state.
 - `verdict`: exactly `likely_vacant`, `likely_occupied` or `unknown`.
 - `confidence`: 0 to 1, how sure you are of that verdict.
 - `rationale`: 500 characters or fewer, plain text, the main reasons.
+- `vacant_since`: when the vacancy started, as `YYYY`, `YYYY-MM` or
+  `YYYY-MM-DD`, using only as much precision as the evidence supports. If the
+  start is unknown but a dated source shows it vacant, use the earliest such
+  date. If you only know a duration, subtract it from today. Leave it out when
+  it is not determinable or the verdict is `likely_occupied`. BARN shows the
+  length of vacancy computed from this date.
 - `evidence`: one item per signal. `likely_vacant` and `likely_occupied` are
   refused unless at least one item has a working `http(s)` `source_url`.
 - Only report what a source actually shows. Never invent a URL or a detail.

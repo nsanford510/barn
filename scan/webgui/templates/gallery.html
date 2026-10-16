@@ -174,6 +174,23 @@
   .badge-fav       { background: #f39c12; }
   .badge-route     { background: #3498db; }
 
+  .vacancy-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    pointer-events: none;
+  }
+  .vacancy-tag .conf { font-weight: 400; opacity: 0.85; margin-left: 3px; }
+  .vacancy-vacant   { background: #c0392b; }
+  .vacancy-occupied { background: #2c7a4b; }
+  .card-body .vacancy-length { color: #e8806f; font-weight: 600; }
+
   .card-body {
     padding: 14px;
     flex: 1;
@@ -340,6 +357,15 @@
       <option value="outreach_score" {% if sort=="outreach_score" %}selected{% endif %}>Outreach Score</option>
       <option value="primary_resident_age" {% if sort=="primary_resident_age" %}selected{% endif %}>Resident Age</option>
       <option value="deceased_count" {% if sort=="deceased_count" %}selected{% endif %}>Deceased Count</option>
+      <option value="ai_vacancy_confidence" {% if sort=="ai_vacancy_confidence" %}selected{% endif %}>AI Confidence</option>
+      <option value="ai_vacant_since" {% if sort=="ai_vacant_since" %}selected{% endif %}>Vacancy Start (Asc = longest)</option>
+    </select>
+    <select name="ai_verdict" title="AI vacancy verdict">
+      <option value="" {% if not ai_verdict_filter %}selected{% endif %}>All AI Verdicts</option>
+      <option value="likely_vacant" {% if ai_verdict_filter=="likely_vacant" %}selected{% endif %}>AI: Likely Vacant</option>
+      <option value="likely_occupied" {% if ai_verdict_filter=="likely_occupied" %}selected{% endif %}>AI: Likely Occupied</option>
+      <option value="unknown" {% if ai_verdict_filter=="unknown" %}selected{% endif %}>AI: Unknown</option>
+      <option value="none" {% if ai_verdict_filter=="none" %}selected{% endif %}>AI: Not Assessed</option>
     </select>
     <select name="condition">
       <option value="" {% if not condition_filter %}selected{% endif %}>All Condition</option>
@@ -400,6 +426,13 @@
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
         <div class="no-img" style="display:none;">🏚️</div>
         <div class="overlay"></div>
+        {% if r.ai_vacancy_verdict in ('likely_vacant', 'likely_occupied') %}
+        <span class="vacancy-tag {% if r.ai_vacancy_verdict == 'likely_vacant' %}vacancy-vacant{% else %}vacancy-occupied{% endif %}"
+              title="AI vacancy research verdict – open the property for the reasoning">
+          {% if r.ai_vacancy_verdict == 'likely_vacant' %}Likely Vacant{% else %}Likely Occupied{% endif %}
+          {%- if r.ai_vacancy_confidence is not none %}<span class="conf">{{ "%.0f"|format(r.ai_vacancy_confidence * 100) }}%</span>{% endif %}
+        </span>
+        {% endif %}
         <div class="badges">
           {% if r.has_vpt == 'Yes' %}<span class="badge badge-vpt">VPT</span>{% endif %}
           {% if r.delinquent == 'Yes' %}<span class="badge badge-delinquent">Delinquent</span>{% endif %}
@@ -417,6 +450,7 @@
           <span>{{ r.city }}{% if r.situs_zip %} {{ r.situs_zip }}{% endif %}</span>
         </div>
         <div class="card-meta">APN: {{ r.apn }}</div>
+        {% if r.ai_vacancy_length %}<div class="card-meta vacancy-length" title="Vacant since {{ r.ai_vacant_since }}">Vacant {{ r.ai_vacancy_length }} <span style="opacity:.75;">(since {{ r.ai_vacant_since }})</span></div>{% endif %}
         {% if r.added_at %}<div class="card-meta">Added: <span class="added-at" data-iso="{{ r.added_at_raw or '' }}">{{ r.added_at }}</span></div>{% endif %}
         {% if r.in_selected_list %}<div class="card-meta"><span class="route-chip">In route</span></div>{% endif %}
         {% if r.owner_name %}<div class="card-meta">{{ r.owner_name }}</div>{% endif %}
@@ -457,7 +491,7 @@
 
   {% if total_pages > 1 %}
   <div class="pager">
-    {% set filter_qs = "q=" ~ q ~ "&zip=" ~ zip_filter ~ "&city=" ~ city_filter ~ "&county=" ~ county_filter ~ "&owner_name=" ~ owner_name_filter ~ "&power=" ~ power_filter ~ "&vpt=" ~ vpt_filter ~ "&new=" ~ new_filter ~ "&delinquent=" ~ delinquent_filter ~ "&condition=" ~ condition_filter ~ "&outofstate=" ~ outofstate_filter ~ "&research=" ~ research_filter ~ "&outreach_stage=" ~ outreach_stage_filter ~ "&list_id=" ~ (list_id or "") ~ "&sort=" ~ sort ~ "&order=" ~ order %}
+    {% set filter_qs = "q=" ~ q ~ "&zip=" ~ zip_filter ~ "&city=" ~ city_filter ~ "&county=" ~ county_filter ~ "&owner_name=" ~ owner_name_filter ~ "&power=" ~ power_filter ~ "&vpt=" ~ vpt_filter ~ "&new=" ~ new_filter ~ "&delinquent=" ~ delinquent_filter ~ "&condition=" ~ condition_filter ~ "&outofstate=" ~ outofstate_filter ~ "&research=" ~ research_filter ~ "&outreach_stage=" ~ outreach_stage_filter ~ "&ai_verdict=" ~ ai_verdict_filter ~ "&list_id=" ~ (list_id or "") ~ "&sort=" ~ sort ~ "&order=" ~ order %}
 
     {% if page > 1 %}
       <a href="?{{ filter_qs }}&page=1">« First</a>

@@ -220,7 +220,7 @@ def get_findings(apn: str, limit: int = 20) -> list[dict[str, Any]]:
     r = (
         db.get_client()
         .table(FINDINGS)
-        .select("id,agent,verdict,confidence,rationale,evidence,created_at")
+        .select("id,agent,verdict,confidence,rationale,evidence,report_md,vacant_since,created_at")
         .eq("apn", apn)
         .order("created_at", desc=True)
         .limit(limit)
@@ -229,6 +229,7 @@ def get_findings(apn: str, limit: int = 20) -> list[dict[str, Any]]:
     findings = r.data or []
     for finding in findings:
         finding["evidence"] = _clean_evidence(finding.get("evidence"))
+        finding["report_md"] = str(finding.get("report_md") or "").strip()
     return findings
 
 

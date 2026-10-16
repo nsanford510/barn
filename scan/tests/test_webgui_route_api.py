@@ -186,6 +186,7 @@ class RouteApiTests(unittest.TestCase):
         fake.get_bills_with_parcels_filtered.return_value = ([{
             "apn": "1-2-3", "location_of_property": "1 Main St", "city": "OAKLAND",
             "ai_vacancy_verdict": "vacant", "ai_vacancy_confidence": 0.85, "site_vacant": True,
+            "ai_vacant_since": "2024-01-15",
         }], 1)
         import flask
         import jinja2
@@ -204,10 +205,160 @@ class RouteApiTests(unittest.TestCase):
         ):
             html = self.webgui_app.search_page.__wrapped__()
         self.assertIn("<th>AI Verdict</th>", html)
+        self.assertIn("<th>Vacant For</th>", html)
+        self.assertIn('title="Vacant since 2024-01-15"', html)
         self.assertIn("likely vacant", html)
         self.assertIn("85%", html)
         self.assertIn('<option value="80" selected>', html)
         self.assertIn('<option value="likely_vacant" selected>', html)
+
+    def _real_render(self):
+        import flask
+        import jinja2
+
+        app = self.webgui_app.app
+        env = app.jinja_env.overlay(loader=jinja2.FileSystemLoader(str(SCAN_DIR / "webgui" / "templates")))
+
+        def render(name, **ctx):
+            extra = {"request": flask.request, "session": flask.session, "g": flask.g, "config": app.config}
+            return env.get_template(name).render(**extra, **ctx)
+
+        return render
+
+    def test_gallery_tags_cards_with_the_ai_vacancy_verdict(self) -> None:
+        fake = self._fake_db()
+        rows = [self._gallery_row(apn, f"{apn} Test St") for apn in ("001", "002", "003", "004")]
+        rows[0].update(ai_vacancy_verdict="likely_vacant", ai_vacancy_confidence=0.82, ai_vacant_since="2019")
+        rows[1].update(ai_vacancy_verdict="occupied", ai_vacancy_confidence=0.6)   # short alias
+        rows[2].update(ai_vacancy_verdict="unknown", ai_vacancy_confidence=0.3)
+        fake.get_bills_with_parcels_filtered.return_value = (rows, 250)   # enough for a pager
+
+        with self.webgui_app.app.test_request_context("/gallery?ai_verdict=likely_vacant&sort=ai_vacancy_confidence"), patch.object(
+            self.webgui_app, "db", fake
+        ), patch.object(self.webgui_app, "_parcel_zip_by_apn", return_value={}), patch.object(
+            self.webgui_app, "render_template", side_effect=self._real_render()
+        ):
+            html = self.webgui_app.gallery_page.__wrapped__()
+
+        kwargs = fake.get_bills_with_parcels_filtered.call_args.kwargs
+        self.assertEqual(("likely_vacant", "ai_vacancy_confidence"), (kwargs["ai_verdict_filter"], kwargs["sort"]))
+        self.assertEqual(1, html.count('vacancy-tag vacancy-vacant'))
+        self.assertEqual(1, html.count('vacancy-tag vacancy-occupied'))
+        self.assertIn("Likely Vacant<span class=\"conf\">82%</span>", html)
+        self.assertIn("Likely Occupied<span class=\"conf\">60%</span>", html)
+        self.assertIn('<option value="likely_vacant" selected>AI: Likely Vacant</option>', html)
+        self.assertIn("&amp;ai_verdict=likely_vacant&amp;", html)   # pager keeps the filter
+        self.assertEqual(1, html.count('class="card-meta vacancy-length"'))
+        self.assertIn("(since 2019)", html)
+        self.assertIn('<option value="ai_vacant_since"', html)
+
+    def test_property_detail_shows_the_reasoning_behind_the_verdict(self) -> None:
+        row = {
+            "apn": "001", "location_of_property": "1 Test St", "city": "OAKLAND", "power_status": "",
+            "has_vpt": 0, "delinquent": 0, "row_json": {},
+            "ai_vacancy_verdict": "likely_vacant", "ai_vacancy_confidence": 0.9,
+            "ai_vacancy_rationale": "Boarded windows and a code case.", "ai_vacancy_updated_at": "2026-10-01T00:00:00Z",
+            "ai_vacant_since": "2020-03",
+        }
+        findings = [
+            {"agent": "grokbot-1", "verdict": "likely_vacant", "confidence": 0.9, "created_at": "2026-10-01T00:00:00Z",
+             "rationale": "Boarded windows and a code case.", "report_md": "## Notes\nStreet View 2025 shows <plywood>.",
+             "evidence": [{"signal": "code_case", "detail": "blight complaint", "observed_at": "2026-09",
+                           "source_url": "https://example.com/case"}]},
+            {"agent": "grokbot-2", "verdict": "unknown", "confidence": 0.2, "created_at": "2026-08-01T00:00:00Z",
+             "rationale": "Nothing conclusive.", "report_md": "", "evidence": []},
+        ]
+        import research_queue
+
+        with self.webgui_app.app.test_request_context("/property/001"), patch.object(
+            self.webgui_app.db, "get_bill_with_parcel", return_value=row
+        ), patch.object(self.webgui_app.db, "has_favorite", return_value=False), patch.object(
+            research_queue, "get_findings", return_value=findings
+        ), patch.object(self.webgui_app, "render_template", side_effect=self._real_render()):
+            html = self.webgui_app.property_detail.__wrapped__("001")
+
+        self.assertIn("Boarded windows and a code case.", html)
+        self.assertIn("(since 2020-03)", html)
+        self.assertIn("blight complaint", html)
+        self.assertIn('href="https://example.com/case"', html)
+        self.assertIn("Full research notes", html)
+        self.assertIn("Street View 2025 shows &lt;plywood&gt;.", html)   # agent text is escaped
+        self.assertIn("Earlier research", html)
+        self.assertIn("Nothing conclusive.", html)
+
+    def test_property_detail_does_not_attribute_a_stale_finding_to_the_verdict(self) -> None:
+        row = {
+            "apn": "001", "location_of_property": "1 Test St", "city": "OAKLAND", "power_status": "",
+            "has_vpt": 0, "delinquent": 0, "row_json": {},
+            "ai_vacancy_verdict": "likely_occupied", "ai_vacancy_confidence": 0.7,
+            "ai_vacancy_rationale": "Gemini: recent listing photos show furniture.",
+        }
+        findings = [{"agent": "grokbot-1", "verdict": "likely_vacant", "confidence": 0.9, "created_at": "2026-08-01",
+                     "rationale": "Older agent run.", "report_md": "old notes", "evidence": []}]
+        import research_queue
+
+        with self.webgui_app.app.test_request_context("/property/001"), patch.object(
+            self.webgui_app.db, "get_bill_with_parcel", return_value=row
+        ), patch.object(self.webgui_app.db, "has_favorite", return_value=False), patch.object(
+            research_queue, "get_findings", return_value=findings
+        ), patch.object(self.webgui_app, "render_template", side_effect=self._real_render()):
+            html = self.webgui_app.property_detail.__wrapped__("001")
+
+        self.assertNotIn("Full research notes", html)
+        self.assertIn("Earlier research", html)
+        self.assertIn("Older agent run.", html)
+
+    def test_vacancy_length_is_derived_from_the_start_date(self) -> None:
+        from datetime import date
+
+        length = self.webgui_app._vacancy_length
+        today = date(2026, 10, 16)
+        self.assertEqual("~7 yr 2 mo", length("2019-08", today))
+        self.assertEqual("~7 yr 1 mo", length("2019-08-20", today))   # day not reached yet
+        self.assertEqual("~7 yr", length("2019", today))              # year precision stays coarse
+        self.assertEqual("~5 mo", length("2026-05", today))
+        self.assertEqual("<1 mo", length("2026-10-01", today))
+        self.assertEqual("<1 yr", length("2026", today))
+        self.assertEqual("~2 yr", length("2024-10", today))
+        for bad in ("", None, "2027-01", "2019-13", "since 2019", "2019/08"):
+            self.assertEqual("", length(bad, today), bad)
+
+    def test_map_markers_filter_by_ai_verdict_and_carry_vacancy_fields(self) -> None:
+        fake = self._fake_db()
+        fake.get_bills_with_parcels_filtered.return_value = ([{
+            "apn": "1", "lat": 37.8, "lng": -122.2, "location_of_property": "1 Main St", "row_json": {},
+            "parcel_number": "", "tracer_number": "", "tax_year": "", "last_payment": "", "delinquent": 0,
+            "power_status": "", "has_vpt": 0, "vpt_marker": "", "city": "OAKLAND", "bill_url": "",
+            "condition_score": None, "ai_vacancy_verdict": "vacant", "ai_vacancy_confidence": 0.7,
+            "ai_vacant_since": "2018",
+        }], 1)
+        with self.webgui_app.app.test_request_context("/api/markers?ai_verdict=likely_vacant"), patch.object(
+            self.webgui_app, "db", fake
+        ):
+            payload = self.webgui_app.api_markers.__wrapped__().get_json()
+
+        self.assertEqual("likely_vacant", fake.get_bills_with_parcels_filtered.call_args.kwargs["ai_verdict_filter"])
+        item = payload["items"][0]
+        self.assertEqual(("likely_vacant", 0.7, "2018"),
+                         (item["ai_vacancy_verdict"], item["ai_vacancy_confidence"], item["ai_vacant_since"]))
+        self.assertTrue(item["ai_vacancy_length"].endswith("yr"))
+
+    def test_route_map_rows_apply_the_ai_verdict_filter(self) -> None:
+        match = self.webgui_app._row_matches_map_filters
+        common = dict(q="", zip_values=set(), power_filter="", fav_filter="", city_filter="", vpt_filter="",
+                      delinquent_filter="", owner_name_filter="", new_filter="", favorites_set=set())
+        vacant, occupied, unassessed = ({"ai_vacancy_verdict": "vacant"}, {"ai_vacancy_verdict": "likely_occupied"}, {})
+        self.assertTrue(match(vacant, {}, **common, ai_verdict_filter="likely_vacant"))
+        self.assertFalse(match(occupied, {}, **common, ai_verdict_filter="likely_vacant"))
+        self.assertTrue(match(unassessed, {}, **common, ai_verdict_filter="none"))
+        self.assertFalse(match(vacant, {}, **common, ai_verdict_filter="none"))
+        self.assertTrue(match(occupied, {}, **common))
+
+    def test_map_template_has_the_ai_verdict_filter(self) -> None:
+        source = (SCAN_DIR / "webgui" / "templates" / "map.html").read_text(encoding="utf-8")
+        self.assertIn('id="filter-ai-verdict"', source)
+        self.assertIn("params.set('ai_verdict', aiVerdict)", source)
+        self.assertIn("item.ai_vacancy_length", source)
 
     def test_list_and_gallery_templates_include_the_date_filter(self) -> None:
         import jinja2

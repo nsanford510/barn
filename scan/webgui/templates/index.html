@@ -620,6 +620,7 @@
       <option value="deceased_count" {% if sort=="deceased_count" %}selected{% endif %}>Deceased Count</option>
       <option value="outreach_score" {% if sort=="outreach_score" %}selected{% endif %}>Outreach Score</option>
       <option value="ai_vacancy_confidence" {% if sort=="ai_vacancy_confidence" %}selected{% endif %}>AI Confidence</option>
+      <option value="ai_vacant_since" {% if sort=="ai_vacant_since" %}selected{% endif %}>Vacancy Start (Asc = longest)</option>
     </select>
     <select name="condition">
       <option value="" {% if not condition_filter %}selected{% endif %}>All Condition</option>
@@ -723,6 +724,7 @@
           <th>Power</th>
           <th>AI Verdict</th>
           <th>AI Conf.</th>
+          <th>Vacant For</th>
           <th>Site Vacant</th>
           <th>Tax Year</th>
           <th>Last Payment</th>
@@ -786,6 +788,7 @@
             style="white-space: nowrap;">
             {{ r.ai_vacancy_verdict.replace("_", " ") if r.ai_vacancy_verdict else "-" }}</td>
           <td>{% if r.ai_vacancy_confidence is not none %}{{ "%.0f"|format(r.ai_vacancy_confidence * 100) }}%{% else %}-{% endif %}</td>
+          <td style="white-space: nowrap;" {% if r.ai_vacant_since %}title="Vacant since {{ r.ai_vacant_since }}"{% endif %}>{{ r.ai_vacancy_length or "-" }}</td>
           <td class="{% if r.site_vacant %}power-off{% endif %}">
             {% if r.site_vacant is none %}-{% elif r.site_vacant %}Yes{% else %}No{% endif %}</td>
           <td>{{ r.tax_year }}</td>

@@ -94,14 +94,28 @@ def submit(finding: dict[str, Any], claim_token: str | None = None) -> dict[str,
     token = claim_token or finding.get("claim_token")
     if not token:
         raise ClientError("claim_token is required (in the finding file or via --token)")
-    return call("submit_vacancy_finding", {
+    params: dict[str, Any] = {
         "p_claim_token": token,
         "p_verdict": finding.get("verdict"),
         "p_confidence": finding.get("confidence"),
         "p_rationale": finding.get("rationale"),
         "p_evidence": finding.get("evidence") or [],
         "p_report_md": finding.get("report_md"),
-    })
+    }
+    vacant_since = vacant_since_param(finding.get("vacant_since"))
+    if vacant_since:
+        params["p_vacant_since"] = vacant_since
+    return call("submit_vacancy_finding", params)
+
+
+_NOT_DETERMINED = {"unknown", "not determinable", "not determined", "n/a", "na", "none", "null"}
+
+
+def vacant_since_param(value: Any) -> str | None:
+    """vacant_since as sent to the RPC: None when absent or a 'not determinable' placeholder,
+    so a finding without one is still accepted. The RPC validates the date itself."""
+    text = str(value or "").strip()
+    return None if text.lower() in _NOT_DETERMINED or not text else text
 
 
 def release(claim_token: str, reason: str = "") -> dict[str, Any]:

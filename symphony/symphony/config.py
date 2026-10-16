@@ -159,6 +159,7 @@ class CodexConfig:
     read_timeout_ms: int = DEFAULT_READ_TIMEOUT_MS
     stall_timeout_ms: int = DEFAULT_STALL_TIMEOUT_MS
     model: str | None = None
+    auto_approve: bool = True
 
     def turn_sandbox_for(self, workspace: str) -> Any:
         if self.turn_sandbox_policy is None:
@@ -278,6 +279,9 @@ class ServiceConfig:
             raise ConfigError("codex.command must be a shell command string",
                               category="invalid_config")
         model = c.get("model")
+        auto_approve = c.get("auto_approve", True)
+        if not isinstance(auto_approve, bool):
+            raise ConfigError("codex.auto_approve must be a boolean", category="invalid_config")
         codex = CodexConfig(
             command=command,  # preserved verbatim; launched via `bash -lc`
             approval_policy=c.get("approval_policy", DEFAULT_APPROVAL_POLICY),
@@ -290,6 +294,7 @@ class ServiceConfig:
             stall_timeout_ms=_int(c, "stall_timeout_ms", DEFAULT_STALL_TIMEOUT_MS,
                                   "codex.stall_timeout_ms"),
             model=model if isinstance(model, str) and model.strip() else None,
+            auto_approve=auto_approve,
         )
 
         s = _section(raw, "server")
