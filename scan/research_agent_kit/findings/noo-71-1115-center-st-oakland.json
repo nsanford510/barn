@@ -1,7 +1,7 @@
 {
   "verdict": "unknown",
   "confidence": 0.25,
-  "rationale": "Public records show a 2011 tax-default auction listing, a $1,176.39 City special-assessment lien for tax years 2021-2025, and residential use code 1100. These do not prove vacancy or occupancy. No current direct occupancy evidence or vacancy start date was established.",
+  "rationale": "Public records show a 2011 tax-default auction listing and a City business-tax lien for 2021-2025, with residential use code 1100. The lien does not identify its business-tax basis or prove occupancy; Oakland collects VPT through county property taxes. No current direct occupancy evidence or vacancy start date was established.",
   "evidence": [
     {
       "signal": "property_identity_and_sale_history",
@@ -28,8 +28,8 @@
       "observed_at": "2021-2024"
     },
     {
-      "signal": "special_assessment_lien_and_residential_land_use_classification",
-      "detail": "A City of Oakland attachment dated January 20, 2026 lists APN 004-0085-008-00 for tax years 2021-2025 with $1,001.39 delinquent, a $175 administrative charge, and a $1,176.39 lien; use code remains 1100, single-family residential homes used as such. Neither the lien nor the use code establishes vacancy or occupancy.",
+      "signal": "business_tax_lien_and_residential_land_use_classification",
+      "detail": "A City of Oakland attachment for its 3rd Quarter 2026 Business Tax Liens, heard by Council January 20, 2026, lists APN 004-0085-008-00 for tax years 2021-2025 with $1,001.39 delinquent, a $175 administrative charge, and a $1,176.39 lien; use code remains 1100, single-family residential homes used as such. The attachment does not state the underlying tax basis and does not establish vacancy or occupancy.",
       "source_url": "https://oakland.legistar.com/View.ashx?GUID=7DFCF982-F0A0-4306-937C-0B06CB56F8F8&ID=15063787&M=F",
       "observed_at": "attachment dated 2026-01-20; interest calculated through 2025-12"
     }
