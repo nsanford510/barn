@@ -1,0 +1,48 @@
+{
+  "issue": "NOO-65",
+  "apn": "004-0067-016-00",
+  "address": "800 CENTER ST, OAKLAND, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.88,
+  "rationale": "Official records describe APN 004-0067-016-00 as a vacant lot in 1997 and part of a three-lot vacant site in 2021; a 2007 Oakland agenda also calls it vacant. A 2020 land listing and current commercial-land classification support a vacant parcel, not an occupied building. Vacancy start and uninterrupted duration are unknown; records show vacant-lot status at observations spanning 1997–2021.",
+  "vacancy_start": "unknown",
+  "duration": "unknown; vacant-lot records are 24 years apart (1997 and 2021), but do not prove continuous vacancy",
+  "evidence": [
+    {
+      "signal": "official_vacant_lot_record",
+      "detail": "Alameda County Environmental Health letter for the Former Signal Station says the plan was to build housing on this vacant lot and include two adjacent parcels. Letter dated April 18, 1997. This establishes a vacant-lot observation, not when vacancy began.",
+      "observed_at": "1997-04-18",
+      "source_title": "Alameda County Environmental Health Services letter: Former Signal Station, 800 Center St.",
+      "source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0000454%5CDIR_L.pdf"
+    },
+    {
+      "signal": "official_vacant_lot_record",
+      "detail": "Oakland City Planning Commission agenda identifies 800 Center Street, including APN 004-0067-016-00, as a vacant lot in a proposed subdivision case. The proposal is not evidence that construction occurred.",
+      "observed_at": "2007-06-06",
+      "source_title": "Oakland City Planning Commission agenda, June 6, 2007, item 8",
+      "source_url": "https://oaklandca.s3.us-west-1.amazonaws.com/oakca1/groups/ceda/documents/webcontent/oak035590.pdf"
+    },
+    {
+      "signal": "official_vacant_site_record",
+      "detail": "Alameda County's public notice says the cleanup work concerns three parcels at 800 Center Street and that all three parcels are currently vacant lots. Work was scheduled to begin September 27, 2021.",
+      "observed_at": "2021-09-15",
+      "source_title": "Alameda County Environmental Health public fact sheet, RO0000454",
+      "source_url": "https://deh.acgov.org/landwater-assets/docs/public-notices/RO0000454_FACT_SHT_2021-09-15.pdf"
+    },
+    {
+      "signal": "land_listing",
+      "detail": "Commercial listing dated June 22, 2020 describes 800 Center St as land for sale, 0.30 acres, and includes APN 004-0067-016-00 among three parcel numbers. Listing is supporting evidence, not proof of physical status after its date.",
+      "observed_at": "2020-06-22",
+      "source_title": "LoopNet listing 800 Center St, Oakland, CA 94607",
+      "source_url": "https://www.loopnet.com/Listing/800-Center-St-Oakland-CA/20003911/"
+    },
+    {
+      "signal": "vacant_commercial_land_classification",
+      "detail": "PropertyShark currently classifies the 800 Center Street parcel (4-67-16) as vacant commercial land, class 3000, 0.15 acres, and shows tax assessment data through 2025-2026. This is an aggregator classification, not direct evidence of occupancy.",
+      "observed_at": "accessed 2026-10-16",
+      "source_title": "PropertyShark: 800 Center Street, Oakland property information",
+      "source_url": "https://www.propertyshark.com/mason/Property/38495866/800-Center-St-Oakland-CA-94607/"
+    }
+  ],
+  "report_md": "# Vacancy research: 800 Center St, Oakland\n\n- APN: 004-0067-016-00 (user-supplied APN 004 006701600)\n- Verdict: likely_vacant\n- Confidence: 0.88\n- Rationale: Official records describe the parcel as a vacant lot in 1997 and 2007, and the three-parcel site as vacant lots in 2021. A 2020 commercial listing and current commercial-land classification support a vacant parcel rather than an occupied building.\n- Vacancy start: unknown. The 1997 letter establishes that it was already vacant by then but does not date the start.\n- Duration: unknown. Vacant-lot observations in 1997 and 2021 are 24 years apart; they do not establish uninterrupted vacancy or current physical condition.\n\n## Evidence\n\n1. [Alameda County Environmental Health Services letter (1997-04-18)](https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0000454%5CDIR_L.pdf): calls 800 Center St a vacant lot and discusses proposed housing.\n2. [Oakland City Planning Commission agenda (2007-06-06)](https://oaklandca.s3.us-west-1.amazonaws.com/oakca1/groups/ceda/documents/webcontent/oak035590.pdf): identifies APNs 004-0067-015-00, -016-00, and -017-00 and calls the location a vacant lot; the development proposal is not proof it was built.\n3. [Alameda County cleanup fact sheet (2021-09-15)](https://deh.acgov.org/landwater-assets/docs/public-notices/RO0000454_FACT_SHT_2021-09-15.pdf): says all three parcels at 800 Center Street are currently vacant lots; cleanup was scheduled for late September 2021.\n4. [LoopNet listing](https://www.loopnet.com/Listing/800-Center-St-Oakland-CA/20003911/): listed the multi-parcel 800 Center site as land for sale on 2020-06-22 and names APN 004-0067-016-00.\n5. [PropertyShark parcel profile](https://www.propertyshark.com/mason/Property/38495866/800-Center-St-Oakland-CA-94607/): classifies 4-67-16 as vacant commercial land and displays 2025-2026 tax data. This is secondary assessor-data aggregation.\n\nThe parcel was historically a service station site; station closure or remediation dates do not by themselves establish when the current vacant-lot condition began. The evidence supports likely vacant land, not a specific vacancy start date or continuous vacancy duration."
+}
