@@ -1,0 +1,36 @@
+{
+  "apn": "004 006900400",
+  "address": "1396 5TH ST, OAKLAND, CA 94607",
+  "verdict": "likely_vacant",
+  "confidence": 0.88,
+  "rationale": "City project records identify the parcel as an existing vacant lot after a 2012 fire destroyed its unfinished senior housing; a 2022 CEQA analysis describes it as vacant and undeveloped. A 2016 environmental assessment is the earliest dated vacant-land record located, supporting at least 10 years vacant by Oct 2026. Exact clearance date and continuity are unverified.",
+  "vacancy_start": "by 2016-05",
+  "duration": "at least 10 years by 2026-10; exact start and uninterrupted duration unverified",
+  "evidence": [
+    {
+      "signal": "City project record: vacant parcel after fire",
+      "detail": "Oakland City Council record describes a proposal for 222 homes on the existing vacant lot. The City CEQA analysis says the prior 112-unit Red Star senior housing development was damaged by arson in June 2012 and subsequently demolished. This provides context, but not an exact vacancy start date.",
+      "observed_at": "2021-12-21",
+      "source_url": "https://oakland.legistar.com/LegislationDetail.aspx?GUID=78E33B97-CFF3-4509-BFD7-0A815CB5A50D&ID=5196424"
+    },
+    {
+      "signal": "Environmental site assessment describes vacant land",
+      "detail": "Alameda County Environmental Health's Phase I assessment for 1396 5th Street states the site consisted of vacant land with no permanent structures. The report filename dates the assessment to May 2016; use as earliest dated vacant-land evidence found, not as proof the site became vacant that month.",
+      "observed_at": "2016-05-05",
+      "source_url": "https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0002896%5CPHASE1_R_2011-06-07.pdf"
+    },
+    {
+      "signal": "City CEQA analysis: current site vacant and undeveloped",
+      "detail": "Oakland's June 2022 CEQA analysis says the project site is currently vacant and undeveloped, with a concrete surface over much of the lot and a chain-link fence. It notes the former senior housing was subject to arson in June 2012 and was later demolished.",
+      "observed_at": "2022-06",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/1396-5th-street-ceqa-analysis-updated-june-2022.pdf"
+    },
+    {
+      "signal": "Planning Commission record identifies vacant lot",
+      "detail": "Oakland's 2021 Planning Commission meeting page links the staff report for an 8-story, 222-unit proposal at 1396 5th Street, consistent with the parcel being an undeveloped redevelopment site at that time.",
+      "observed_at": "2021-03-03",
+      "source_url": "https://www.oaklandca.gov/Public-Meetings/Planning-Commission/2021/03-03-21-PC"
+    }
+  ],
+  "report_md": "# Vacancy research: 1396 5th St, Oakland (APN 004 006900400)\n\n**Verdict:** likely_vacant (0.88 confidence).\n\nOakland project records identify this as a vacant lot following destruction of the unfinished Red Star senior housing project in a June 2012 arson and its later demolition. The City’s June 2022 CEQA analysis explicitly calls the site vacant and undeveloped. An Alameda County Environmental Health Phase I assessment identifies vacant land with no permanent structures; its report filename dates it to May 2016, the earliest dated vacant-land documentation located here.\n\n**Duration:** at least 10 years by October 2026, based on vacant-land documentation by May 2016. This is a conservative evidence floor, not the exact vacancy start. The fire occurred in June 2012, but sources reviewed do not establish the precise demolition/clearance date or uninterrupted vacancy since then. No current 2026 site inspection, utility records, or parcel-specific vacancy-tax filing was located.\n\nSources: [Alameda County environmental assessment](https://dehpra.acgov.org/Lopinfo/ReadFile?record=RO0002896%5CPHASE1_R_2011-06-07.pdf); [Oakland CEQA analysis, June 2022](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/1396-5th-street-ceqa-analysis-updated-june-2022.pdf); [Oakland City Council record](https://oakland.legistar.com/LegislationDetail.aspx?GUID=78E33B97-CFF3-4509-BFD7-0A815CB5A50D&ID=5196424); [Oakland Planning Commission page](https://www.oaklandca.gov/Public-Meetings/Planning-Commission/2021/03-03-21-PC)."
+}
