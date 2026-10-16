@@ -1,0 +1,45 @@
+{
+  "apn": "002 006900301",
+  "verdict": "likely_vacant",
+  "confidence": 0.78,
+  "rationale": "Likely vacant as a residence: Oakland records identify this APN as an undeveloped lot in 2016 and later as parking/storage with only a small office, not housing. In March 2026 it remained in the affordable-housing pipeline; July 2026 reporting described initial grading permits, not completed homes. No residential occupancy is evidenced since at least 2016 (over 10 years); exact start is unknown. A third-party aggregator conflicts on the address/property type.",
+  "evidence": [
+    {
+      "signal": "undeveloped parcel",
+      "detail": "Oakland Planning Commission agenda dated 2016-06-22 identifies 285 12th Street, APN 002-0069-003-01, as an existing undeveloped lot proposed for a new 77-unit building. This establishes no existing dwelling by that date, not an exact vacancy start.",
+      "observed_at": "2016-06-22",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/brooklyn-basin/meetings/06-22-2016-agenda.pdf"
+    },
+    {
+      "signal": "nonresidential use; small ancillary office",
+      "detail": "A City-hosted environmental assessment for APN 2-69-3-1 describes the 15,000-sq-ft site as asphalt parking and temporary construction storage, with an approximately 500-sq-ft structure; it also recounts the 2017 Phase I observation of a vacant school yard and small office. It does not describe residential units.",
+      "observed_at": "2017-11-16",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/appendix_a_-appendix_f1.pdf"
+    },
+    {
+      "signal": "planned housing remained preconstruction pipeline",
+      "detail": "Oakland's March 9, 2026 I-Bond oversight packet lists 285 12th Street among projects that applied for tax credits in February 2026, rather than among projects already under construction.",
+      "observed_at": "2026-03-09",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/affordable-housing-amp-infrastructure-i-bond-public-oversight-committee/2026/03-09-26-i-bond-committee-meeting-agenda-packet.pdf"
+    },
+    {
+      "signal": "grading/site preparation permits, not completed housing",
+      "detail": "July 2, 2026 reporting says initial grading and site-preparation permits were submitted and construction might begin that year. This supports continued lack of residential occupancy through that report date, but is not a direct inspection of the site.",
+      "observed_at": "2026-07-02",
+      "source_url": "https://sfyimby.com/2026/07/initial-grading-permits-submitted-for-285-12th-street-in-oakland.html"
+    },
+    {
+      "signal": "planned future homes",
+      "detail": "Oakland announced AHSC funding for a future 64-home affordable housing development at 285 12th Street on December 18, 2025.",
+      "observed_at": "2025-12-18",
+      "source_url": "https://www.oaklandca.gov/News-Releases/Oakland-Awarded-35M-from-State-Climate-Action-Programs-for-Affordable-Housing-and-Transportation-Projects"
+    },
+    {
+      "signal": "conflicting third-party parcel classification",
+      "detail": "CountyOffice maps the same APN to 285 E 12th St, ZIP 94606, and labels the use as a 2-4 unit apartment house. This conflicts with the parcel-specific City planning/environmental records for the 285 12th St/94607 corner lot; the aggregator does not establish current occupancy and the address mismatch lowers confidence.",
+      "observed_at": "2026-06-08",
+      "source_url": "https://www.countyoffice.org/property-record-285-e-12th-st-oakland-ca-94606-6e9/"
+    }
+  ],
+  "report_md": "# Vacancy research: 285 12th St, Oakland\n\n- **APN:** 002 006900301 (City records format: 002-0069-003-01; alternate: 2-69-3-1)\n- **Verdict:** likely_vacant\n- **Confidence:** 0.78\n- **Rationale:** Likely vacant as a residence: Oakland records identify this APN as an undeveloped lot in 2016 and later as parking/storage with only a small office, not housing. In March 2026 it remained in the affordable-housing pipeline; July 2026 reporting described initial grading permits, not completed homes. No residential occupancy is evidenced since at least 2016 (over 10 years); exact start is unknown. A third-party aggregator conflicts on the address/property type.\n\n## Vacancy start and duration\n\nThe exact date the site became nonresidential/without dwellings is not established. Oakland's June 22, 2016 planning agenda already describes this APN as an existing undeveloped lot, so the parcel had no documented dwelling by that date: at least 10 years and 3 months by the issue date (2026-10-15). This is a lower bound, not a measured continuous period of physical emptiness. City-hosted environmental records describe nonresidential parking, temporary construction storage, a vacant school yard and a small office; therefore “vacant” here means no residential occupancy, not unused land.\n\n## Current-status limits\n\nOakland's March 2026 oversight packet placed the future 64-unit project in the tax-credit application pipeline. July 2, 2026 reporting described initial grading/site-preparation permit submissions and possible construction later in 2026. Neither source reports completed or occupied homes. No post-July site inspection, utility record, occupancy permit, or dated street-view observation was located, so status after July is inferred from the development timeline rather than directly observed.\n\nA third-party aggregator assigns this APN to “285 E 12th St,” ZIP 94606, and labels it a 2-4 unit apartment house. That conflicts with the City parcel-specific location/use records for 285 12th St at 94607; it is retained as conflicting evidence, not treated as proof of occupancy.\n\n## Sources\n\n1. [Oakland Planning Commission agenda, June 22, 2016](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/brooklyn-basin/meetings/06-22-2016-agenda.pdf) — exact APN and “existing undeveloped lot.”\n2. [City-hosted environmental assessment appendix](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/dp/ceqa/2011-present/appendix_a_-appendix_f1.pdf) — parcel location/area, parking and construction storage, small office, 2017 vacant school yard.\n3. [Oakland I-Bond oversight packet, March 9, 2026](https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/affordable-housing-amp-infrastructure-i-bond-public-oversight-committee/2026/03-09-26-i-bond-committee-meeting-agenda-packet.pdf) — project listed as having applied for tax credits in February 2026.\n4. [SF YIMBY, July 2, 2026](https://sfyimby.com/2026/07/initial-grading-permits-submitted-for-285-12th-street-in-oakland.html) — grading/site-preparation permit submissions; secondary source.\n5. [City of Oakland funding announcement, December 18, 2025](https://www.oaklandca.gov/News-Releases/Oakland-Awarded-35M-from-State-Climate-Action-Programs-for-Affordable-Housing-and-Transportation-Projects) — future 64-home development.\n6. [CountyOffice parcel page](https://www.countyoffice.org/property-record-285-e-12th-st-oakland-ca-94606-6e9/) — conflicting address/property-type aggregator entry.\n\n**Assessment date:** 2026-10-15. Public records support a long-standing absence of residential units; they do not establish exact vacancy onset or current site conditions after the July 2026 permit report."
+}

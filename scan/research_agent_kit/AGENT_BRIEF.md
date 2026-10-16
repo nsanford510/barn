@@ -22,6 +22,10 @@ account to obtain information.
    `python research_client.py claim --zip 94601,94607`. You then only receive
    properties in those zip codes, and `null` means none are left there.
 
+   If you were assigned a specific parcel, pass its exact APN with
+   `python research_client.py claim --apn "002 006900301"`. This combines with
+   the city and ZIP filters and returns `null` if that parcel is not claimable.
+
 2. **Research** that property. You have until `lease_expires_at` (45 minutes by
    default). If you need longer, run
    `python research_client.py extend --token <claim_token>` before it expires;

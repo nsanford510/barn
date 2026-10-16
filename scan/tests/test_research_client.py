@@ -69,7 +69,21 @@ class RequestTests(unittest.TestCase):
 
         plain, targeted = (json.loads(c[0][0].data) for c in urlopen.call_args_list)
         self.assertNotIn("p_zip_codes", plain)
+        self.assertNotIn("p_apn", plain)
         self.assertEqual(["94601", "94607"], targeted["p_zip_codes"])
+
+    def test_claim_sends_exact_apn_only_when_given(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen:
+            research_client.claim(apn=" 002 006900301 ")
+
+        body = json.loads(urlopen.call_args[0][0].data)
+        self.assertEqual("002 006900301", body["p_apn"])
+
+    def test_claim_rejects_blank_apn_without_calling_the_server(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen") as urlopen:
+            with self.assertRaisesRegex(research_client.ClientError, "APN cannot be blank"):
+                research_client.claim(apn="   ")
+        urlopen.assert_not_called()
 
     def test_zip_codes_are_flattened_and_deduplicated(self) -> None:
         self.assertEqual(
@@ -92,6 +106,13 @@ class RequestTests(unittest.TestCase):
             code = research_client.main(["claim", "--zip", "94601,94607", "--zip", "94621"])
         self.assertEqual(0, code)
         self.assertEqual(["94601", "94607", "94621"], json.loads(urlopen.call_args[0][0].data)["p_zip_codes"])
+
+    def test_cli_apn_flag_reaches_the_rpc(self) -> None:
+        with patch.object(research_client.urllib.request, "urlopen", return_value=_response("null")) as urlopen, \
+                patch("sys.stdout", new_callable=io.StringIO):
+            code = research_client.main(["claim", "--apn", "002 006900301"])
+        self.assertEqual(0, code)
+        self.assertEqual("002 006900301", json.loads(urlopen.call_args[0][0].data)["p_apn"])
 
     def test_submit_maps_the_finding_to_rpc_parameters(self) -> None:
         finding = {

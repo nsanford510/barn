@@ -9,7 +9,7 @@ Environment:
     BARN_AGENT_TOKEN        this agent's personal token
 
 Commands (each prints JSON on stdout; errors go to stderr with exit code 1):
-    research_client.py claim [--city OAKLAND] [--zip 94601,94607] [--lease-minutes 45]
+    research_client.py claim [--city OAKLAND] [--zip 94601,94607] [--apn APN] [--lease-minutes 45]
     research_client.py submit --file finding.json [--token CLAIM_TOKEN]
     research_client.py release --token CLAIM_TOKEN --reason "why"
     research_client.py extend --token CLAIM_TOKEN [--minutes 30]
@@ -82,11 +82,21 @@ def parse_zip_codes(values: list[str] | None) -> list[str]:
     return zips
 
 
-def claim(city: str = "", lease_minutes: int = 45, zip_codes: list[str] | None = None) -> dict[str, Any] | None:
+def claim(
+    city: str = "",
+    lease_minutes: int = 45,
+    zip_codes: list[str] | None = None,
+    apn: str | None = None,
+) -> dict[str, Any] | None:
     """One property to research, or None when nothing matching is left in the queue."""
     params: dict[str, Any] = {"p_lease_minutes": lease_minutes, "p_city": city or ""}
     if zip_codes:
         params["p_zip_codes"] = zip_codes
+    if apn is not None:
+        apn = apn.strip()
+        if not apn:
+            raise ClientError("APN cannot be blank")
+        params["p_apn"] = apn
     return call("claim_vacancy_research", params)
 
 
@@ -120,6 +130,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--city", default="")
     p.add_argument("--zip", action="append", default=None, metavar="ZIP[,ZIP...]",
                    help="only claim properties in these zip codes (repeatable or comma-separated)")
+    p.add_argument("--apn", default=None, help="claim only the specified assessor parcel number")
     p.add_argument("--lease-minutes", type=int, default=45)
 
     p = sub.add_parser("submit", help="submit a finding and close the claim")
@@ -141,7 +152,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "claim":
             result: Any = claim(
-                city=args.city, lease_minutes=args.lease_minutes, zip_codes=parse_zip_codes(args.zip)
+                city=args.city,
+                lease_minutes=args.lease_minutes,
+                zip_codes=parse_zip_codes(args.zip),
+                apn=args.apn,
             )
         elif args.command == "submit":
             try:
