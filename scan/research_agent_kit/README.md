@@ -22,7 +22,10 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
    ```
 
 3. Check it works: `python research_client.py claim` should print a property (or
-   `null` if nothing is queued). Release it again with
+   `null` if nothing is queued). To claim one exact APN, use
+   `python research_client.py claim --apn '003 003700503'` after applying
+   `db_migrations/supa_migration_claim_vacancy_by_apn.sql`. Release a setup
+   claim with
    `python research_client.py release --token <claim_token> --reason "setup test"`.
 
 4. Give the agent `AGENT_BRIEF.md` as its instructions.
@@ -34,6 +37,9 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
 - Target zip codes: tell the agent to claim with `--zip 94601,94607` (repeatable
   or comma-separated; combines with `--city`). It only filters what that agent
   is handed; the properties must already be in the queue.
+- Exact APN: `--apn '003 003700503'` limits a claim to one queued property.
+  The database migration must be applied first; calls without `--apn` retain
+  the existing city/ZIP queue behavior.
 - Watch progress: `python research_queue.py status`, or **Scan > Vacancy** in the
   web UI.
 - Retry failures: `python research_queue.py requeue --status failed`.
