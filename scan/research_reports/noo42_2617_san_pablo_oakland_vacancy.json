@@ -1,0 +1,40 @@
+{
+  "issue_id": "NOO-42",
+  "apn": "003-0005-003-00",
+  "address": "2617 San Pablo Ave",
+  "city": "Oakland",
+  "zip": "94612",
+  "researched_at": "2026-10-16",
+  "verdict": "likely_vacant",
+  "confidence": 0.82,
+  "rationale": "Alameda County's 2026-27 secured bill for Oakland APN 3-5-3 displays a $3,000 MEAS-W OAKLAND VPT assessment. Oakland says VPT applies to qualifying properties in use fewer than 50 days during calendar 2025 and is collected on the following fiscal-year bill. This supports likely vacancy in 2025, but an assessment is not direct occupancy evidence; an exact start date and continuous spell are unknown.",
+  "vacancy_start": null,
+  "vacancy_duration": "Calendar year 2025 VPT classification: fewer than 50 days in use (at least 316 aggregate days outside use under the city's threshold), not necessarily continuous. Start date and 2026 occupancy unknown.",
+  "evidence": [
+    {
+      "signal": "county_vpt_assessment",
+      "detail": "The Alameda County Treasurer-Tax Collector account for the selected Oakland APN 3-5-3 shows a 2026-2027 secured bill, tracer 01387600, with a separate MEAS-W OAKLAND VPT charge of $3,000.00. The portal's rendered bill is labeled Internet Copy and says it is not an official bill. A sanitized excerpt is retained in scan/research_reports/noo42_2617_san_pablo_oakland_county_bill_excerpt.md.",
+      "source_url": "https://propertytax.alamedacountyca.gov/search",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "oakland_vpt_2025_criteria",
+      "detail": "Oakland describes VPT as applying to qualifying property in use fewer than 50 days during a calendar year; its FY 2026-2027 materials identify calendar year 2025 as the subject period and explain county collection on the following fiscal-year bill.",
+      "source_url": "https://www.oaklandca.gov/Business/For-Landlords/Vacant-Property-Tax-VPT",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "parcel_identity_and_use",
+      "detail": "Oakland parcel GIS matches SORTPARCEL 003 000500300 to 2617 SAN PABLO AVE OAKLAND 94612 and use code 3200. This corroborates parcel identity, not physical occupancy.",
+      "source_url": "https://gismaps.oaklandca.gov/server/rest/services/Accela/Parcels/MapServer/0/query?where=SORTPARCEL%3D%27003%20000500300%27%26outFields=SORTPARCEL%2CFULL_SITUSADDRESS%2CSHP_USECODE%26returnGeometry=false%26f=pjson",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "same_number_berkeley_property_excluded",
+      "detail": "The Berkeley property at the same street number is APN 054-1785-013-00 and is a separate city/ZIP and parcel; business and permit records for it were excluded from the Oakland occupancy assessment.",
+      "source_url": "https://www.loopnet.com/property/2617-san-pablo-ave-berkeley-ca-94702/06001-054%20178501300/",
+      "observed_at": "2026-10-16"
+    }
+  ],
+  "report_md": "Verdict: likely_vacant (0.82). Alameda County's 2026-27 secured bill for Oakland APN 3-5-3 displays a $3,000 MEAS-W OAKLAND VPT assessment. Oakland's VPT standard indicates fewer than 50 days in use during calendar year 2025; this supports likely vacancy during 2025. It does not establish the actual move-out date, a continuous vacancy spell, or 2026 occupancy. The county bill display is labeled Internet Copy, not an official bill."
+}
