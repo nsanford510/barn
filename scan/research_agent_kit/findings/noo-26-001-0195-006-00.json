@@ -1,0 +1,22 @@
+{
+  "apn": "001-0195-006-00",
+  "address": "701 Franklin St, Oakland, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.35,
+  "rationale": "2018 sources describe the upper floors as vacant and the building as roughly 90% vacant, while three ground-floor retail units had tenants. Those records are too old to establish current occupancy. The SRO rooms were reportedly last occupied around 1962 to the late 1960s.",
+  "evidence": [
+    {
+      "signal": "Historical vacancy classification",
+      "detail": "Oakland Planning and Building Department's September 20, 2018 preliminary residential-hotel map labels 701 Franklin St as Vacant. This is a dated historical classification and does not establish present-day occupancy.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/planning-commission/2018/item-8-for-publication-sep-26.pdf",
+      "observed_at": "2018-09-20"
+    },
+    {
+      "signal": "Upper floors vacant; ground-floor retail partly occupied",
+      "detail": "A sale listing marketed 701-705 Franklin St on 2018-03-16 as roughly 90% vacant. It says the upper two floors were vacant, three of six ground-floor retail units had tenants, and the former 28-room George Hotel rooms appeared last occupied in 1962; the owners reportedly believed the rooms were last rented in the late 1960s. This supports long-term vacancy of the upper rooms, not a claim that the entire building has been continuously vacant.",
+      "source_url": "https://www.loopnet.com/Listing/701-705-Franklin-St-Oakland-CA/11949353/",
+      "observed_at": "2018-03-16"
+    }
+  ],
+  "report_md": "# Vacancy research: 701 Franklin St, Oakland\n\n**APN:** 001-0195-006-00  \n**Research date:** 2026-10-15  \n**Verdict:** unknown (confidence 0.35)\n\n## Finding\n\nThe available evidence documents substantial historical vacancy but cannot establish whether the property remains vacant today. The City of Oakland's September 20, 2018 preliminary residential-hotel inventory labels 701 Franklin St \u201cVacant.\u201d A sale listing dated March 16, 2018 describes the building as roughly 90% vacant, with the upper two floors vacant and three of six ground-floor retail units occupied. These accounts distinguish the largely unused upper floors from active ground-floor tenants; they do not show that the entire property was empty.\n\nThe same listing says the upper rooms belonged to the former 28-room George Hotel and appeared last occupied in 1962, while reporting that owners believed they were last rented in the late 1960s. This places the estimated start of upper-floor vacancy around 1962\u20131969 (about 57\u201364 years by October 2026), but the date is a retrospective listing statement, not a contemporaneous occupancy record. Do not apply that duration to all building space.\n\nNo recent public evidence found in this search establishes current occupancy, vacancy, or a newer vacancy start date. Because the direct occupancy evidence is from 2018, the present-day verdict remains unknown.\n\n## Sources\n\n- City of Oakland, Planning and Building Department, *Preliminary Identification of Residential Hotels \u2013 Downtown & West Oakland*, dated 2018-09-20: https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/planning-commission/2018/item-8-for-publication-sep-26.pdf\n- LoopNet, *701-705 Franklin St*, listing dated 2018-03-16: https://www.loopnet.com/Listing/701-705-Franklin-St-Oakland-CA/11949353/"
+}
