@@ -1,0 +1,32 @@
+{
+  "verdict": "likely_vacant",
+  "confidence": 0.66,
+  "rationale": "Recent MLS listings identify APN 0030033010 as unimproved land, supporting current vacancy. Oakland records show a dilapidated rear house in 2019, so vacancy began later; the exact start and duration are unverified.",
+  "evidence": [
+    {
+      "signal": "current vacant land listing",
+      "detail": "The Nov. 21, 2025 MLS listing identifies 814 20th Street as Land; the 2026 sale page also calls it unimproved land. This supports no dwelling at those dates but does not establish the lot was continuously vacant.",
+      "source_url": "https://ascendre.com/home-search/listings/323115782237629442-814-814-20th-Street",
+      "observed_at": "2025-11-21"
+    },
+    {
+      "signal": "later sale as land",
+      "detail": "MLSListings identifies 814 20th Street, MLS CC41118036, as Land; sold May 21, 2026 for $80,000. APN 0030033010 appears on the property listing record.",
+      "source_url": "https://www.mlslistings.com/Search/Result/alameda-county/96?criteria=H4sIAAAAAAAACnWPQWuDQBCF_0qZa90yjjaueytpDzk1EPsDpusEha2G3RGU0P8eTO2hhx4f3_vgvSsk4ei7jyTxJEG89uNwaMFhtpE1AO2owPJcGettYcrSkrHC3vi8ZSSLRc2f8Gs0Mis4eAn8JS0_7Mdp0OUPbZaLgIMf8h6PHPvUQQYaeUh837BVongZNCynMbSQgY_CKq-sKyOkncHC5Nhg5Z7J5fVTWRFVmD8iOkTIIHDSt1n8pHL_8a9iN-X7Bi1fVEoSAQAAGbQpVQpWIJGmMdJZ0GN_LiEQ3wFrfCcH9AEhIqMkZaI&view=list",
+      "observed_at": "2026-05-21"
+    },
+    {
+      "signal": "prior dilapidated dwelling",
+      "detail": "Oakland's Q4 FY2018-19 code enforcement report records case 1304508 at 814 20TH ST: a dilapidated house, with a rear house whose foundation was caving in; follow-up inspection June 6, 2019.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf",
+      "observed_at": "2019-06-06"
+    },
+    {
+      "signal": "ambiguous 2021-2022 residential history",
+      "detail": "Permit summaries show residential alteration, roofing and electrical permits issued/final in 2021-2022, and listing history shows 2022 activity with $/sqft fields. These records do not prove occupancy, but they prevent dating the vacancy from the 2019 complaint alone.",
+      "source_url": "https://www.realtor.com/realestateandhomes-detail/814-20th-St_Oakland_CA_94607_M26494-49347",
+      "observed_at": "2022-06-24"
+    }
+  ],
+  "report_md": "# Vacancy research: 814 20TH ST, OAKLAND\n\n**APN:** 003-0033-010-00 (listing formats also show 0030033010)  \n**Research date:** 2026-10-15  \n**Verdict:** likely_vacant  \n**Confidence:** 0.66\n\n## Finding\n\nRecent listings identify the parcel as land/unimproved land, and MLSListings records a May 21, 2026 sale as Land. This supports that there is no dwelling now, but a vacant lot is not proof nobody uses the site. The vacancy start is unknown. The current evidence documents a lot by November 21, 2025; that is a documented lower bound only, not proof the lot was continuously vacant since then.\n\n## Timeline and limits\n\n- June 6, 2019: Oakland code-enforcement case 1304508 describes a dilapidated house and a rear house with a caving foundation. This confirms a dwelling existed, but does not say whether it was occupied.\n- 2021-2022: third-party permit summaries show residential alteration, roof and electrical work. Permit activity is not occupancy evidence. MLS history in 2022 has ambiguous residential-looking $/sqft data; it does not independently establish occupancy.\n- November 21, 2025: MLS listing describes property type as Land.\n- May 21, 2026: MLSListings records the property as Land and sold for $80,000.\n\nNo reliable demolition date or evidence supporting a continuous vacancy interval was found. Do not report a definite vacancy duration.\n\n## Sources\n\n- [Oakland code enforcement quarterly report (case 1304508)](https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf)\n- [MLS listing describing the parcel as land (Nov. 2025)](https://ascendre.com/home-search/listings/323115782237629442-814-814-20th-Street)\n- [MLSListings Alameda County sold results (May 21, 2026)](https://www.mlslistings.com/Search/Result/alameda-county/96?criteria=H4sIAAAAAAAACnWPQWuDQBCF_0qZa90yjjaueytpDzk1EPsDpusEha2G3RGU0P8eTO2hhx4f3_vgvSsk4ei7jyTxJEG89uNwaMFhtpE1AO2owPJcGettYcrSkrHC3vi8ZSSLRc2f8Gs0Mis4eAn8JS0_7Mdp0OUPbZaLgIMf8h6PHPvUQQYaeUh837BVongZNCynMbSQgY_CKq-sKyOkncHC5Nhg5Z7J5fVTWRFVmD8iOkTIIHDSt1n8pHL_8a9iN-X7Bi1fVEoSAQAAGbQpVQpWIJGmMdJZ0GN_LiEQ3wFrfCcH9AEhIqMkZaI&view=list)\n- [Permit and listing history summary](https://www.realtor.com/realestateandhomes-detail/814-20th-St_Oakland_CA_94607_M26494-49347)"
+}
