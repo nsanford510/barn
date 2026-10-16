@@ -3,6 +3,10 @@
 Everything a remote agent needs to work the BARN vacancy research queue. Copy
 this folder to the agent's machine; it needs Python 3.9+ and nothing else.
 
+The optional exact-APN claim filter requires applying
+`scan/db_migrations/supa_migration_vacancy_research_exact_apn_claim.sql` after
+the base vacancy research migration.
+
 ## Setup on the agent's machine
 
 1. On the BARN machine, create the agent and note the token it prints (shown
@@ -34,6 +38,8 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
 - Target zip codes: tell the agent to claim with `--zip 94601,94607` (repeatable
   or comma-separated; combines with `--city`). It only filters what that agent
   is handed; the properties must already be in the queue.
+- For a single queued property, claim its exact APN with `--apn '003 002500900'`.
+  The APN must already be in the queue; this option does not seed a task.
 - Watch progress: `python research_queue.py status`, or **Scan > Vacancy** in the
   web UI.
 - Retry failures: `python research_queue.py requeue --status failed`.

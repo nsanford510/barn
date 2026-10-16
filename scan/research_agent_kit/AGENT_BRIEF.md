@@ -22,6 +22,10 @@ account to obtain information.
    `python research_client.py claim --zip 94601,94607`. You then only receive
    properties in those zip codes, and `null` means none are left there.
 
+   To claim one known queue task by its exact APN, use
+   `python research_client.py claim --apn '003 002500900'`. This does not add
+   a task to the queue.
+
 2. **Research** that property. You have until `lease_expires_at` (45 minutes by
    default). If you need longer, run
    `python research_client.py extend --token <claim_token>` before it expires;
