@@ -85,7 +85,7 @@ if ENV_FILE.exists():
 
 SCOUT_API_KEY = os.environ.get("SCOUT_API_KEY", "")
 
-app = Flask(__name__)
+app = Flask(__name__, root_path=str(_WEBGUI_DIR))
 _DEFAULT_SECRET_KEY = "vpt-local-secret-key-change-me"
 app.secret_key = os.environ.get("SECRET_KEY") or _DEFAULT_SECRET_KEY
 _ON_VERCEL = bool(os.environ.get("VERCEL"))

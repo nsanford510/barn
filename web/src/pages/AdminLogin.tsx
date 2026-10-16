@@ -6,14 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Home, Lock, UserPlus } from "lucide-react";
+import { Home, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -67,48 +66,6 @@ const AdminLogin = () => {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const redirectUrl = `${window.location.origin}/admin`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-        },
-      });
-
-      if (error) {
-        toast({
-          title: "Sign Up Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data.user) {
-        toast({
-          title: "Account Created!",
-          description: "Your account has been created. Please check your email to confirm, or contact an administrator to grant admin access.",
-        });
-        setIsSignUp(false);
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-md">
@@ -123,17 +80,15 @@ const AdminLogin = () => {
         <Card className="shadow-elevated">
           <CardHeader className="text-center">
             <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              {isSignUp ? <UserPlus className="h-6 w-6 text-primary" /> : <Lock className="h-6 w-6 text-primary" />}
+              <Lock className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle className="text-2xl">{isSignUp ? "Create Account" : "Admin Login"}</CardTitle>
+            <CardTitle className="text-2xl">Admin Login</CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? "Create an account to request admin access" 
-                : "Sign in to access the property reports dashboard"}
+              Sign in to access the property reports dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={isSignUp ? handleSignUp : handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -156,7 +111,7 @@ const AdminLogin = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  autoComplete={isSignUp ? "new-password" : "current-password"}
+                  autoComplete="current-password"
                 />
               </div>
               <Button 
@@ -165,23 +120,13 @@ const AdminLogin = () => {
                 size="lg"
                 disabled={isLoading}
               >
-                {isLoading 
-                  ? (isSignUp ? "Creating account..." : "Signing in...") 
-                  : (isSignUp ? "Create Account" : "Sign In")}
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
             
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {isSignUp 
-                  ? "Already have an account? Sign in" 
-                  : "Need an account? Create one"}
-              </button>
-            </div>
+            <p className="mt-4 text-center text-sm text-muted-foreground">
+              Accounts are invite-only. Contact an administrator for access.
+            </p>
           </CardContent>
         </Card>
       </div>

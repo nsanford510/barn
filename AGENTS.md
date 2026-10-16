@@ -24,6 +24,9 @@ Recent history follows Conventional Commit prefixes such as `feat:`, `fix:`, `do
 ## Security & Configuration Tips
 Never commit `.env` files, Supabase keys, `MAPS_API_KEY`, or deploy SSH secrets. Scanner setup may require `playwright install chromium` after dependency changes. Android local secrets belong in `android/local.properties`; web and scan secrets belong in local `.env` files.
 
+## Auth
+`scan/webgui` (deployed to Vercel as `barn-scan`, root dir `scan/`) and the Android app are invite-only: a Supabase account needs an `admin` or `scout` row in `public.user_roles` (checked by `has_app_access()`, migration `web/supabase/migrations/20261016150000_scout_role_app_access.sql`). Flask routes are protected by a global `before_request` guard; add new public routes to `PUBLIC_ENDPOINTS` in `scan/webgui/app.py` and admin-only ones with `@admin_required`. Webgui tests that hit protected routes should use `signed_in_client()` from `scan/tests/webgui_auth_helpers.py`.
+
 ## Cursor Cloud specific instructions
 
 Standard build/test/run commands live in the sections above and in `web/README.md` / `scan/README.md`; the notes below only capture what is non-obvious for this cloud environment.

@@ -53,3 +53,4 @@ test-results/
 
 # Fleet run artifacts (segment CSVs, manifests)
 fleet/out/
+.env*

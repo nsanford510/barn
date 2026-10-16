@@ -19,3 +19,22 @@ venv/
 __pycache__/
 *.pyc
 .git/
+# Not needed by the web UI (keeps the function bundle small)
+node_modules/
+Screenshots/
+scratch/
+fleet/
+openclaw/
+research_agent_kit/
+docs/
+tests/
+*.png
+*.jpg
+*.log
+*.pdf
+/debug*.html
+/dashboard*.html
+/test_embed.*
+/test_*.py
+/keys.txt
+/favs*.json

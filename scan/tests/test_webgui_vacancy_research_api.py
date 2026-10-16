@@ -10,6 +10,8 @@ from unittest.mock import patch
 SCAN_DIR = Path(__file__).resolve().parents[1]
 if str(SCAN_DIR) not in sys.path:
     sys.path.insert(0, str(SCAN_DIR))
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import research_queue
 from webgui_auth_helpers import signed_in_client

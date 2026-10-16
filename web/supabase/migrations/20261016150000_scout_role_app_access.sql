@@ -27,6 +27,7 @@ CREATE POLICY user_roles_select_own ON public.user_roles
   FOR SELECT TO authenticated USING (user_id = auth.uid());
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.user_roles FROM anon, authenticated;
 GRANT SELECT ON public.user_roles TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.user_roles TO service_role;
 
 -- 2. Role helpers. Roles are compared as text so this file works in the same
 -- transaction that adds the 'scout' enum value.

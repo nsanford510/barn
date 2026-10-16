@@ -2,9 +2,10 @@ project_id = "zezhsmgtdzlagqwlvjui"
 
 [auth]
 # Invite-only: admins add users from the dashboard, then grant a role in user_roles.
+# Production (https://barn-scan.vercel.app) needs the same settings in the dashboard: Auth > Sign In / Providers and URL Configuration.
 enable_signup = false
 site_url = "http://127.0.0.1:5000"
-additional_redirect_urls = ["http://127.0.0.1:5000/reset-password", "http://localhost:5000/reset-password"]
+additional_redirect_urls = ["http://127.0.0.1:5000/reset-password", "http://localhost:5000/reset-password", "https://barn-scan.vercel.app/reset-password"]
 
 [auth.email]
 enable_signup = false
