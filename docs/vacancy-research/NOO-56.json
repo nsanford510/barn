@@ -1,0 +1,48 @@
+{
+  "issue": "NOO-56",
+  "address": "616 14TH ST, OAKLAND, CA 94612",
+  "apn": "003-0071-021-00",
+  "verdict": "unknown",
+  "confidence": 0.35,
+  "rationale": "Oakland's Sept. 2018 inventory and a March 2019 sale listing document historical vacancy. A 2021 commercial soft-demolition permit does not establish occupancy. No recent evidence determines the property's current condition, so present vacancy and continuous duration remain unknown.",
+  "vacancy_start": {
+    "status": "upper_bound_only",
+    "date": "2018-09-20",
+    "detail": "Oakland's preliminary residential-hotel inventory already labels 616 14th St vacant on this date; the actual vacancy start is unknown."
+  },
+  "duration": {
+    "status": "unknown",
+    "detail": "Vacancy was reported in September 2018 and again in the March 2019 sale listing. Continuous vacancy between or after those observations is not established, so no present-day duration can be claimed."
+  },
+  "evidence": [
+    {
+      "signal": "municipal_vacancy_inventory",
+      "detail": "Oakland Planning and Building Department's preliminary identification of residential hotels marks the property 'Vacant — 616 14th St.' This is a dated municipal classification, not a move-out date.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/public-meetings/planning-commission/2018/item-8-for-publication-sep-26.pdf",
+      "observed_at": "2018-09-20"
+    },
+    {
+      "signal": "sale_listing_reports_all_units_vacant",
+      "detail": "The LoopNet listing, on market March 7, 2019, identifies parcel 003-0071-021-00, calls the 18-unit SRO building '100% vacant,' and reports average occupancy 0%. This is broker-provided marketing information.",
+      "source_url": "https://www.loopnet.com/Listing/616-14th-St-Oakland-CA/15380902/",
+      "observed_at": "2019-03-07"
+    },
+    {
+      "signal": "sale_and_public_record_cross_check",
+      "detail": "Redfin's parcel page independently shows APN 003-0071-021-00, a March 2019 listing and August 2019 sale, and 18 vacant units. The data appear tied to the listing period and do not establish present occupancy.",
+      "source_url": "https://www.redfin.com/CA/Oakland/616-14th-St-94612/home/160665627",
+      "observed_at": "2019-08-21"
+    },
+    {
+      "signal": "later_permit_activity_not_proof_of_occupancy",
+      "detail": "The parcel page lists a June 18, 2021 final permit for soft demolition of a partition wall and drop ceiling in the ground-floor commercial space. This indicates work activity, but says nothing about residential occupancy.",
+      "source_url": "https://www.redfin.com/CA/Oakland/616-14th-St-94612/home/160665627",
+      "observed_at": "2021-06-18"
+    }
+  ],
+  "limitations": [
+    "No recent 2022–2026 occupancy or vacancy observation was found in the reviewed sources.",
+    "No utility, current code-enforcement, current rental, or current street-view evidence was verified.",
+    "The 2018 inventory is preliminary and the 2019 vacancy statements are historical; neither establishes continuous vacancy or current status."
+  ]
+}
