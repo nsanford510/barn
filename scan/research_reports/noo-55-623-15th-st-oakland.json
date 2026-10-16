@@ -1,0 +1,32 @@
+{
+  "issue": "NOO-55",
+  "address": "623 15TH ST, OAKLAND, CA 94606",
+  "apn": "003 007101400",
+  "researched_at": "2026-10-15",
+  "verdict": "likely_vacant",
+  "confidence": 0.92,
+  "rationale": "Oakland's 2019 planning notice calls this APN a vacant parcel; a 2022 listing identifies it as land with $0 improvements, and 2026 marketing again offers it as a development site. Vacancy is supported since at least 2019, but the actual start date is unknown.",
+  "vacancy_start": null,
+  "vacancy_duration": "At least since 2019-08-02 (7 years, 2 months, 13 days as of 2026-10-15); actual start unknown.",
+  "evidence": [
+    {
+      "signal": "Official planning notice describes property as vacant",
+      "detail": "Oakland Planning's Applications on File dated 2019-08-02 identifies 623 15TH STREET, APN 003 007101400, and describes a proposal for a 10-unit building on a vacant parcel. This establishes vacancy no later than the notice date, not its start date.",
+      "source_url": "https://cao-94612.s3.amazonaws.com/documents/aof-8-2-19.pdf",
+      "observed_at": "2019-08-02"
+    },
+    {
+      "signal": "Listed as land; no assessed improvements",
+      "detail": "A LoopNet listing dated 2022-05-19 classifies the same APN and address as residential land and reports improvements assessment $0. The listing is no longer advertised, so it is historical evidence.",
+      "source_url": "https://www.loopnet.com/Listing/623-15th-St-Oakland-CA/25742584/",
+      "observed_at": "2022-05-19"
+    },
+    {
+      "signal": "Current development land marketing",
+      "detail": "A commercial listing crawled in October 2026 markets 623 15th St as residential land for sale, describes a shovel-ready development site, and reports improvements assessment $0. It lists date on market 2026-09-03. Marketing is not an independent site inspection.",
+      "source_url": "https://www.showcase.com/623-15th-st-oakland-ca-94606/42035573/",
+      "observed_at": "2026-10-15"
+    }
+  ],
+  "report_md": "## Finding\n\n**Verdict:** likely_vacant (0.92 confidence).\n\nOakland's 2019 planning notice explicitly describes APN 003 007101400 at 623 15TH STREET as a vacant parcel. A 2022 land listing for the same parcel reports no improvements assessment, and 2026 commercial marketing again offers it as a development site. Taken together, these support that the parcel is vacant now and has been vacant since at least 2019-08-02. The vacancy start date is unknown; the duration is a minimum supported interval of 7 years, 2 months, 13 days as of 2026-10-15. This does not establish continuous vacancy from an earlier date or substitute for an on-site check.\n\nThe issue says ZIP 94612, while Oakland's 2019 notice and the listings identify 94606; APN and street address match.\n\n### Sources\n\n- Oakland Planning, Applications on File, 2019-08-02: https://cao-94612.s3.amazonaws.com/documents/aof-8-2-19.pdf\n- LoopNet historical land listing, on market 2022-05-19: https://www.loopnet.com/Listing/623-15th-St-Oakland-CA/25742584/\n- Showcase commercial land listing, on market 2026-09-03: https://www.showcase.com/623-15th-st-oakland-ca-94606/42035573/"
+}
