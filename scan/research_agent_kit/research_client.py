@@ -83,7 +83,7 @@ def parse_zip_codes(values: list[str] | None) -> list[str]:
 
 
 def parse_apns(values: list[str] | None) -> list[str]:
-    """Normalize repeated, comma-separated parcel IDs to 12 digits."""
+    """Normalize one repeated or comma-separated parcel ID to 12 digits."""
     apns: list[str] = []
     for value in values or []:
         for part in value.split(","):
@@ -93,8 +93,12 @@ def parse_apns(values: list[str] | None) -> list[str]:
             apn = "".join(char for char in part if char.isascii() and char.isdigit())
             if len(apn) != 12:
                 raise ClientError(f"not a 12-digit APN: {part}")
-            if apn not in apns:
-                apns.append(apn)
+            # The BARN bills table stores Alameda APNs as "001 011503000".
+            canonical = f"{apn[:3]} {apn[3:]}"
+            if canonical not in apns:
+                apns.append(canonical)
+    if len(apns) > 1:
+        raise ClientError("claim accepts one APN at a time")
     return apns
 
 
@@ -108,8 +112,9 @@ def claim(
     params: dict[str, Any] = {"p_lease_minutes": lease_minutes, "p_city": city or ""}
     if zip_codes:
         params["p_zip_codes"] = zip_codes
-    if apns:
-        params["p_apns"] = apns
+    normalized_apns = parse_apns(apns)
+    if normalized_apns:
+        params["p_apn"] = normalized_apns[0]
     return call("claim_vacancy_research", params)
 
 

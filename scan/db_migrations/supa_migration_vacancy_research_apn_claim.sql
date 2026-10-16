@@ -1,5 +1,5 @@
--- Allow research agents to claim one or more specific APNs through the
--- existing claim RPC. APNs are compared by digits so common separators match.
+-- Allow research agents to claim one specific APN through the existing claim
+-- RPC. APNs are compared by digits so common separators match.
 -- Apply manually via Supabase SQL Editor.
 
 -- Replace the existing four-argument function instead of leaving overloads
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION public.claim_vacancy_research(
     p_lease_minutes INTEGER DEFAULT 45,
     p_city          TEXT    DEFAULT '',
     p_zip_codes     TEXT[]  DEFAULT NULL,
-    p_apns          TEXT[]  DEFAULT NULL
+    p_apn           TEXT    DEFAULT NULL
 )
 RETURNS JSON
 LANGUAGE plpgsql
@@ -45,7 +45,7 @@ BEGIN
     WHERE (t.status = 'pending' OR (t.status = 'claimed' AND t.lease_expires_at < now()))
       AND (p_city = '' OR p_city IS NULL OR LOWER(b.city) = LOWER(p_city))
       AND (COALESCE(cardinality(p_zip_codes), 0) = 0 OR LEFT(TRIM(b.zip_code), 5) = ANY(p_zip_codes))
-      AND (COALESCE(cardinality(p_apns), 0) = 0 OR regexp_replace(t.apn, '[^0-9]', '', 'g') = ANY(p_apns))
+      AND (p_apn IS NULL OR regexp_replace(t.apn, '[^0-9]', '', 'g') = regexp_replace(p_apn, '[^0-9]', '', 'g'))
     ORDER BY t.priority DESC, t.apn
     LIMIT 1
     FOR UPDATE OF t SKIP LOCKED;
@@ -95,9 +95,9 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT[])
+REVOKE ALL ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT)
     FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT[])
+GRANT EXECUTE ON FUNCTION public.claim_vacancy_research(TEXT, INTEGER, TEXT, TEXT[], TEXT)
     TO anon, authenticated, service_role;
 
 NOTIFY pgrst, 'reload schema';

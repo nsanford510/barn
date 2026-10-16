@@ -149,9 +149,8 @@ python research_queue.py status                  # or Scan > Vacancy in the web 
 Agents use only the files in `research_agent_kit/` (see its README), never the
 secret key.
 
-To claim a specific APN, also apply
-`db_migrations/supa_migration_vacancy_research_apn_claim.sql`; the client then
-supports `research_client.py claim --apn 001-0115-030-00`.
+The client can target one queued parcel with `research_client.py claim --apn
+001-0115-030-00`.
 
 ## Web Interface
 

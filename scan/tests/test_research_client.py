@@ -78,14 +78,18 @@ class RequestTests(unittest.TestCase):
 
         plain, targeted = (json.loads(c[0][0].data) for c in urlopen.call_args_list)
         self.assertNotIn("p_apns", plain)
-        self.assertEqual(["001011503000"], targeted["p_apns"])
+        self.assertEqual("001 011503000", targeted["p_apn"])
 
     def test_apns_are_normalized_and_deduplicated(self) -> None:
         self.assertEqual(
-            ["001011503000", "001011503001"],
-            research_client.parse_apns(["001 011503000, 001-0115-030-00", "001011503001"]),
+            ["001 011503000"],
+            research_client.parse_apns(["001 011503000, 001-0115-030-00"]),
         )
         self.assertEqual([], research_client.parse_apns(None))
+
+    def test_apn_filter_rejects_more_than_one_parcel(self) -> None:
+        with self.assertRaisesRegex(research_client.ClientError, "one APN"):
+            research_client.parse_apns(["001011503000,001011503001"])
 
     def test_cli_rejects_a_malformed_apn_without_calling_the_server(self) -> None:
         with patch.object(research_client.urllib.request, "urlopen") as urlopen, \
@@ -122,7 +126,7 @@ class RequestTests(unittest.TestCase):
                 patch("sys.stdout", new_callable=io.StringIO):
             code = research_client.main(["claim", "--apn", "001 011503000"])
         self.assertEqual(0, code)
-        self.assertEqual(["001011503000"], json.loads(urlopen.call_args[0][0].data)["p_apns"])
+        self.assertEqual("001 011503000", json.loads(urlopen.call_args[0][0].data)["p_apn"])
 
     def test_submit_maps_the_finding_to_rpc_parameters(self) -> None:
         finding = {
