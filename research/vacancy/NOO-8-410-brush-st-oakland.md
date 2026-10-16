@@ -33,4 +33,6 @@ No dated recent street-view observation, utility signal, parcel-specific code-en
 
 ## Queue submission status
 
-Not submitted. The required `research_client.py` RPC requires `BARN_AGENT_TOKEN` plus the BARN Supabase URL and publishable key under the client’s expected variable names. The project URL and publishable key exist in local BARN config, but no agent token is configured, so a claim cannot be obtained. No direct table access or claim-token workaround was used.
+No finding was submitted. The documented operator enqueue command for APN `001 011502600` returned `0` added tasks; that result does not distinguish an already-existing task from a missing matching bill row. A temporary agent was provisioned through the documented operator command, then the research client claimed the first two Oakland/94607 tasks. They were APNs `001 013300100` (544 2nd St) and `001 013500300` (201 Broadway), not this property. Both unrelated claims were released through the RPC and the temporary agent was revoked.
+
+The available claim RPC filters by city and ZIP but has no APN selector. With the first two claims resolving to other properties, the target cannot currently be claimed through the client without changing or bypassing the queue selection. No table was used to record a finding. The `unknown` verdict and undetermined duration above remain a research conclusion, not a submitted queue finding.
