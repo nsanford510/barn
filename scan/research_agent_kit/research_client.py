@@ -82,11 +82,34 @@ def parse_zip_codes(values: list[str] | None) -> list[str]:
     return zips
 
 
-def claim(city: str = "", lease_minutes: int = 45, zip_codes: list[str] | None = None) -> dict[str, Any] | None:
+def parse_apns(values: list[str] | None) -> list[str]:
+    """Normalize repeated, comma-separated parcel IDs to 12 digits."""
+    apns: list[str] = []
+    for value in values or []:
+        for part in value.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            apn = "".join(char for char in part if char.isascii() and char.isdigit())
+            if len(apn) != 12:
+                raise ClientError(f"not a 12-digit APN: {part}")
+            if apn not in apns:
+                apns.append(apn)
+    return apns
+
+
+def claim(
+    city: str = "",
+    lease_minutes: int = 45,
+    zip_codes: list[str] | None = None,
+    apns: list[str] | None = None,
+) -> dict[str, Any] | None:
     """One property to research, or None when nothing matching is left in the queue."""
     params: dict[str, Any] = {"p_lease_minutes": lease_minutes, "p_city": city or ""}
     if zip_codes:
         params["p_zip_codes"] = zip_codes
+    if apns:
+        params["p_apns"] = apns
     return call("claim_vacancy_research", params)
 
 
@@ -120,6 +143,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--city", default="")
     p.add_argument("--zip", action="append", default=None, metavar="ZIP[,ZIP...]",
                    help="only claim properties in these zip codes (repeatable or comma-separated)")
+    p.add_argument("--apn", action="append", default=None, metavar="APN[,APN...]",
+                   help="only claim these parcels (repeatable or comma-separated)")
     p.add_argument("--lease-minutes", type=int, default=45)
 
     p = sub.add_parser("submit", help="submit a finding and close the claim")
@@ -141,7 +166,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "claim":
             result: Any = claim(
-                city=args.city, lease_minutes=args.lease_minutes, zip_codes=parse_zip_codes(args.zip)
+                city=args.city,
+                lease_minutes=args.lease_minutes,
+                zip_codes=parse_zip_codes(args.zip),
+                apns=parse_apns(args.apn),
             )
         elif args.command == "submit":
             try:

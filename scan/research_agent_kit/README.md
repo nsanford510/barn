@@ -32,8 +32,11 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
 - Seed work: `python research_queue.py enqueue --city OAKLAND` (add `--limit 5`
   for a pilot).
 - Target zip codes: tell the agent to claim with `--zip 94601,94607` (repeatable
-  or comma-separated; combines with `--city`). It only filters what that agent
-  is handed; the properties must already be in the queue.
+  or comma-separated; combines with `--city`).
+- Target APNs: after applying `supa_migration_vacancy_research_apn_claim.sql`,
+  tell the agent to claim with `--apn 001-0115-030-00`. APN formatting is
+  normalized to digits; filters combine with `--city` and `--zip`. The property
+  must already be in the queue.
 - Watch progress: `python research_queue.py status`, or **Scan > Vacancy** in the
   web UI.
 - Retry failures: `python research_queue.py requeue --status failed`.
