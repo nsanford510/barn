@@ -1,0 +1,51 @@
+{
+  "apn": "004-007501000",
+  "address": "375 CENTER ST",
+  "city": "OAKLAND",
+  "zip_code": "94607",
+  "research_date": "2026-10-16",
+  "verdict": "likely_vacant",
+  "confidence": 0.82,
+  "rationale": "Oakland's 2023 vacant-property-tax finding for this parcel was upheld on judicial review in 2026; the court found the owner's storage claim did not establish qualifying use. A 2024 redevelopment application does not prove construction or occupancy. Current vacancy and its start date remain unverified.",
+  "vacancy_start": null,
+  "duration": null,
+  "duration_note": "City vacancy determination applies to tax year 2023; no start date or continuous duration is established.",
+  "evidence": [
+    {
+      "source_url": "https://decisiondepot.legal/cases/225434",
+      "source_name": "DecisionDepot case record, Center 5th Street LLC v. City of Oakland, 25CV148214",
+      "observed_date": "2026-08-07",
+      "published_date": "2026-08-05",
+      "supports": "The court record concerns 375 Center Street and describes notices issued 2024-03-22 and 2024-05-03 for the 2023 vacant-property-tax assessment, the 2024-07-02 administrative hearing, and denial of the owner's writ petition on 2026-08-07. City evidence included blight/disrepair and no associated business license; the owner's storage claim did not establish qualifying use or the required 40% occupied storage area. The court record says the City acknowledged a redevelopment planning permit could support an exemption in 2024 and later if in place.",
+      "limitation": "Published case-record reproduction, not the court docket-hosted original; confirms a 2023 assessment only, not continuous or present-day vacancy. It also records a possible later-year redevelopment exemption without establishing whether one was granted."
+    },
+    {
+      "source_url": "https://www.decisiondepot.legal/cases/257447",
+      "source_name": "DecisionDepot compliance order, same case",
+      "observed_date": "2026-08-24",
+      "published_date": "2026-08-21",
+      "supports": "The court had received no objections to the proposed judgment and would enter it; the compliance hearing was vacated.",
+      "limitation": "Published case-record reproduction, not the court portal's original; procedural outcome only, no evidence of present-day occupancy."
+    },
+    {
+      "source_url": "https://sfyimby.com/2024/02/two-story-residence-proposed-at-375-center-street-oakland.html",
+      "source_name": "SF YIMBY",
+      "published_date": "2024-02-24",
+      "supports": "Reports a pending application for demolition of existing garage/warehouse buildings and a proposed duplex at the subject address.",
+      "limitation": "A pending proposal does not establish that demolition, construction, or occupancy occurred."
+    },
+    {
+      "source_url": "https://www.loopnet.com/property/375-center-st-oakland-ca-94607/06001-004%20007501000/",
+      "source_name": "LoopNet property record",
+      "supports": "Matches 375 Center St to APN 004-0075-010-00; reports auto-repair land use and sale-listing history beginning 2019-05-29.",
+      "limitation": "Aggregated property and listing history, not current occupancy evidence."
+    },
+    {
+      "source_url": "https://oaklandca.gov/files/assets/city/v/1/boards-amp-commissions/documents/pc/2.4.2026-item-1-citywide-case-file-za26001-attach-f-housing-cap-anal-of-oakland-zoning-comp-w-sb-79-standards-in-tier-1-tod-zones-for-six-bart-stations-pc-2.4.26.pdf",
+      "source_name": "City of Oakland Planning Commission attachment",
+      "supports": "Lists 375 Center St, Oakland 94607 with APN 004 007501000, confirming parcel identity.",
+      "limitation": "Parcel identification only; does not establish occupancy."
+    }
+  ],
+  "report_md": "See docs/vacancy-research/NOO-67.md"
+}
