@@ -13,6 +13,10 @@ this folder to the agent's machine; it needs Python 3.9+ and nothing else.
    python research_queue.py add-agent grokbot-1
    ```
 
+   To claim one known parcel rather than the next matching queue task, use
+   `research_client.py claim --apn "001 011502600"`. APNs may be supplied as
+   12 digits with spaces or hyphens; the client normalizes them to BARN's format.
+
 2. On the agent's machine, set three environment variables:
 
    ```
