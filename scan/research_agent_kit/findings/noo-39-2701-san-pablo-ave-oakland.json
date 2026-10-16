@@ -1,0 +1,26 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.35,
+  "rationale": "A 2025 air-district notice documents soil-vapor extraction at the parcel, and an official 2025 business-license report lists an active contractor at the address through August 2026. These show site-related business activity but do not establish current occupancy or vacancy.",
+  "evidence": [
+    {
+      "signal": "site remediation activity",
+      "detail": "A July 1, 2025 Bay Area Air Quality Management District notice identifies a portable soil-vapor-extraction operation at 2701 San Pablo Avenue. Site work indicates activity at the parcel, but does not establish a tenant or continuous occupancy.",
+      "source_url": "https://www.baaqmd.gov/~/media/files/engineering/public-notices/2025/722493/fid19967_nsr_722493_pn_070125-pdf.pdf?rev=aa12558d71574d58a9efc8e482c355d0&sc_lang=en",
+      "observed_at": "2025-07-01"
+    },
+    {
+      "signal": "business license at property address",
+      "detail": "The City of San Pablo's July 2025 license report lists Cooper and Hawkins Engineering Inc. at 2701 San Pablo Ave with active license BL3114, issued July 29, 2025 and expiring August 12, 2026. The business listing supports prior use but does not prove it operated from the site or remains there today.",
+      "source_url": "https://sanpabloca.gov/ArchiveCenter/ViewFile/Item/3378",
+      "observed_at": "2025-09-09"
+    },
+    {
+      "signal": "historical business use",
+      "detail": "Oakland's 2017-2018 industrial and commercial facility list identifies T & L Meat Market at 2701 San Pablo Ave. This is historical evidence only and cannot establish present occupancy or a vacancy start.",
+      "source_url": "https://cao-94612.s3.amazonaws.com/documents/Oakland_2017-18_MRP_AR.pdf",
+      "observed_at": "2018"
+    }
+  ],
+  "report_md": "## Vacancy finding — 2701 San Pablo Ave, Oakland (APN 003 000300400)\n\n**Verdict:** unknown (confidence 0.35). The parcel is a 5,780 sq. ft. commercial building. A July 2025 Bay Area Air Quality Management District notice documents a soil-vapor-extraction operation at the address. A City of San Pablo business-license report lists Cooper and Hawkins Engineering Inc. at the address with an active license through August 12, 2026. Oakland's 2017-2018 commercial facility list also names T & L Meat Market there. These records indicate past business use and site activity, but do not establish that a tenant currently occupies the building.\n\n**Vacancy start:** not confirmed. **Duration:** unknown. The public evidence reviewed does not show a reliable vacancy date or establish continuous vacancy. The 2025 remediation notice reflects site work, not tenant occupancy; the business-license record expired before the current research date. No current listing, utility record, or recent dated street-level observation was located.\n\nSources: [BAAQMD July 2025 public notice](https://www.baaqmd.gov/~/media/files/engineering/public-notices/2025/722493/fid19967_nsr_722493_pn_070125-pdf.pdf?rev=aa12558d71574d58a9efc8e482c355d0&sc_lang=en), [City of San Pablo July 2025 business-license report](https://sanpabloca.gov/ArchiveCenter/ViewFile/Item/3378), [Oakland 2017-2018 industrial and commercial facilities report](https://cao-94612.s3.amazonaws.com/documents/Oakland_2017-18_MRP_AR.pdf)."
+}
