@@ -138,7 +138,9 @@ If these are missing, the app returns a 503 with instructions. To verify the dep
 ### Vacancy research by remote agents
 
 AI agents on other machines research each property and report a vacancy verdict
-with evidence. Apply `db_migrations/supa_migration_vacancy_research.sql`, then:
+with evidence. Apply `db_migrations/supa_migration_vacancy_research.sql`. To
+enable claims targeted to specific APNs, also apply
+`db_migrations/supa_migration_vacancy_research_claim_apns.sql`, then:
 
 ```bash
 python research_queue.py add-agent grokbot-1     # prints the agent's token once
