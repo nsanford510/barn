@@ -13,6 +13,10 @@ account to obtain information.
    python research_client.py claim
    ```
 
+   For an assignment tied to a specific parcel, pass `--apn`, for example
+   `python research_client.py claim --apn "003 003301000"`. This filter can be
+   combined with `--city` and `--zip`.
+
    You get a JSON object with the address, city, owner name, known signals
    (`power_status`, `condition_score`, `condition_notes`, `site_vacant`,
    `mail_vacant`, `has_vpt`, `delinquent`), a `claim_token` and a
