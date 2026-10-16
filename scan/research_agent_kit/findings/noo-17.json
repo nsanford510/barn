@@ -1,0 +1,29 @@
+{
+  "apn": "001 015301400",
+  "address": "267 4TH ST, OAKLAND, CA 94607",
+  "research_date": "2026-10-15",
+  "verdict": "unknown",
+  "confidence": 0.2,
+  "rationale": "Public records identify this parcel as an office building and show a landlord business account expired in 2021; neither establishes whether tenants remained or when vacancy began. Current occupancy evidence is insufficient, so vacancy start and duration are unknown.",
+  "evidence": [
+    {
+      "signal": "Historical office use and parcel identity",
+      "detail": "The National Register nomination identifies 267 4th Street as APN 001-0153-014 and says the warehouse was converted into two floors of offices. This establishes historic use, not current occupancy.",
+      "source_url": "https://localwiki.org/oakland/waterfront%20warehouse%20district/_files/00000361.pdf",
+      "observed_at": "1999"
+    },
+    {
+      "signal": "Assessor-derived office-building classification",
+      "detail": "LoopNet's property record identifies APN 001-0153-014-00 at 267 4th St as an office building, 14,140 square feet, with 2024 tax-year and 2025 assessed-year data. This is not evidence that the building is occupied today.",
+      "source_url": "https://www.loopnet.com/property/267-4th-st-oakland-ca-94607/06001-001%20015301400/",
+      "observed_at": "2025"
+    },
+    {
+      "signal": "Landlord business account expiration",
+      "detail": "Oakland's October 2022 closed-business-accounts list includes Huntleigh Coronado Properties LLC at 267 4th St, NAICS 531120 (lessor of nonresidential buildings), with account expiration 2021-12-31. A tax-account expiration does not show when any tenant left or whether any unit became vacant.",
+      "source_url": "https://cao-94612.s3.amazonaws.com/documents/Closed-Business-Accounts-October-2022.pdf",
+      "observed_at": "2022-10"
+    }
+  ],
+  "report_md": "## NOO-17 vacancy research — 267 4th St, Oakland\n\n**Parcel:** APN 001-0153-014-00 (issue notation: 001 015301400)\n**Research date:** 2026-10-15\n**Verdict:** unknown (confidence 0.2)\n**Vacancy start / duration:** unknown; no dated vacancy evidence found.\n\n### Evidence reviewed\n\n- The [National Register nomination](https://localwiki.org/oakland/waterfront%20warehouse%20district/_files/00000361.pdf) identifies 267 4th Street as APN 001-0153-014 and describes a historic warehouse converted into two floors of offices. This source is historical and cannot establish present occupancy.\n- [LoopNet's property record](https://www.loopnet.com/property/267-4th-st-oakland-ca-94607/06001-001%20015301400/) matches the full APN and lists an office building of 14,140 square feet with 2024 tax-year and 2025 assessment data. The property classification is not a current occupancy observation.\n- The City of Oakland's [October 2022 closed business accounts list](https://cao-94612.s3.amazonaws.com/documents/Closed-Business-Accounts-October-2022.pdf) lists Huntleigh Coronado Properties LLC at this address as a nonresidential building lessor, with an account expiration date of 2021-12-31. The account closure may reflect a business/tax registration change and does not establish vacancy or a tenant departure date.\n\nSearches for current address-specific listings, permits, code/blight records, utility status, street-view dates, news, and vacancy-tax records did not produce a reliable, dated observation of occupancy or vacancy. A rental post surfaced at the same map address but described a 1,213-square-foot condo and conflicts with the parcel's 14,140-square-foot office-building record, so it was excluded as a likely address/parcel mismatch.\n\n**Conclusion:** Public evidence supports historical office use and a landlord registration that ended in 2021, but does not resolve whether the property is vacant now. Do not infer a vacancy start or duration from the landlord account expiration."
+}
