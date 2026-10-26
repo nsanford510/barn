@@ -1,0 +1,33 @@
+{
+  "issue": "NOO-58",
+  "apn": "004-0027-014-00",
+  "address": "336 Adeline St, Oakland, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.72,
+  "rationale": "The parcel is an industrial property with a 2019 lease listing, while a 2021 state enforcement report associates an operating company with the address. Neither establishes present occupancy; no public evidence located establishes a vacancy start or continuous duration.",
+  "vacancy_start": null,
+  "vacancy_duration": null,
+  "evidence": [
+    {
+      "date": "2019-11-18",
+      "summary": "LoopNet records the property as listed for lease on this date. This indicates space was offered, but does not show whether it was occupied before or after the listing or whether all buildings/space were vacant.",
+      "source": "https://www.loopnet.com/property/336-adeline-st-oakland-CA-94607/06001-004%20002701400/"
+    },
+    {
+      "date": "2021",
+      "summary": "California Air Resources Board's 2021 annual enforcement report identifies Green Planet 21, Inc. dba The Sutta Company and gives 336 Adeline Street as its company location. A business mailing/principal address does not prove physical occupancy.",
+      "source": "https://ww2.arb.ca.gov/sites/default/files/2022-07/2021_Annual_Enforcement_Report_4.pdf"
+    },
+    {
+      "date": "accessed 2026-10-16",
+      "summary": "Oakland Legistar attachment maps 336 Adeline Street to APN 004 002701400 and zoning CIX-1B, corroborating parcel identity and industrial context, not occupancy.",
+      "source": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F"
+    },
+    {
+      "date": "accessed 2026-10-16",
+      "summary": "Oakland states that general building, code-enforcement, and planning records after 1987 are searchable through its Online Permit Center. This research did not retrieve a parcel-specific record from that system, so no absence-of-record claim is made.",
+      "source": "https://www.oaklandca.gov/Planning-Building/Planning-Building-Records-Requests"
+    }
+  ],
+  "report_md": "# Vacancy research: 336 Adeline St, Oakland\n\n**APN:** 004-0027-014-00  \n**Verdict:** unknown (confidence 0.72)  \n**Vacancy start / duration:** unknown; no public evidence located establishes when a vacancy began or whether one was continuous.\n\nThe parcel is an industrial property. LoopNet reports a lease listing dated November 18, 2019, but a listing does not prove the premises became or remained vacant. A 2021 California Air Resources Board enforcement report associates Green Planet 21, Inc. dba The Sutta Company with the address; a company address likewise does not establish physical occupancy. Oakland Legistar records confirm the APN/address pairing and CIX-1B zoning, which is not occupancy evidence. Current physical occupancy therefore cannot be determined from the public evidence located.\n\nSources: [LoopNet property/lease history](https://www.loopnet.com/property/336-adeline-st-oakland-CA-94607/06001-004%20002701400/); [CARB 2021 annual enforcement report](https://ww2.arb.ca.gov/sites/default/files/2022-07/2021_Annual_Enforcement_Report_4.pdf); [Oakland Legistar attachment](https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F); [Oakland public permit-records guidance](https://www.oaklandca.gov/Planning-Building/Planning-Building-Records-Requests)."
+}
