@@ -1,0 +1,38 @@
+{
+  "verdict": "unknown",
+  "confidence": 0.25,
+  "rationale": "Public records show a 2011 tax-default auction listing and a City business-tax lien for 2021-2025, with residential use code 1100. The lien does not identify its business-tax basis or prove occupancy; Oakland collects VPT through county property taxes. No current direct occupancy evidence or vacancy start date was established.",
+  "evidence": [
+    {
+      "signal": "property_identity_and_sale_history",
+      "detail": "Redfin identifies the address as a single-family home and reports its last recorded sale on June 24, 1992. The page does not expose a date for its Street View image.",
+      "source_url": "https://www.redfin.com/CA/Oakland/1115-Center-St-94607/home/535848",
+      "observed_at": "accessed 2026-10-16; sale 1992-06-24"
+    },
+    {
+      "signal": "tax_default_sale_listing",
+      "detail": "Alameda County's Treasurer-Tax Collector report lists APN 4-85-8 / 1115 Center St among properties subject to tax-default sale. This indicates tax delinquency, not vacancy; whether it sold is not established by the cited entry.",
+      "source_url": "https://www.acgov.org/board/bos_calendar/documents/DocsAgendaReg_11_22_11/GENERAL%20ADMINISTRATION/Regular%20Calendar/TTX_Sale_Tax_Defaulted_Property.pdf",
+      "observed_at": "report printed 2011-11-01"
+    },
+    {
+      "signal": "residential_land_use_classification",
+      "detail": "Oakland lists the parcel as code 1100, single-family residential homes used as such. This land-use classification does not verify actual occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=09D82F49-CD60-482B-A33D-8CAB20E6A3F9&ID=6785905&M=F",
+      "observed_at": "2016-2018"
+    },
+    {
+      "signal": "residential_land_use_classification",
+      "detail": "A later City attachment lists the same parcel and address as code 1100, single-family residential homes used as such. This land-use classification does not verify actual occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?G=15529D0E-EFE8-4C09-817E-CE554309072E&GUID=E4E0D13F-7635-4B47-B0FA-271A96F9B96C&ID=14301879&M=F",
+      "observed_at": "2021-2024"
+    },
+    {
+      "signal": "business_tax_lien_and_residential_land_use_classification",
+      "detail": "A City of Oakland attachment for its 3rd Quarter 2026 Business Tax Liens, heard by Council January 20, 2026, lists APN 004-0085-008-00 for tax years 2021-2025 with $1,001.39 delinquent, a $175 administrative charge, and a $1,176.39 lien; use code remains 1100, single-family residential homes used as such. The attachment does not state the underlying tax basis and does not establish vacancy or occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=7DFCF982-F0A0-4306-937C-0B06CB56F8F8&ID=15063787&M=F",
+      "observed_at": "attachment dated 2026-01-20; interest calculated through 2025-12"
+    }
+  ],
+  "report_md": "See docs/research/NOO-71-1115-center-st-oakland.md. Vacancy start and duration are not established. The BARN queue RPC was not submitted because the required BARN_SUPABASE_ANON_KEY is unavailable in this environment."
+}
