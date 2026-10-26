@@ -1,0 +1,41 @@
+{
+  "apn": "004-0063-020-00",
+  "address": "1429 11TH ST",
+  "city": "OAKLAND",
+  "state": "CA",
+  "zip": "94606",
+  "verdict": "unknown",
+  "confidence": 0.35,
+  "rationale": "Public records conflict: an assessor-derived report labels APN 4-63-20 vacant land, but its 0.76-acre figure conflicts with Oakland's 0.076 acres, and a matching-APN listing reports 925 sq ft total size. No dated site evidence establishes occupancy or vacancy duration.",
+  "vacancy_start": null,
+  "vacancy_duration": "unknown",
+  "evidence": [
+    {
+      "signal": "assessor land-use classification and valuation",
+      "detail": "PropertyShark's report for 1429 11th St, APN 4-63-20, shows tax year 2026-2027, property type 'Vacant Residential Land, Zoned 4 Units or Less (1000)', and total market value equal to land value ($173,725). The report is a secondary assessor-data aggregator, not direct proof of current physical vacancy.",
+      "source_url": "https://www.propertyshark.com/mason/Property/38676820/1429-11-St-Oakland-CA-94606/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "meaning of use code 1000",
+      "detail": "Alameda County Assessor's use-code list defines 1000 as vacant residential land zoned for four units or less. This describes assessment classification, not occupancy duration.",
+      "source_url": "https://propinfo.acgov.org/UseCodeList/",
+      "observed_at": "2026-10"
+    },
+    {
+      "signal": "parcel and address cross-check",
+      "detail": "A City of Oakland planning attachment identifies 1429 11TH ST, Oakland 94606, APN 004 006302000, as a 0.076-acre RM-2 parcel. This confirms the parcel/address match and differs from the issue's ZIP 94607; it does not establish vacancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F",
+      "observed_at": "2026-02"
+    },
+    {
+      "signal": "conflicting secondary parcel record",
+      "detail": "LoopNet identifies APN 004-0063-020-00 but labels the address 1429 11th Ave, lists land use as recreational acreage and reports 925 sq ft total size. These fields conflict with PropertyShark\u2019s vacant-land classification but do not establish whether a structure exists or is occupied.",
+      "source_url": "https://www.loopnet.com/property/1429-11th-ave-oakland-ca-94606/06001-004%20006302000/",
+      "observed_at": "2026-10"
+    }
+  ],
+  "checked_but_not_found": [
+    "No direct, dated site observation or parcel-specific permit, listing, sale, code-enforcement, utility, vacancy-tax, or news evidence resolved the conflicting parcel records or established a physical vacancy start/duration."
+  ]
+}
