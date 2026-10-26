@@ -1,0 +1,42 @@
+{
+  "apn": "004 003902100",
+  "address": "1234 10TH ST, OAKLAND, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.78,
+  "rationale": "A parcel-matched 2019 MLS listing describes 1234 10th St as a level vacant lot for new construction. Later Zillow data conflict by labeling it multifamily but provide no beds, baths, floor area, or build year. No reliable post-2019 physical-use evidence establishes current occupancy, so present vacancy and continuous duration remain unknown.",
+  "vacancy_start": "Earliest located vacancy evidence is the MLS listing dated 2019-01-16, which describes a level lot for new construction. Actual vacancy onset and last occupancy are unknown.",
+  "vacancy_duration": "Unknown. The 2019 listing supports vacant-lot status at that time, but no later parcel-specific site observation, occupancy record, utility history, or permit outcome was found to establish continuous vacancy through 2026.",
+  "evidence": [
+    {
+      "signal": "MLS listing marketed the exact property as a vacant lot",
+      "detail": "The syndicated MLS record for 1234 10th St, Oakland, listing 301868630, was listed 2019-01-16 and closed 2019-02-14. It describes a 'level lot' and invites a buyer to build a home; bedrooms are listed as zero and lot size as 3,049 square feet. The listing identifies the corner of 10th and Union. This supports that the parcel was vacant land when marketed, but does not establish when it became vacant or whether it remains so.",
+      "source_url": "https://www.realty.com/land-listings/284715846/1234-10th-St-Oakland-CA-94607",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Sale recorded in 2019; later automated property profile conflicts with vacant-land listing",
+      "detail": "Zillow's 1234 10th St profile identifies parcel number 43921, labels the property multifamily, and reports a public-record sale on 2019-06-27 for $245,000. It gives no beds, baths, floor area, or construction year and describes the record as off market. The sale date and generic property type do not establish occupancy; the profile conflicts with the MLS listing's vacant-lot description.",
+      "source_url": "https://www.zillow.com/homedetails/1234-10th-St-Oakland-CA-94607/299068138_zpid/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "City of Oakland planning attachment confirms APN and official street address",
+      "detail": "A 2026 Oakland planning attachment pairs APN 004 003902100 with 1234 10TH ST OAKLAND and ZIP 94606, and identifies RM-2 zoning. The issue and MLS use ZIP 94607. This helps confirm parcel identity while noting the ZIP discrepancy; the table does not report building condition or occupancy.",
+      "source_url": "https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Public-record-derived property profile labels the parcel Recreationalacreage",
+      "detail": "LoopNet identifies the exact APN 004-0039-021-00 at 1234 E 10th St and reports land use as Recreationalacreage with a 0.07-acre lot. This is a secondary property profile derived from county/public records, not a site observation; it does not establish whether a structure is present or occupied.",
+      "source_url": "https://www.loopnet.com/property/1234-e-10th-st-oakland-ca-94606/06001-004%20003902100/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Oakland permit records are publicly searchable, but no parcel-specific record was verified in this research pass",
+      "detail": "The City states that general building, code-enforcement, and planning records after 1987 are available through its Online Permit Center. No permit result establishing demolition, new construction, or current occupancy at this APN was retrieved; absence from this research pass is not evidence that no permit exists.",
+      "source_url": "https://www.oaklandca.gov/Planning-Building/Permit-Process-Overview/Permit-Services-Questions-Portal",
+      "observed_at": "2026-10-16"
+    }
+  ],
+  "report_md": "## Vacancy assessment\n\n**Verdict:** unknown (0.78 confidence). The current physical occupancy question is unresolved.\n\nThe strongest historical record is the 2019 MLS listing for 1234 10th St (listing 301868630), which called the property a level lot for new construction, showed zero bedrooms, and stated the lot was at 10th and Union. It closed on February 14, 2019. This supports vacant-lot status when marketed in early 2019, but does not establish the present condition. Zillow separately reports a June 27, 2019 public-record sale for $245,000; its generic multifamily label has no beds, baths, area, or build year and conflicts with the vacant-lot listing.\n\nA 2026 City of Oakland planning attachment matches APN 004 003902100 to 1234 10th St but gives ZIP 94606, while the issue and 2019 listing use 94607. The attachment contains zoning and parcel-identification fields, not occupancy evidence. A public-record-derived LoopNet profile for the exact APN reports “Recreationalacreage” and a 0.07-acre lot, but this is not a site observation and does not establish whether a structure is present or occupied. No reliable post-2019 observation or record was found to establish whether the lot remains vacant.\n\n**Start and duration:** The first located vacancy evidence is the 2019-01-16 listing. The actual vacancy onset and any continuous vacancy duration are unknown. The evidence supports vacant-lot status when marketed in early 2019 only; it does not support a claim of seven years of continuous vacancy.\n\n**Sources:** [2019 MLS listing](https://www.realty.com/land-listings/284715846/1234-10th-St-Oakland-CA-94607); [Zillow property and sale history](https://www.zillow.com/homedetails/1234-10th-St-Oakland-CA-94607/299068138_zpid/); [Oakland planning attachment](https://oakland.legistar.com/View.ashx?GUID=DE9D9D0B-4771-4D9D-8F7E-B529062A531F&ID=15191265&M=F); [LoopNet property profile](https://www.loopnet.com/property/1234-e-10th-st-oakland-ca-94606/06001-004%20003902100/); [Oakland permit search guidance](https://www.oaklandca.gov/Planning-Building/Permit-Process-Overview/Permit-Services-Questions-Portal)."
+}
