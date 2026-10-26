@@ -1,0 +1,36 @@
+{
+  "issue": "NOO-69",
+  "address": "1468 8TH ST, OAKLAND, CA 94607",
+  "apn": "004-0081-010-00",
+  "verdict": "likely_vacant",
+  "confidence": 0.9,
+  "rationale": "The current assessor-class record identifies this parcel as vacant residential land, and an MLS listing dated 2025-11-06 describes it as a cleared, unimproved lot. Oakland also verified a blight condition in 2019. These support likely site vacancy, but do not establish when vacancy began or that it continued without interruption through today.",
+  "vacancy_start": null,
+  "vacancy_duration": "Unknown. A 2025-11-06 listing describes a cleared lot; no source establishes the start date or continuous duration.",
+  "evidence": [
+    {
+      "signal": "assessor land-use classification",
+      "detail": "PropertyShark's 2025-2026 tax and parcel record identifies APN 4-81-10 at 1468 8th Street as use code 1000, 'Vacant Residential Land, Zoned 4 Units or Less.' Alameda County defines use code 1000 that way and cautions that its codes are maintained for assessment purposes, not as continuously updated occupancy determinations.",
+      "source_url": "https://www.propertyshark.com/mason/Property/38676902/1468-8-St-Oakland-CA-94607/",
+      "observed_at": "2025-2026"
+    },
+    {
+      "signal": "listed as unimproved land",
+      "detail": "An MLS-syndicated listing for 1468 8th St (MLS 41116859), dated 2025-11-06, identifies the property as lots and land / unimproved land and describes a cleared, level 3,400-square-foot parcel. Listing status is time-sensitive; this does not prove the parcel remains vacant today or that it was vacant continuously before then.",
+      "source_url": "https://www.weichert.com/131540909/",
+      "observed_at": "2025-11-06"
+    },
+    {
+      "signal": "verified city blight condition",
+      "detail": "Oakland's Q4 2019 Code Enforcement report records case 1902122 at 1468 8TH ST: violation verified on 2019-05-20 for vegetation over five feet and a fallen fence. This supports poor site condition at that time, but is not by itself proof of vacancy.",
+      "source_url": "https://www.oaklandca.gov/files/assets/city/v/1/planning-amp-building/documents/ce/bce-reports/code-enforcement-quarterly-report-inspection-count-q4-april-1-june-30-2019.pdf",
+      "observed_at": "2019-05-20"
+    }
+  ],
+  "limitations": [
+    "No dated source establishes the first day of vacancy or continuous vacancy duration.",
+    "No current 2026 field observation, utility record, or current code-enforcement result was found.",
+    "The assessor use code is an appraisal classification and may not be continuously updated; it is not proof of who is present at a property.",
+    "PropertyShark displays an issued date of 2025-11-18 in its permit section but no permit number, type, or status; this uncorroborated fragment is not evidence of occupancy or vacancy duration."
+  ]
+}
