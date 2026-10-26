@@ -1,0 +1,36 @@
+{
+  "apn": "004 003501800",
+  "address": "1228 MAGNOLIA ST, OAKLAND, CA 94607",
+  "verdict": "unknown",
+  "confidence": 0.2,
+  "rationale": "Public property records identify a two-unit residential building, and Zillow currently marks it off market, but neither shows whether either unit is occupied. No parcel-specific vacancy, utility, permit, code-enforcement, or dated occupancy evidence establishing vacancy was found. Vacancy start and duration are unknown.",
+  "vacancy_start": "Unknown. No public source found establishes when the property or either unit became vacant.",
+  "vacancy_duration": "Unknown. The records reviewed do not establish a vacancy interval or continuous physical vacancy.",
+  "evidence": [
+    {
+      "signal": "Public property profile identifies the parcel as a multi-family residence and off market",
+      "detail": "Redfin identifies APN 004 003501800 at 1228 Magnolia St as a 3,054 sq ft multi-family property with a county use description of double or duplex, two units. It reports the last sale as November 9, 1990 and currently labels the property off market. Off-market status and building classification do not establish current occupancy or vacancy duration.",
+      "source_url": "https://www.redfin.com/CA/Oakland/1228-Magnolia-St-94607/home/1714859",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Zillow profile shows the property is not listed there for sale or rent",
+      "detail": "The property profile identifies 1228 Magnolia St as a 4-bedroom, 2-bath multi-family home and says it is off market, meaning it is not currently listed for sale or rent on Zillow. Zillow notes that other sites or public sources may differ. This is not proof that the home is vacant or occupied.",
+      "source_url": "https://www.zillow.com/homedetails/1228-Magnolia-St-Oakland-CA-94607/24738801_zpid/",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Alameda County waste assessment roll lists the parcel with two units",
+      "detail": "The Alameda County Waste Management Authority preliminary FY 2025-26 levy roll lists APN 004-0035-018-00 at 1228 Magnolia St and a quantity of 2. This supports the parcel/address match and a two-unit record, but a waste-fee roll is not an occupancy record and does not show whether either unit was occupied.",
+      "source_url": "https://www.stopwaste.org/sites/default/files/ACWMA%20-%20Preliminary%20Levy%20Roll%20FY%202025-26.pdf",
+      "observed_at": "2026-10-16"
+    },
+    {
+      "signal": "Oakland provides public permit and private-property enforcement searches",
+      "detail": "The City's public Kiosk directs users to search building permits and private-property enforcement records. A parcel-specific result was not retrieved in this research pass, so no conclusion about permits or enforcement is drawn.",
+      "source_url": "https://apps.oaklandca.gov/Kiosk/",
+      "observed_at": "2026-10-16"
+    }
+  ],
+  "report_md": "## Vacancy assessment\n\n**Verdict:** unknown (0.20 confidence).\n\nPublic property profiles identify the subject APN as a two-unit residential building. Zillow says it is not currently listed for sale or rent on Zillow, and Redfin labels it off market. Neither status establishes that the units are vacant. The county waste assessment roll also lists the parcel with two units; this is a parcel and unit-count signal, not occupancy evidence.\n\nNo parcel-specific record establishing physical vacancy, a move-out date, or continuous vacancy was found. No utility data or dated street-level observation was available in this research pass. Oakland's public Kiosk offers permit and private-property enforcement searches, but a parcel-specific result was not retrieved.\n\n**Start/duration:** Unknown. The public records reviewed do not establish when either unit became vacant or any period of continuous vacancy.\n\n**Sources:** [Redfin property profile](https://www.redfin.com/CA/Oakland/1228-Magnolia-St-94607/home/1714859); [Zillow property profile](https://www.zillow.com/homedetails/1228-Magnolia-St-Oakland-CA-94607/24738801_zpid/); [Alameda County Waste Management Authority FY 2025-26 preliminary levy roll](https://www.stopwaste.org/sites/default/files/ACWMA%20-%20Preliminary%20Levy%20Roll%20FY%202025-26.pdf); [Oakland Kiosk](https://apps.oaklandca.gov/Kiosk/)."
+}
