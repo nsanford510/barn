@@ -520,6 +520,7 @@ PUBLIC_ENDPOINTS = {
     "favicon",
     "health",
     "login",
+    "signup",
     "auth_callback",
     "logout",
     "reset_password",
@@ -659,6 +660,13 @@ def login():
         next_url=nxt or "",
         **_supabase_public_config(),
     )
+
+
+@app.route("/signup", methods=["GET"])
+def signup():
+    """Shareable sign-up link: the login page with the create-account form open."""
+    nxt = _safe_next(request.args.get("next"))
+    return redirect(url_for("login", signup=1, next=nxt) if nxt else url_for("login", signup=1))
 
 
 @app.route("/auth/callback", methods=["POST"])

@@ -198,6 +198,18 @@ class WebguiAuthTests(unittest.TestCase):
         with patch.object(self.mod.db, "get_client", return_value=self._fake_client([{"role": "user"}], [])):
             self.assertIsNone(self.mod._lookup_app_role("u1"))
 
+    def test_signup_link_opens_the_create_account_form(self) -> None:
+        client = self.mod.app.test_client()
+        response = client.get("/signup")
+        self.assertEqual(302, response.status_code)
+        self.assertIn("/login?signup=1", response.headers["Location"])
+        with patch.dict(os.environ, {"SUPABASE_URL": "https://x.supabase.co", "SUPABASE_PUBLISHABLE_KEY": "pk"}):
+            page = client.get("/login?signup=1").get_data(as_text=True)
+        self.assertIn('id="signup-form"', page)
+        self.assertIn("Create an account", page)
+        self.assertIn("emailRedirectTo", page)
+        self.assertIn('href="https://x.supabase.co/storage/v1/object/public/downloads/barn-scout.apk"', page)
+
     def test_billing_return_page_is_public_but_billing_needs_sign_in(self) -> None:
         client = self.mod.app.test_client()
         self.assertEqual(200, client.get("/billing/done").status_code)

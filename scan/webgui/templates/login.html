@@ -34,12 +34,33 @@
         <button type="button" class="link-button" id="btn-forgot">Forgot password?</button>
       </div>
       <button type="submit" id="btn-submit">Sign In</button>
+      <p class="hint">New here? <button type="button" class="link-button" id="btn-show-signup">Create an account</button></p>
+    </form>
+    <form id="signup-form" hidden>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" name="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" name="password" placeholder="At least 8 characters" required minlength="8" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label for="signup-confirm">Confirm password</label>
+        <input type="password" id="signup-confirm" name="confirm" placeholder="Repeat password" required minlength="8" autocomplete="new-password">
+      </div>
+      <button type="submit" id="btn-signup">Create Account</button>
+      <p class="hint">Already have an account? <button type="button" class="link-button" id="btn-show-login">Sign in</button></p>
     </form>
     <div id="subscribe-box" hidden>
       <p class="hint">BARN is $100/month. New subscribers get the first 30 days free, and you can cancel anytime from Billing.</p>
       <button type="button" id="btn-subscribe">Start 30-day free trial</button>
     </div>
-    <p class="hint">BARN requires an active subscription.</p>
+    <p class="hint">BARN requires a subscription: $100/month after a 30-day free trial.</p>
+    <p class="hint app-download">
+      On Android? <a href="{{ supabase_url.rstrip('/') }}/storage/v1/object/public/downloads/barn-scout.apk" download="barn-scout.apk">Download the BARN Scout app (APK)</a>
+      <br><small>Sign in with the same account. You may need to allow installs from your browser.</small>
+    </p>
     {% endif %}
   </div>
 
@@ -69,6 +90,90 @@
         document.getElementById('subscribe-box').hidden = !show;
       }
 
+      var params = new URLSearchParams(location.search);
+
+      function showMode(mode) {
+        document.getElementById('login-form').hidden = mode !== 'login';
+        document.getElementById('signup-form').hidden = mode !== 'signup';
+        auth.showMessage(null);
+        var first = document.getElementById(mode === 'signup' ? 'signup-email' : 'email');
+        var typed = document.getElementById(mode === 'signup' ? 'email' : 'signup-email').value;
+        if (typed && !first.value) first.value = typed;
+        first.focus();
+      }
+      document.getElementById('btn-show-signup').addEventListener('click', function () { showMode('signup'); });
+      document.getElementById('btn-show-login').addEventListener('click', function () { showMode('login'); });
+      if (params.has('signup')) showMode('signup');
+
+      // Signed in with Supabase: start the server session, or offer the trial if there's no subscription.
+      async function finishSignIn(accessToken) {
+        var r = await startSession(accessToken);
+        if (r.ok) { window.location.href = r.json.redirect || '/'; return r; }
+        // Keep the browser session for checkout when the only problem is a missing subscription.
+        if (r.status === 403 && !r.json.subscribe) supabase.auth.signOut().catch(function () {});
+        showSubscribe(r.status === 403 && !!r.json.subscribe);
+        auth.showMessage(r.json.error || 'Login failed');
+        return r;
+      }
+
+      document.getElementById('signup-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var email = document.getElementById('signup-email').value.trim();
+        var password = document.getElementById('signup-password').value;
+        var confirm = document.getElementById('signup-confirm').value;
+        if (password.length < 8) { auth.showMessage('Password must be at least 8 characters.'); return; }
+        if (password !== confirm) { auth.showMessage("Passwords don't match."); return; }
+        var btn = document.getElementById('btn-signup');
+        auth.showMessage(null);
+        btn.disabled = true;
+        try {
+          var result = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: { emailRedirectTo: location.origin + '/login?confirmed=1' }
+          });
+          if (result.error) {
+            var msg = result.error.message || 'Sign up failed';
+            if (/signups? not allowed/i.test(msg)) msg = 'New sign-ups are turned off right now.';
+            auth.showMessage(msg);
+            return;
+          }
+          var user = result.data.user;
+          if (user && Array.isArray(user.identities) && user.identities.length === 0) {
+            auth.showMessage('That email already has an account. Sign in instead.');
+            showMode('login');
+            document.getElementById('email').value = email;
+            return;
+          }
+          if (result.data.session) {
+            await finishSignIn(result.data.session.access_token);
+            if (!document.getElementById('subscribe-box').hidden) {
+              auth.showMessage('Account created! Start your free trial to get access.', 'notice');
+            }
+            return;
+          }
+          showMode('login');
+          document.getElementById('email').value = email;
+          auth.showMessage('Check your email for a confirmation link. After confirming, you can start your free trial.', 'notice');
+        } catch (err) {
+          auth.showMessage(err.message || 'Something went wrong');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      // Back from the confirmation email: supabase-js picks the session up from the link.
+      if (params.has('confirmed') || /access_token=/.test(location.hash)) {
+        (async function () {
+          var s = (await supabase.auth.getSession()).data.session;
+          if (!s) { auth.showMessage('Email confirmed. Sign in to continue.', 'notice'); return; }
+          var r = await finishSignIn(s.access_token);
+          if (!r.ok && r.json.subscribe) {
+            auth.showMessage('Email confirmed! Start your free trial to get access.', 'notice');
+          }
+        })();
+      }
+
       document.getElementById('btn-subscribe').addEventListener('click', async function () {
         this.disabled = true;
         var res = await supabase.functions.invoke('create-subscription-checkout', {
@@ -85,7 +190,7 @@
       });
 
       // Back from Stripe Checkout: the webhook may take a few seconds to record the subscription.
-      if (new URLSearchParams(location.search).has('subscribed')) {
+      if (params.has('subscribed')) {
         auth.showMessage('Thanks for subscribing! Finishing sign-in...', 'notice');
         (async function () {
           var s = (await supabase.auth.getSession()).data.session;
@@ -101,7 +206,7 @@
       }
 
       // Arriving from /logout: drop the browser-side Supabase session too.
-      if (new URLSearchParams(location.search).has('signed_out')) {
+      if (params.has('signed_out')) {
         supabase.auth.signOut().catch(function () {});
         auth.showMessage('You have been signed out.', 'notice');
       }
@@ -141,15 +246,7 @@
           var accessToken = result.data.session && result.data.session.access_token;
           if (!accessToken) throw new Error('No session returned');
 
-          var r = await startSession(accessToken);
-          if (!r.ok) {
-            // Keep the browser session for checkout when the only problem is a missing subscription.
-            if (r.status === 403 && !r.json.subscribe) supabase.auth.signOut().catch(function () {});
-            showSubscribe(r.status === 403 && !!r.json.subscribe);
-            auth.showMessage(r.json.error || 'Login failed');
-            return;
-          }
-          window.location.href = r.json.redirect || '/';
+          await finishSignIn(accessToken);
         } catch (err) {
           auth.showMessage(err.message || 'Something went wrong');
         } finally {
