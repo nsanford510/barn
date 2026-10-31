@@ -1,11 +1,16 @@
 project_id = "zezhsmgtdzlagqwlvjui"
 
 [auth]
-# Invite-only: admins add users from the dashboard, then grant a role in user_roles.
+# Anyone can create an account (e.g. from the Scout app), but it can't see data until an
+# admin grants it a role in user_roles (checked by has_app_access()).
 # Production (https://barn-scan.vercel.app) needs the same settings in the dashboard: Auth > Sign In / Providers and URL Configuration.
-enable_signup = false
+enable_signup = true
 site_url = "http://127.0.0.1:5000"
 additional_redirect_urls = ["http://127.0.0.1:5000/reset-password", "http://localhost:5000/reset-password", "https://barn-scan.vercel.app/reset-password"]
 
 [auth.email]
-enable_signup = false
+enable_signup = true
+
+# Stripe calls this directly and authenticates with its signature, not a Supabase JWT.
+[functions.stripe-webhook]
+verify_jwt = false

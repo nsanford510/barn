@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPT - Billing</title>
+{% include "_auth_styles.html" %}
+</head>
+
+<body>
+  <div class="login-container">
+    <h1>Billing</h1>
+    <p class="subtitle">Opening your subscription settings...</p>
+    <form><p class="hint"><a href="/">Back to the scanner</a></p></form>
+  </div>
+{% include "_auth_client.html" %}
+  <script>
+    (async function () {
+      var auth = window.barnAuth;
+      if (!auth.client) { auth.showMessage('Supabase script did not load. Try again.'); return; }
+      var res = await auth.client.functions.invoke('create-billing-portal', { body: { return_path: '/' } });
+      if (res.data && res.data.url) { location.href = res.data.url; return; }
+      auth.showMessage('Could not open billing. Sign out and back in, then try again.');
+    })();
+  </script>
+</body>
+
+</html>

@@ -90,7 +90,8 @@ class WebguiAuthTests(unittest.TestCase):
         client = self.mod.app.test_client()
         response = self._callback(client, {"sub": "u1", "email": "a@b.c"}, None)
         self.assertEqual(403, response.status_code)
-        self.assertIn("approved", response.get_json()["error"])
+        self.assertIn("subscription", response.get_json()["error"])
+        self.assertTrue(response.get_json()["subscribe"])
         self.assertEqual(401, client.get(STATUS_URL).status_code)
 
     def test_callback_starts_session_for_approved_user(self) -> None:
@@ -159,20 +160,49 @@ class WebguiAuthTests(unittest.TestCase):
             denied = client.get(STATUS_URL, headers={"Authorization": "Bearer jwt"})
         self.assertEqual(401, denied.status_code)
 
-    def test_lookup_prefers_admin_over_scout(self) -> None:
+    def _fake_client(self, roles, subscriptions):
+        """Fake Supabase client that answers per table and records .in_() filters."""
+        test = self
+
         class _Query:
             def __init__(self, rows): self.rows = rows
+            def in_(self, column, values):
+                test.assertEqual("status", column)
+                self.rows = [r for r in self.rows if r.get("status") in values]
+                return self
             def __getattr__(self, _name): return lambda *a, **k: self
             def execute(self): return type("R", (), {"data": self.rows})()
 
         class _Client:
-            def __init__(self, rows): self.rows = rows
-            def table(self, _name): return _Query(self.rows)
+            def table(self, name):
+                return _Query(list({"user_roles": roles, "subscriptions": subscriptions}[name]))
 
-        with patch.object(self.mod.db, "get_client", return_value=_Client([{"role": "scout"}, {"role": "admin"}])):
+        return _Client()
+
+    def test_lookup_grants_admins_without_a_subscription(self) -> None:
+        with patch.object(self.mod.db, "get_client", return_value=self._fake_client([{"role": "admin"}], [])):
             self.assertEqual("admin", self.mod._lookup_app_role("u1"))
-        with patch.object(self.mod.db, "get_client", return_value=_Client([{"role": "user"}])):
+
+    def test_lookup_grants_trialing_and_active_subscribers(self) -> None:
+        for status in ("trialing", "active"):
+            client = self._fake_client([], [{"status": status}])
+            with patch.object(self.mod.db, "get_client", return_value=client):
+                self.assertEqual("scout", self.mod._lookup_app_role("u1"), status)
+
+    def test_lookup_denies_without_a_live_subscription(self) -> None:
+        # The scout role alone no longer grants access.
+        for status in ("past_due", "canceled", "unpaid", "incomplete", None):
+            client = self._fake_client([{"role": "scout"}], [{"status": status}])
+            with patch.object(self.mod.db, "get_client", return_value=client):
+                self.assertIsNone(self.mod._lookup_app_role("u1"), status)
+        with patch.object(self.mod.db, "get_client", return_value=self._fake_client([{"role": "user"}], [])):
             self.assertIsNone(self.mod._lookup_app_role("u1"))
+
+    def test_billing_return_page_is_public_but_billing_needs_sign_in(self) -> None:
+        client = self.mod.app.test_client()
+        self.assertEqual(200, client.get("/billing/done").status_code)
+        self.assertEqual(302, client.get("/billing").status_code)
+        self.assertEqual(200, signed_in_client(self.mod).get("/billing").status_code)
 
     # --- webhook and config ----------------------------------------------
 

@@ -243,6 +243,7 @@
     </div>
     <div class="topnav-user">
       <span>{{ session.get('user_email', '') }}{% if session.get('role') == 'admin' %} · admin{% endif %}</span>
+      <a href="/billing">Billing</a>
       <a href="/logout">Sign out</a>
     </div>
   </nav>

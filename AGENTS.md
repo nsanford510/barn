@@ -25,7 +25,9 @@ Recent history follows Conventional Commit prefixes such as `feat:`, `fix:`, `do
 Never commit `.env` files, Supabase keys, `MAPS_API_KEY`, or deploy SSH secrets. Scanner setup may require `playwright install chromium` after dependency changes. Android local secrets belong in `android/local.properties`; web and scan secrets belong in local `.env` files.
 
 ## Auth
-`scan/webgui` (deployed to Vercel as `barn-scan`, root dir `scan/`) and the Android app are invite-only: a Supabase account needs an `admin` or `scout` row in `public.user_roles` (checked by `has_app_access()`, migration `web/supabase/migrations/20261016150000_scout_role_app_access.sql`). Flask routes are protected by a global `before_request` guard; add new public routes to `PUBLIC_ENDPOINTS` in `scan/webgui/app.py` and admin-only ones with `@admin_required`. Webgui tests that hit protected routes should use `signed_in_client()` from `scan/tests/webgui_auth_helpers.py`.
+`scan/webgui` (deployed to Vercel as `barn-scan`, root dir `scan/`) and the Android app are paid: anyone can sign up, but data access needs an `admin` row in `public.user_roles` or a `trialing`/`active` Stripe subscription in `public.subscriptions` (checked by `has_app_access()`, migrations `20261016150000_scout_role_app_access.sql` and `20261031120000_stripe_subscriptions.sql`). The `scout` role alone no longer grants access. Subscriptions are $100/month with a 30-day trial for first-time subscribers, sold through Stripe Checkout by the `create-subscription-checkout` edge function, managed through `create-billing-portal`, and synced into `public.subscriptions` only by `stripe-webhook` (service role). Edge function secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL` (optional `STRIPE_PRICE_ID`; otherwise the price with lookup key `barn_scout_monthly` is used or created). Flask routes are protected by a global `before_request` guard; add new public routes to `PUBLIC_ENDPOINTS` in `scan/webgui/app.py` and admin-only ones with `@admin_required`. Webgui tests that hit protected routes should use `signed_in_client()` from `scan/tests/webgui_auth_helpers.py`.
+
+Production migration history does not match `web/supabase/migrations` (many remote-only versions), so do not `supabase db push`; apply a single new migration with `supabase db query --linked -f <file>` and then `supabase migration repair --status applied <version> --linked`.
 
 ## Cursor Cloud specific instructions
 
@@ -49,8 +51,12 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE O
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO anon, authenticated, service_role;
 -- keep PostGIS's spatial_ref_sys read-only for API roles (see migration 20261016120000)
 DO $$ BEGIN IF to_regclass('public.spatial_ref_sys') IS NOT NULL THEN REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.spatial_ref_sys FROM anon, authenticated; END IF; END $$;
+-- keep subscriptions writable only by the stripe-webhook (service role), or users can grant themselves access
+DO $$ BEGIN IF to_regclass('public.subscriptions') IS NOT NULL THEN REVOKE ALL ON public.subscriptions FROM anon; REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.subscriptions FROM authenticated; END IF; END $$;
 ```
-Apply with: `docker exec -i "$(docker ps --format '{{.Names}}' | grep supabase_db)" psql -U postgres -d postgres`.
+Apply with: `docker exec -i "$(docker ps --format '{{.Names}}' | grep supabase_db)" psql -U postgres -d postgres` (with snap Docker, where `docker exec` fails silently, use `PGPASSWORD=postgres psql -h 127.0.0.1 -p 54322 -U postgres -d postgres`).
+
+With snap Docker, `supabase start` fails with `failed to copy secret file into container` because snap has a private `/tmp`; run Supabase CLI commands with `TMPDIR=$PWD/supabase/.temp/tmp` (gitignored) from `web/`. Local Stripe testing: put sandbox `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (from `stripe listen --print-secret`) and `SITE_URL` in gitignored `web/supabase/functions/.env`, run `supabase functions serve --env-file supabase/functions/.env`, and `stripe listen --forward-to http://127.0.0.1:54321/functions/v1/stripe-webhook`.
 
 ### Web RLS behavior (not a bug)
 Public forms (`property_reports`, `volunteers`, etc.) allow anon `INSERT` but only admins can `SELECT`. So `.insert()` works, but an anon `.insert().select()` / `Prefer: return=representation` fails RLS by design. The public form components correctly insert without selecting.

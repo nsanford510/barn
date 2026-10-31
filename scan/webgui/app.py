@@ -505,9 +505,13 @@ def _verify_supabase_bearer_request() -> dict | None:
 
 
 # --- Access control ---------------------------------------------------------
-# Signing in with Supabase is not enough: the account also needs an 'admin' or
-# 'scout' row in public.user_roles (see web/supabase/migrations/*_scout_role_app_access.sql).
+# Signing in with Supabase is not enough: the account needs the 'admin' role in
+# public.user_roles, or a trialing/active Stripe subscription in public.subscriptions
+# (mirrors has_app_access(); see web/supabase/migrations/*_stripe_subscriptions.sql).
+# Subscribers get the session role 'scout'.
 APP_ROLES = ("admin", "scout")
+SUBSCRIPTION_ACCESS_STATUSES = ("trialing", "active")
+NO_SUBSCRIPTION_MESSAGE = "You need an active subscription to use BARN. Start your 30-day free trial below."
 ROLE_RECHECK_SECONDS = 15 * 60
 
 # Endpoints reachable without signing in. Everything else requires a session.
@@ -519,22 +523,28 @@ PUBLIC_ENDPOINTS = {
     "auth_callback",
     "logout",
     "reset_password",
+    "billing_done",
     "api_outreach_webhook_reply",
     "static",
 }
 
 
 def _lookup_app_role(user_id: str) -> str | None:
-    """Return 'admin' or 'scout' for an approved user, None otherwise. Raises on DB errors."""
-    rows = (
-        db.get_client().table("user_roles").select("role").eq("user_id", user_id).execute().data
+    """Return 'admin', or 'scout' for a subscriber, None otherwise. Raises on DB errors."""
+    client = db.get_client()
+    roles = client.table("user_roles").select("role").eq("user_id", user_id).execute().data or []
+    if any(str(r.get("role")) == "admin" for r in roles):
+        return "admin"
+    subs = (
+        client.table("subscriptions")
+        .select("status")
+        .eq("user_id", user_id)
+        .in_("status", list(SUBSCRIPTION_ACCESS_STATUSES))
+        .execute()
+        .data
         or []
     )
-    roles = {str(r.get("role")) for r in rows}
-    for role in APP_ROLES:
-        if role in roles:
-            return role
-    return None
+    return "scout" if subs else None
 
 
 def _start_session(claims: dict, role: str) -> None:
@@ -668,7 +678,7 @@ def auth_callback():
     except Exception:
         return jsonify({"error": "Could not check account access. Try again."}), 503
     if role is None:
-        return jsonify({"error": "Your account hasn't been approved yet. Ask an admin for access."}), 403
+        return jsonify({"error": NO_SUBSCRIPTION_MESSAGE, "subscribe": True}), 403
     _start_session(claims, role)
     return jsonify({"ok": True, "redirect": _safe_next(data.get("next")) or url_for("search_page")})
 
@@ -678,6 +688,19 @@ def logout():
     """Logout and clear session."""
     session.clear()
     return redirect(url_for("login", signed_out=1))
+
+
+@app.route("/billing", methods=["GET"])
+@login_required
+def billing():
+    """Send a subscriber to the Stripe customer portal (opened by supabase-js in the page)."""
+    return render_template("billing.html", **_supabase_public_config())
+
+
+@app.route("/billing/done", methods=["GET"])
+def billing_done():
+    """Where Stripe Checkout and the billing portal send people back to."""
+    return render_template("billing_done.html")
 
 
 @app.route("/reset-password", methods=["GET"])
