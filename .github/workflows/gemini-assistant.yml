@@ -19,8 +19,8 @@ jobs:
           deno-version: v2.x
       - name: Check edge function and test research and live relay
         run: |
-          deno check web/supabase/functions/property-assistant/index.ts
-          deno test web/supabase/functions/_shared/
+          deno check --node-modules-dir=auto web/supabase/functions/property-assistant/index.ts
+          deno test --node-modules-dir=auto web/supabase/functions/_shared/
       - uses: supabase/setup-cli@v1
         with:
           version: latest
