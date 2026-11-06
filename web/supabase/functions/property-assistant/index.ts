@@ -1,26 +1,21 @@
-// Scout research assistant: Kimi K3 on Amazon Bedrock with BARN data and web tools.
+// Scout research assistant: Gemini 3.8 Live on Google Agent Platform with BARN data and web tools.
 // Body: { messages: [{ role: "user" | "assistant", text }], apn?: string }
 //   ->  { reply, steps: [{ tool, summary }], sources: [url] }
-// Secrets: BEDROCK_API_KEY, BRAVE_API_KEY; optional AWS_REGION (us-west-2), ASSISTANT_MODEL_ID,
-// FIRECRAWL_URL + FIRECRAWL_KEY (enables read_page).
+// Secrets: GOOGLE_AGENT_PLATFORM_API_KEY, GOOGLE_AGENT_PLATFORM_PROJECT, BRAVE_API_KEY.
+// Optional: ASSISTANT_GEMINI_LOCATION, ASSISTANT_GEMINI_MODEL, FIRECRAWL_URL + FIRECRAWL_KEY.
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { adminClient, corsHeaders, json, requestUser, requireEnv } from "../_shared/billing.ts";
 import {
   braveResults,
-  buildMessages,
-  type ConverseMessage,
-  type ConverseResponse,
-  converseBody,
-  DEFAULT_MODEL_ID,
   firecrawlPage,
   ilikePattern,
   isPublicHttpUrl,
-  runToolLoop,
   type ToolFn,
-  toolSpecsFor,
   trimHistory,
 } from "../_shared/assistant.ts";
+
+import { liveConfig, runGeminiLiveTurn } from "../_shared/gemini-live.ts";
 
 const PROPERTY_COLUMNS =
   "apn,location,city,situs_zip,zip_code,lat,lng,has_vpt,delinquent,power_status,condition_score," +
@@ -45,19 +40,6 @@ async function fetchJson(url: string, init: RequestInit, label: string, timeoutM
   const text = await response.text();
   if (!response.ok) throw new Error(`${label} ${response.status}: ${text.slice(0, 300)}`);
   return text ? JSON.parse(text) : {};
-}
-
-function bedrockConverse(): (messages: ConverseMessage[]) => Promise<ConverseResponse> {
-  const region = Deno.env.get("AWS_REGION") || "us-west-2";
-  const model = Deno.env.get("ASSISTANT_MODEL_ID") || DEFAULT_MODEL_ID;
-  const apiKey = requireEnv("BEDROCK_API_KEY");
-  const url = `https://bedrock-runtime.${region}.amazonaws.com/model/${encodeURIComponent(model)}/converse`;
-  return async (messages) =>
-    await fetchJson(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(converseBody(messages, toolSpecsFor(Object.keys(tools())))),
-    }, "Bedrock", 120_000) as ConverseResponse;
 }
 
 function str(input: Record<string, unknown>, key: string): string {
@@ -164,10 +146,18 @@ serve(async (req) => {
     }
     const apn = typeof body.apn === "string" && body.apn.trim() ? body.apn.trim().slice(0, 64) : null;
 
-    const result = await runToolLoop(bedrockConverse(), tools(), buildMessages(history, apn));
+    const config = liveConfig({
+      GOOGLE_AGENT_PLATFORM_API_KEY: Deno.env.get("GOOGLE_AGENT_PLATFORM_API_KEY"),
+      GOOGLE_AGENT_PLATFORM_PROJECT: Deno.env.get("GOOGLE_AGENT_PLATFORM_PROJECT"),
+      ASSISTANT_GEMINI_LOCATION: Deno.env.get("ASSISTANT_GEMINI_LOCATION"),
+      ASSISTANT_GEMINI_MODEL: Deno.env.get("ASSISTANT_GEMINI_MODEL"),
+    });
+    const result = await runGeminiLiveTurn(config, tools(), history, apn, { signal: req.signal });
     return json(result);
   } catch (error) {
-    console.error("property-assistant failed:", error);
+    // Do not log raw upstream errors or WebSocket URLs containing the Google key.
+    console.error("property-assistant failed");
     return json({ error: "The assistant couldn't answer right now. Try again." }, 500);
   }
 });
+
