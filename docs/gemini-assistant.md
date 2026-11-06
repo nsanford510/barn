@@ -14,8 +14,8 @@ The response is still `{ "reply": "...", "steps": [], "sources": [] }`. Gemini
 Live produces audio; the function requests its output transcription and returns
 that transcript. Existing on-device speech recognition and text-to-speech can
 continue using this API. This is a model replacement for the existing chat API,
-not continuous microphone/speaker streaming. Native live voice needs a separate
-authenticated audio transport and Android audio/lifecycle work.
+also compatible with on-device voice turns. The rebuilt Android Assistant now
+uses a separate WebSocket mode on this same endpoint for native live voice.
 
 ## Server configuration
 
@@ -64,12 +64,40 @@ and unsubscribed users. Confirm `reply`, `steps`, and `sources` in Android and
 check cold-start/response latency. The full function and real Gemini connection
 need a Supabase/Deno runtime and the server credentials.
 
-## Android source to resolve
+## Native Android live voice
 
-At BARN commit `1100ac49a43dd865e9f1b8a30a48d48b1cdeb2b6`, `android/` is a
-submodule of `Zer0phucks/BARN-scout`, pinned to
-`9e56661f31fbc9f1cb52d76938d73ac7d29e8452`. That revision and the checked
-`BARN-scout` main branch do not contain `AssistantScreen.kt` or an `assistant/`
-package, although the BARN guidelines describe one. Locate the branch/repository
-used for the current Android assistant before making native voice changes.
-This change does not repoint the submodule or alter either BARN-scout repository.
+The rebuilt app is in `nsanford510/BARN-scout`, branch `codex/gemini-live-android`,
+based on the Android revision BARN already used. It adds an Assistant tab and an
+Ask Assistant action to property sheets. Typed questions use the existing POST
+contract. Live voice connects with an authenticated GET WebSocket upgrade to
+`/functions/v1/property-assistant`. Supabase JWT validation and `has_app_access()`
+run before either transport opens a Google session.
+
+The phone sends `{type: "start", messages, apn}`, then binary 16 kHz mono PCM16.
+It sends `{type: "mic", open: false}` after the last microphone frame when the
+user taps Finish speaking. The relay returns binary 24 kHz mono PCM16 plus JSON
+`ready`, `user`/`assistant` (running transcripts), `turn`, `activity`, `sources`,
+`interrupted`, `error`, and `ended` events. Typed input during voice uses
+`{type: "text", text}`. The Google key is never sent to Android. Voice sessions
+stop on screen exit, backgrounding, sign-out, disconnect, 90 seconds of idle,
+or an eight-minute cap. The user taps Live voice to reconnect.
+
+The preview is debug-signed under `com.vpt.scout.geminipreview` to install beside
+production without its private signing key. If Actions has no Supabase public
+key, its setup screen accepts a publishable/anon key and rejects service-role
+and other secret-key types. Optional Maps key configuration still comes from
+Actions secrets. The preview workflow runs unit tests before publishing an APK
+as a prerelease download.
+
+## Deployment workflow
+
+`.github/workflows/gemini-assistant.yml` checks the function with Deno and runs
+all shared-helper tests. It deploys only `property-assistant` when the repository
+has a `SUPABASE_ACCESS_TOKEN` Actions secret. The Google credentials already in
+Supabase are not deployment credentials. Create a personal access token from
+Supabase account settings, add it as a GitHub Actions secret, and rerun the
+workflow. No database migrations, Claimtrace updates, or user secrets are
+included in the APK or repository.
+
+A successful build and deployment do not establish the Google project's model
+permissions. Verify a signed-in question and live conversation on a device.

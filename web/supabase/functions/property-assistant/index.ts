@@ -16,6 +16,7 @@ import {
 } from "../_shared/assistant.ts";
 
 import { liveConfig, runGeminiLiveTurn } from "../_shared/gemini-live.ts";
+import { relayGeminiVoice } from "../_shared/gemini-voice.ts";
 
 const PROPERTY_COLUMNS =
   "apn,location,city,situs_zip,zip_code,lat,lng,has_vpt,delinquent,power_status,condition_score," +
@@ -129,14 +130,27 @@ function tools(): Record<string, ToolFn> {
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
-  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  if (req.method === "OPTIONS") return new Response(null, { headers: { ...corsHeaders, "Access-Control-Allow-Methods": "GET, POST, OPTIONS" } });
+  if (req.method !== "POST" && req.method !== "GET") return json({ error: "Method not allowed" }, 405);
 
   try {
     const user = await requestUser(req);
     if (!user) return json({ error: "Sign in first." }, 401);
     if (!(await hasAppAccess(req.headers.get("Authorization")!))) {
       return json({ error: "An active BARN Scout subscription is required." }, 403);
+    }
+
+    const config = liveConfig({
+      GOOGLE_AGENT_PLATFORM_API_KEY: Deno.env.get("GOOGLE_AGENT_PLATFORM_API_KEY"),
+      GOOGLE_AGENT_PLATFORM_PROJECT: Deno.env.get("GOOGLE_AGENT_PLATFORM_PROJECT"),
+      ASSISTANT_GEMINI_LOCATION: Deno.env.get("ASSISTANT_GEMINI_LOCATION"),
+      ASSISTANT_GEMINI_MODEL: Deno.env.get("ASSISTANT_GEMINI_MODEL"),
+    });
+    if (req.method === "GET") {
+      if (req.headers.get("upgrade")?.toLowerCase() !== "websocket") return json({ error: "WebSocket upgrade required." }, 426);
+      const { socket, response } = Deno.upgradeWebSocket(req);
+      relayGeminiVoice(socket, config, tools());
+      return response;
     }
 
     const body = await req.json().catch(() => ({}));
@@ -146,12 +160,6 @@ serve(async (req) => {
     }
     const apn = typeof body.apn === "string" && body.apn.trim() ? body.apn.trim().slice(0, 64) : null;
 
-    const config = liveConfig({
-      GOOGLE_AGENT_PLATFORM_API_KEY: Deno.env.get("GOOGLE_AGENT_PLATFORM_API_KEY"),
-      GOOGLE_AGENT_PLATFORM_PROJECT: Deno.env.get("GOOGLE_AGENT_PLATFORM_PROJECT"),
-      ASSISTANT_GEMINI_LOCATION: Deno.env.get("ASSISTANT_GEMINI_LOCATION"),
-      ASSISTANT_GEMINI_MODEL: Deno.env.get("ASSISTANT_GEMINI_MODEL"),
-    });
     const result = await runGeminiLiveTurn(config, tools(), history, apn, { signal: req.signal });
     return json(result);
   } catch (error) {

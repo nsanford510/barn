@@ -41,6 +41,7 @@ export function liveSetup(config: LiveConfig, tools: Record<string, ToolFn>) {
       generationConfig: { responseModalities: ["AUDIO"] },
       // Live's audio response is transcribed by Gemini; return that text through the existing chat API.
       outputAudioTranscription: {},
+      inputAudioTranscription: {},
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
       tools: [{ functionDeclarations: toolSpecsFor(Object.keys(tools)).map(({ toolSpec }) => ({
         name: toolSpec.name,
