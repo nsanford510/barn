@@ -96,7 +96,7 @@ all shared-helper tests. It deploys only `property-assistant` when the repositor
 has a `SUPABASE_ACCESS_TOKEN` Actions secret. The Google credentials already in
 Supabase are not deployment credentials. Create a personal access token from
 Supabase account settings, add it as a GitHub Actions secret, and rerun the
-workflow. No database migrations, Claimtrace updates, or user secrets are
+workflow. For a phone-only alternative, see [the Supabase editor steps](phone-deploy-gemini.md). No database migrations, Claimtrace updates, or user secrets are
 included in the APK or repository.
 
 A successful build and deployment do not establish the Google project's model
